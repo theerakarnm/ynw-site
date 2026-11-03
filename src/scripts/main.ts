@@ -15,5 +15,5 @@ if (document.querySelector("[data-profile-form]")) {
 }
 
 if (document.querySelector(".hero-wave")) {
-  void import("./motion");
+  void import("./motion").then((m) => m.initMotion());
 }

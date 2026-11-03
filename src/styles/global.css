@@ -6,6 +6,7 @@
 
 /* =================== Base =================== */
 html, body { margin: 0; background: var(--bg); color: var(--text-primary); font-family: var(--font-sans); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+*, *::before, *::after { box-sizing: border-box; }
 :lang(th) { font-family: var(--font-thai); line-height: 1.7; }
 button, input, textarea, select { font: inherit; color: inherit; }
 ::selection { background: var(--accent); color: var(--on-accent); }

@@ -54,6 +54,11 @@ export function flush(): void {
   }
   const events = queue;
   queue = [];
+  if (!apiBase) {
+    // Mock mode (dev): swallow events locally instead of beaconing at same-origin /v1.
+    for (const event of events) void sendEvent(event);
+    return;
+  }
   for (const event of events) {
     const body = JSON.stringify(event);
     if (typeof navigator.sendBeacon === "function") {
