@@ -1,0 +1,170 @@
+/* YNW design tokens.
+   Color/spacing/type values are transcribed 1:1 from the reference design system
+   (_reference/ds/ynw/tokens.css, sourced from tokens.json). Do not edit values
+   without updating docs/ANALYSIS.md. Fonts are self-hosted Fontsource files
+   (npm run fonts:sync), subset latin/thai, font-display swap. */
+
+/* ---------- Fonts ---------- */
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300 800;
+  src: url("../assets/fonts/geist-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 600;
+  src: url("../assets/fonts/geist-mono-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "IBM Plex Sans Thai";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("../assets/fonts/ibm-plex-sans-thai-thai-400-normal.woff2") format("woff2");
+  unicode-range: U+0E01-0E5B, U+200C-200D, U+25CC;
+}
+@font-face {
+  font-family: "IBM Plex Sans Thai";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("../assets/fonts/ibm-plex-sans-thai-latin-400-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ---------- Tokens ---------- */
+:root {
+  color-scheme: dark;
+
+  --bg: #0b0a0b;
+  --surface: #131112;
+  --surface-raised: #1b1819;
+  --surface-overlay: #242021;
+  --surface-hover: #2c2728;
+  --border: #2b2627;
+  --border-strong: #3d3637;
+  --border-control: #7a706d;
+  --text-primary: #f4efec;
+  --text-secondary: #b9afab;
+  --text-muted: #948a86;
+  --accent: #ed662e;
+  --accent-hover: #f2834a;
+  --accent-pressed: #db4a1c;
+  --accent-subtle: #2a1510;
+  --accent-text: #f59a68;
+  --on-accent: #0b0a0b;
+  --focus-ring: #f2834a;
+  --scrim: rgba(5, 4, 5, 0.72);
+  --success: #4cc38a;
+  --success-subtle: #0f2219;
+  --warning: #f5c842;
+  --warning-subtle: #2a2208;
+  --error: #ff5c5c;
+  --error-subtle: #2e0d0e;
+  --info: #6fc1c4;
+  --info-subtle: #0d2224;
+
+  --brand-signal: #eb1515;
+  --brand-ember: #ee4821;
+  --brand-flame: #ed662e;
+  --brand-amber: #ec9141;
+  --brand-gold: #eab46c;
+  --brand-sand: #cd8e4e;
+  --brand-teal: #335554;
+  --brand-teal-deep: #133337;
+  --brand-wine: #6a1a21;
+  --brand-maroon: #30151a;
+  --brand-ink: #090b0f;
+  --brand-berry: #b01f2c;
+
+  --font-sans: "Geist", "IBM Plex Sans Thai", system-ui, sans-serif;
+  --font-mono: "Geist Mono", "IBM Plex Sans Thai", ui-monospace, monospace;
+  --font-thai: "IBM Plex Sans Thai", "Geist", system-ui, sans-serif;
+
+  --text-display: 700 120px/0.9 var(--font-sans);
+  --text-h1: 600 56px/1 var(--font-sans);
+  --text-h2: 600 40px/1.05 var(--font-sans);
+  --text-h3: 600 28px/1.15 var(--font-sans);
+  --text-h4: 600 22px/1.25 var(--font-sans);
+  --text-h5: 600 17px/1.35 var(--font-sans);
+  --text-h6: 600 14px/1.4 var(--font-sans);
+  --text-body-lg: 400 18px/1.6 var(--font-sans);
+  --text-body-md: 400 15px/1.6 var(--font-sans);
+  --text-body-sm: 400 13px/1.55 var(--font-sans);
+  --text-caption: 400 12px/1.45 var(--font-sans);
+  --text-mono-label: 500 11px/1.45 var(--font-mono);
+  --text-mono-code: 400 13px/1.6 var(--font-mono);
+  --text-mono-meta: 400 12px/1.45 var(--font-mono);
+
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+
+  --shadow-overlay: 0 0 0 1px #2b2627, 0 12px 32px -8px #000000;
+  --shadow-glow: 0 0 0 1px #ed662e66, 0 0 24px -4px #ed662e59;
+
+  --bw-hairline: 1px;
+  --bw-focus: 2px;
+
+  --dur-instant: 80ms;
+  --dur-fast: 140ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
+  --dur-pulse: 1200ms;
+  --dur-ticker: 40s;
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out: cubic-bezier(0, 0, 0, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-linear: linear;
+
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-sidebar: 20;
+  --z-dropdown: 30;
+  --z-sheet: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+  --z-tooltip: 70;
+
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-2xl: 1536px;
+
+  --grid-columns: 12;
+  --grid-gutter: 24px;
+  --grid-margin: 24px;
+  --grid-max: 1280px;
+  --chat-max: 760px;
+  --sidebar-w: 264px;
+
+  --icon-stroke: 1.5px;
+  --icon-xs: 12px;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 32px;
+}
