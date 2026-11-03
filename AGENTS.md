@@ -5,7 +5,7 @@ Conventions for any coding agent working in this repo. Read `docs/ANALYSIS.md` f
 ## Commands
 
 - `npm run dev` - dev server (mock API active unless `PUBLIC_API_BASE` is set).
-- `npm run build` - typecheck + production build to `dist/`.
+- `npm run build` - typecheck + production build to `dist/` (also regenerates `dist/_headers` with env-aware CSP; needs Node >= 22.23.4).
 - `npm run preview` - serve the build.
 - `npm run check` - `astro check` (TypeScript strict + Astro diagnostics).
 Commit small and often; one logical change per commit (docs, tokens, layout, sections, integration, pages, SEO, fixes). Never one giant commit.
@@ -80,6 +80,7 @@ Behavior rules: honeypot `company` filled -> pretend success. Never reveal wheth
 
 1. Never hardcode keys, endpoints or the site URL - env vars only (`PUBLIC_SITE_URL`, `PUBLIC_API_BASE`, `PUBLIC_TURNSTILE_SITE_KEY`).
 2. Never hotlink assets or fonts; everything ships from this repo.
-3. Never edit `_reference/`, `CHANGELOG.md` (auto-generated), or generated files (`public/og.png`, favicons) by hand - regenerate via the script that produced them.
+3. Never edit `_reference/`, `CHANGELOG.md` (auto-generated), or generated files (`public/og.png`, favicons) by hand - regenerate via `scripts/generate_assets.py` (assets) and `scripts/build-headers.mjs` (headers, runs on build).
+3b. Verification tooling lives outside the repo (`playwright-core` scratch + installed Chrome); do not add test frameworks to package.json without a README note.
 4. No em dashes in any user-facing or documentation text.
 5. Keep `README.md` and `AGENTS.md` in sync when decisions change; append verified findings to `docs/ANALYSIS.md` instead of rewriting history.

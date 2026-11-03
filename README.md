@@ -22,12 +22,16 @@ npm run dev
 
 Without `PUBLIC_API_BASE` the site runs against a built-in mock API (success, every error state and latency simulated) so the form is fully testable offline.
 
+Requires Node >= 22.23.4 (Astro 7). With nvm: `nvm install 24 && nvm use 24`.
+
 ## Scripts
 
 - `npm run dev` - dev server.
-- `npm run build` - production build to `dist/` (runs `astro check` first).
+- `npm run build` - production build to `dist/`: `astro check` (TypeScript strict) + build + `dist/_headers` generation.
 - `npm run preview` - serve the production build.
 - `npm run check` - TypeScript + Astro diagnostics only.
+- `npm run fonts:sync` - copy the self-hosted woff2 subsets from the Fontsource packages into `src/assets/fonts` (run after changing font deps).
+- `python3 scripts/generate_assets.py` - regenerate favicons, PWA icons and the OG image (needs pillow + fonttools + brotli).
 
 ## Editing content
 
@@ -80,7 +84,7 @@ The full API contract (source of truth, identical to the worker repo) is reprodu
 | Security/caching headers (CSP, XCTO, Referrer-Policy, Permissions-Policy) | Done - `public/_headers` (Cloudflare Pages) |
 | Third-party scripts lazy | Done - Turnstile on first email focus; motion module deferred |
 | Self-hosted fonts, preload critical weight | Done |
-| Lighthouse mobile 95+, LCP < 2.5s, CLS < 0.05, INP < 200ms | Verified in the final build report (docs/VERIFICATION.md) |
+| Lighthouse mobile 95+, LCP < 2.5s, CLS < 0.05, INP < 200ms | Done - mobile 99/100/100/100 (LCP 0.8s, CLS 0), desktop 100s; see docs/VERIFICATION.md |
 
 ## Deploy (Cloudflare Pages)
 
@@ -90,4 +94,21 @@ The full API contract (source of truth, identical to the worker repo) is reprodu
 
 ## Deviations from the reference
 
-All deviations are listed with rationale in `docs/ANALYSIS.md` ("Rebuild decisions") and flagged where the owner must confirm: target keywords, privacy page copy, consent checkbox added, use-case chips wired to `/v1/events`, OG/favicon assets generated, GSAP ported from npm, fonts self-hosted from Fontsource.
+Full rationale in `docs/ANALYSIS.md` ("Rebuild decisions"), evidence in `docs/VERIFICATION.md`. Summary:
+
+1. Consent checkbox added to both wishlist forms (required by the API contract; the mockup has none).
+2. Turnstile target + lazy loader added (loads on first email focus; skipped in mock mode).
+3. `/privacy` page created - the mockup links to a Privacy page that is not in the zip; copy is placeholder (CONFIRM).
+4. Use-case chips post `use_case_pick` to `/v1/events` (the contract has no dedicated use-case endpoint).
+5. Fonts self-hosted via Fontsource subsets; the mockup hotlinked Google Fonts.
+6. The design-tool runtime (react dev builds, support.js) and ~60% of unused design-system CSS were dropped; motion.js ported to typed TS on npm GSAP.
+7. OG image, favicon set and manifest generated from the reference dot-grid geometry (mockup ships none).
+8. Nav lockup is a home link (mockup: plain image); visuals unchanged.
+9. The no-JS fallback copy tells visitors to email instead of the missing static form endpoint. fallback copy tells visitors to email instead of the missing static form endpoint.
+
+## Verification summary
+
+- `npm run build`: 0 errors, 0 warnings.
+- Visual: reference vs clone at 360/768/1024/1440/1920 match (pin + story modes); details in docs/VERIFICATION.md.
+- Functional: 21/21 UX-state tests, 18/18 API-contract tests, profile payload verified.
+- Lighthouse: mobile 99/100/100/100, desktop 100/100/100/100.
