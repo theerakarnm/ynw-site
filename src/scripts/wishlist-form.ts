@@ -170,8 +170,23 @@ async function handleSubmit(r: FormRefs): Promise<void> {
   setState(r, "submitting");
   window.dispatchEvent(new CustomEvent("ynw:dots", { detail: { on: true } }));
 
+  // Wait for the Turnstile token, but never hang: a widget that cannot resolve
+  // (bad key/domain) must fail the submit with a visible, retryable error.
   const turnstile = ensureTurnstile(r.form);
-  const token = turnstile ? await turnstile.token() : "";
+  let token = "";
+  if (turnstile) {
+    const raced = await Promise.race([
+      turnstile.token().then((t) => (t === "" ? "" : t)),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), 12_000)),
+    ]);
+    if (raced === null) {
+      window.dispatchEvent(new CustomEvent("ynw:dots", { detail: { on: false } }));
+      setState(r, "failure", t.errorTurnstile);
+      focusEmail(r);
+      return;
+    }
+    token = raced;
+  }
 
   const payload: WishlistPayload = {
     email,

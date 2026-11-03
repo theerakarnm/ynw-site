@@ -25,11 +25,11 @@ if (!apiBase) {
 
 const csp = [
   "default-src 'self'",
-  "script-src 'self' https://challenges.cloudflare.com",
+  "script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "font-src 'self'",
-  `connect-src 'self' https://challenges.cloudflare.com${apiBase ? ` ${apiBase}` : ""}`,
+  `connect-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com${apiBase ? ` ${apiBase}` : ""}`,
   "frame-src https://challenges.cloudflare.com",
   "base-uri 'self'",
   "form-action 'self'",

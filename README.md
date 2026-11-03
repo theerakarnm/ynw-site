@@ -92,7 +92,7 @@ The full API contract (source of truth, identical to the worker repo) is reprodu
 2. Env values: `.env` (gitignored) supplies `PUBLIC_SITE_URL=https://ynw.app` and `PUBLIC_API_BASE` at build time; both `astro.config.mjs` and `scripts/build-headers.mjs` fall back to `.env` when the shell env is empty. `PUBLIC_TURNSTILE_SITE_KEY` must be set before the form works against the real worker (see CONFIRM notes).
 3. Security and caching headers ship via `dist/_headers` (Workers static assets support it): CSP, XCTO, Referrer-Policy, Permissions-Policy, HSTS, immutable caching for `_astro/*`. CSP `connect-src` allows only the site origin, `PUBLIC_API_BASE` and the Turnstile origin.
 
-Deployed 2026-11-03: https://ynw.app (worker `ynw-site`, version after the sitemap canonical fix).
+Deployed 2026-11-03: https://ynw.app (worker `ynw-site`). `PUBLIC_API_BASE=https://api-marketing.ynw.app` and the Turnstile site key are wired and shipped. Two owner-side items block end-to-end form submits: the Turnstile key must list `ynw.app` among its hostnames (dashboard setting, no rebuild needed once set), and `api-marketing.ynw.app` DNS must go live.
 
 ## Deviations from the reference
 

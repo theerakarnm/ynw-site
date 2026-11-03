@@ -54,4 +54,13 @@ Mobile: FCP 0.8s, LCP 0.8s, CLS 0, TBT 120ms, Speed Index 1.0s. Desktop: FCP 0.2
 - Live checks: 200 on /, /robots.txt, /sitemap-index.xml, /llms.txt, /manifest.webmanifest, /thanks; 404 page served for unknown paths; security headers (CSP, XCTO, Referrer-Policy, Permissions-Policy, HSTS) present on every response; `_astro/*` served immutable.
 - Canonical, og:url, robots.txt Sitemap line and sitemap URLs all read `https://ynw.app`.
 - Fix shipped with the deploy: `astro.config.mjs` and `scripts/build-headers.mjs` now fall back to `.env` for `PUBLIC_SITE_URL` / `PUBLIC_API_BASE` (Astro does not load `.env` at config-evaluation time, and the postbuild script is plain node; without the fallback the sitemap kept `example.com`).
-- Pending owner input: real `PUBLIC_TURNSTILE_SITE_KEY` (form cannot pass the real worker without it) and confirmation of `PUBLIC_API_BASE=https://api.ynw.app`.
+## Real API + Turnstile wiring (2026-11-03, later same day)
+
+- Owner-supplied values applied: `PUBLIC_API_BASE=https://api-marketing.ynw.app`, Turnstile site key set in `.env`, rebuilt and redeployed.
+- Live-verified: CSP `connect-src` includes the API origin; site key and API base present in the shipped bundle; Turnstile script still lazy-loads on first email focus.
+- Found live and fixed (commit "fix: turnstile token timeout + analytics beacon CSP"):
+  1. Submit waited forever on the Turnstile token if the widget never resolves - now a 12s timeout fails the submit with the visible, retryable turnstile error instead of hanging the button.
+  2. Cloudflare's zone-level Web Analytics beacon (auto-injected `static.cloudflareinsights.com`) violated script-src/connect-src - both allowlisted.
+- Console noise noted and accepted: the Turnstile challenge iframe logs CSP violations of ITS OWN internal policy (`hagen`/`brunhild.challenges.cloudflare.com`, `data:,` pings) - zero violations of the site's policy.
+- Blocking owner action: the site key stays pending on ynw.app - in the Cloudflare dashboard (Turnstile -> the key's Hostnames) `ynw.app` must be added (or the key recreated with it). Until then, submits fail client-side after the 12s token timeout with the turnstile error message. Once the hostname is authorized, no rebuild is needed - the widget resolves and submits proceed.
+- Also pending: DNS for `api-marketing.ynw.app` does not resolve yet (checked 2026-11-03); form submits will show the network error message until the marketing worker's subdomain goes live.
