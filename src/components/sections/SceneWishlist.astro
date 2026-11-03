@@ -1,0 +1,29 @@
+---
+/**
+ * Scene 07 - Wishlist: the closing card (approval-style chrome around the
+ * second wishlist form) plus the contour lines that draw along the bottom.
+ */
+import Icon from "@/components/ui/Icon.astro";
+import Scene from "./Scene.astro";
+import WishlistForm from "@/components/forms/WishlistForm.astro";
+import { scenes, closing } from "@/data/content";
+
+const meta = scenes[6];
+---
+
+<Scene {...meta} stageClass="stage-wishlist" closing>
+  <div class="ynw-approval closing-card">
+    <div class="ynw-approval-head">
+      <Icon name="shield" />
+      <span class="ynw-eyebrow">{closing.eyebrow}</span>
+    </div>
+    <div class="ynw-approval-body">
+      <WishlistForm source="closing" />
+    </div>
+  </div>
+  <svg slot="extra" class="contours" viewBox="0 0 1440 140" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 96 C 240 44 460 132 720 80 S 1200 28 1440 72"></path>
+    <path d="M0 112 C 260 66 480 140 740 98 S 1220 52 1440 92"></path>
+    <path d="M0 128 C 280 90 500 146 760 116 S 1240 78 1440 112"></path>
+  </svg>
+</Scene>

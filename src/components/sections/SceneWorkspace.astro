@@ -1,0 +1,40 @@
+---
+/**
+ * Scene 06 - Workspace: agent node, connector tree, four network cards.
+ */
+import Scene from "./Scene.astro";
+import { scenes, workspaceDemo as d } from "@/data/content";
+
+const meta = scenes[5];
+---
+
+<Scene {...meta} stageClass="stage-workspace" pin={150}>
+  <div class="net-node">
+    <span class="ynw-avatar ynw-avatar--agent">{d.node.initial}</span>
+    <span class="ynw-badge ynw-badge--plain">{d.node.badge}</span>
+  </div>
+  <svg class="net-lines" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M500 0 V40"></path>
+    <path d="M125 40 H875"></path>
+    <path d="M125 40 V100"></path>
+    <path d="M375 40 V100"></path>
+    <path d="M625 40 V100"></path>
+    <path d="M875 40 V100"></path>
+  </svg>
+  <div class="net-cards">
+    <div class="spine" aria-hidden="true"></div>
+    {
+      d.cards.map((card) => (
+        <article class="ynw-card net-card">
+          <div class="ynw-card-top">
+            <span class="seat-title">
+              <span class="ynw-card-index">{card.index}</span>
+              <span class="ynw-h5">{card.name}</span>
+            </span>
+          </div>
+          <p>{card.body}</p>
+        </article>
+      ))
+    }
+  </div>
+</Scene>

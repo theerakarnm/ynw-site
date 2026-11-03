@@ -1,0 +1,63 @@
+---
+/**
+ * Scene 03 - Backstage: frontstage/backstage columns split by a hairline.
+ * During the timeline each column cross-fades from its work layer to its
+ * private-life layer.
+ */
+import Scene from "./Scene.astro";
+import { scenes, backstageDemo as d } from "@/data/content";
+
+const meta = scenes[2];
+---
+
+<Scene {...meta} stageClass="stage-backstage" pin={150}>
+  <div class="split-rule" aria-hidden="true"></div>
+  <div class="split-col split-front">
+    <div class="split-layer layer-work">
+      <span class="ynw-eyebrow split-label">{d.frontWorkLabel}</span>
+      <div class="ynw-msg">
+        <span class="ynw-avatar">N</span>
+        <div>
+          <div class="ynw-msg-head">{d.frontWorkAuthor}</div>
+          <div class="ynw-msg-body" lang="th">{d.frontWorkMessage}</div>
+        </div>
+      </div>
+    </div>
+    <div class="split-layer layer-home">
+      <span class="ynw-eyebrow split-label">{d.frontHomeLabel}</span>
+      <p class="home-line">{d.frontHomeLine}</p>
+    </div>
+  </div>
+  <div class="split-col split-back">
+    <div class="split-layer layer-work">
+      <span class="ynw-eyebrow split-label">{d.backWorkLabel}</span>
+      <div class="ynw-thread back-thread">
+        <div class="ynw-msg back-summary">
+          <span class="ynw-avatar ynw-avatar--agent">B</span>
+          <div>
+            <div class="ynw-msg-head">{d.summary.author}</div>
+            <div class="ynw-msg-body">{d.summary.body}</div>
+          </div>
+        </div>
+        <div class="ynw-msg back-mali">
+          <span class="ynw-avatar">M</span>
+          <div>
+            <div class="ynw-msg-head">{d.mali.author}</div>
+            <div class="ynw-msg-body">{d.mali.body}</div>
+          </div>
+        </div>
+        <div class="ynw-msg back-draft">
+          <span class="ynw-avatar ynw-avatar--agent">B</span>
+          <div>
+            <div class="ynw-msg-head">{d.draft.author}</div>
+            <div class="ynw-msg-body" lang="th">{d.draft.body}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="split-layer layer-home">
+      <span class="ynw-eyebrow split-label">{d.backHomeLabel}</span>
+      <p class="home-line">{d.backHomeLine}</p>
+    </div>
+  </div>
+</Scene>

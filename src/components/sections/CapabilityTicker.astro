@@ -1,0 +1,14 @@
+---
+/**
+ * Capabilities marquee band. Items duplicated once for the seamless CSS loop;
+ * the duplicate is aria-hidden.
+ */
+import { ticker } from "@/data/content";
+---
+
+<div class="ynw-ticker site-ticker" role="region" aria-label={ticker.label}>
+  <div class="ynw-ticker-track">
+    {ticker.items.map((item) => <span class="ynw-ticker-item">{item}</span>)}
+    {ticker.items.map((item) => <span class="ynw-ticker-item" aria-hidden="true">{item}</span>)}
+  </div>
+</div>

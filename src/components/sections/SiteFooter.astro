@@ -1,0 +1,19 @@
+---
+/**
+ * Site footer: three slogan lines, lockup, privacy link.
+ */
+import LogoLockup from "@/components/ui/LogoLockup.astro";
+import { footer } from "@/data/content";
+---
+
+<footer class="site-footer">
+  <div class="site-footer-in">
+    <div class="ynw-slogan">
+      {footer.slogan.map((line) => <span>{line}</span>)}
+    </div>
+    <div class="site-footer-end">
+      <LogoLockup />
+      <a class="site-privacy" href="/privacy/">{footer.privacy}</a>
+    </div>
+  </div>
+</footer>

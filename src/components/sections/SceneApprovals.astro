@@ -1,0 +1,73 @@
+---
+/**
+ * Scene 04 - Approvals: interactive approval card (Deny/Approve) next to the
+ * autonomy ladder. The buttons are real controls; the scroll timeline can also
+ * auto-resolve the demo.
+ */
+import Icon from "@/components/ui/Icon.astro";
+import Scene from "./Scene.astro";
+import { scenes, approvalsDemo as d } from "@/data/content";
+
+const meta = scenes[3];
+---
+
+<Scene {...meta} stageClass="stage-approvals" pin={250}>
+  <div class="approve-col">
+    <div class="ynw-msg approve-nok">
+      <span class="ynw-avatar">N</span>
+      <div>
+        <div class="ynw-msg-head">{d.nokAuthor}</div>
+        <div class="ynw-msg-body" lang="th">{d.nokMessage}</div>
+      </div>
+    </div>
+    <div class="ynw-approval approval-card" data-approval="pending" role="group" aria-label="Approval required">
+      <div class="approval-glow" aria-hidden="true"></div>
+      <div class="ynw-approval-head">
+        <Icon name="shield" />
+        <span class="ynw-eyebrow">{d.headEyebrow}</span>
+        <span class="ynw-mono approval-meta">{d.headMeta}</span>
+      </div>
+      <div class="ynw-approval-body">
+        <p>{d.body}</p>
+        <pre class="ynw-code">{d.code}</pre>
+      </div>
+      <div class="ynw-approval-foot approval-foot">
+        <div class="approval-actions">
+          <button class="ynw-btn ynw-btn--secondary" type="button" data-approval-action="deny">{d.deny}</button>
+          <button class="ynw-btn ynw-btn--primary" type="button" data-approval-action="approve">{d.approve}</button>
+        </div>
+        <p class="approval-result approval-result--approved ynw-mono" role="status">{d.approved}</p>
+        <p class="approval-result approval-result--denied ynw-mono" role="status">{d.denied}</p>
+      </div>
+    </div>
+    <div class="ynw-msg approve-sent">
+      <span class="ynw-avatar ynw-avatar--agent">B</span>
+      <div>
+        <div class="ynw-msg-head">{d.sent.author}</div>
+        <div class="ynw-msg-body" lang="th">{d.sent.body}</div>
+      </div>
+    </div>
+  </div>
+  <div class="ladder-col">
+    <ol class="ladder">
+      <li class="ladder-marker" aria-hidden="true"><span></span></li>
+      {
+        d.ladder.map((row) => (
+          <li class="ladder-row">
+            <span class="ladder-rule" />
+            <span class="ladder-name">{row.name}</span>
+            <span class="ladder-desc">{row.desc}</span>
+            <span class="ladder-eg">{row.eg}</span>
+          </li>
+        ))
+      }
+    </ol>
+    <div class="ynw-msg ladder-ask">
+      <span class="ynw-avatar ynw-avatar--agent">B</span>
+      <div>
+        <div class="ynw-msg-head">{d.ask.author}</div>
+        <div class="ynw-msg-body">{d.ask.body}</div>
+      </div>
+    </div>
+  </div>
+</Scene>

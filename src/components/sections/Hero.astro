@@ -1,0 +1,35 @@
+---
+/**
+ * Hero: glow, LED-wave canvas, giant wordmark, copy block and the first
+ * wishlist form. Canvas is painted by motion.ts only when JS runs; the static
+ * page shows the radial glow + copy so no-JS still renders the hero.
+ */
+import LogoWordmark from "@/components/ui/LogoWordmark.astro";
+import WishlistForm from "@/components/forms/WishlistForm.astro";
+import { hero } from "@/data/content";
+---
+
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <canvas class="hero-wave" aria-hidden="true"></canvas>
+  <div class="hero-mark" aria-hidden="true">
+    <LogoWordmark />
+  </div>
+  <div class="hero-copy">
+    <span class="ynw-eyebrow hero-eyebrow">{hero.eyebrow}</span>
+    <h1 class="hero-title" id="hero-title">
+      {
+        hero.titleLines.map((line) => (
+          <span class="sl">
+            <span class="sl-in">
+              <span class="sl-dim">{line}</span>
+              <span class="sl-lit" aria-hidden="true">{line}</span>
+            </span>
+          </span>
+        ))
+      }
+    </h1>
+    <p class="hero-lead">{hero.lead}</p>
+    <WishlistForm source="hero" />
+  </div>
+</section>

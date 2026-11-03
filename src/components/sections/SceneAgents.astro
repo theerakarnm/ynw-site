@@ -1,0 +1,76 @@
+---
+/**
+ * Scene 02 - Agents: demo thread with thinking dots, handoff note, plan card
+ * and two tool cards whose statuses flip during the scroll timeline.
+ */
+import Icon from "@/components/ui/Icon.astro";
+import Scene from "./Scene.astro";
+import { scenes, agentsDemo as d } from "@/data/content";
+
+const meta = scenes[1];
+---
+
+<Scene {...meta} stageClass="stage-agents" pin={200}>
+  <div class="ynw-thread agents-thread">
+    <div class="ynw-msg agents-nok">
+      <span class="ynw-avatar">N</span>
+      <div>
+        <div class="ynw-msg-head">{d.nokAuthor}</div>
+        <div class="ynw-msg-body" lang="th">{d.nokMessage}</div>
+      </div>
+    </div>
+    <div class="agents-status">
+      <div class="ynw-msg agents-agent">
+        <span class="ynw-avatar ynw-avatar--agent">B</span>
+        <div>
+          <div class="ynw-msg-head">{d.agentName}</div>
+          <div class="ynw-msg-body agents-thinking">
+            <span class="ynw-thinking">
+              <span class="ynw-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              {d.thinking}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="ynw-sysnote agents-handoff">
+        <span class="ynw-eyebrow">{d.handoff}</span>
+      </div>
+    </div>
+  </div>
+  <div class="agents-work">
+    <div class="ynw-plan agents-plan">
+      <div class="plan-head"><span class="ynw-eyebrow">{d.planTitle}</span></div>
+      <ol class="ynw-steps">
+        {
+          d.steps.map((label, i) => (
+            <li class="ynw-step" data-status={i < 2 ? "done" : "running"} data-plan={i}>
+              <span class="ynw-step-ico">
+                <Icon name="check" size="xs" />
+              </span>
+              <span class="label">{label}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+    {
+      d.tools.map((tool, i) => (
+        <div class="ynw-tool agents-tool" data-run="done" data-tool={i}>
+          <div class="tool-head">
+            <span class="ynw-tool-ico">
+              <Icon name={tool.icon as "database" | "file"} />
+            </span>
+            <span class="ynw-tool-name">{tool.name}</span>
+            <span class="tool-status">
+              <span class="ynw-badge ynw-badge--accent tool-running">{d.statusRunning}</span>
+              <span class="ynw-badge ynw-badge--success tool-done">{d.statusDone}</span>
+            </span>
+          </div>
+          <div class="ynw-tool-body">
+            <div class="ynw-tool-sec tool-out">{tool.output}</div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</Scene>

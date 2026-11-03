@@ -1,0 +1,88 @@
+---
+/**
+ * Wishlist email form (used twice: hero + closing card).
+ * Visual structure is the reference's; consent checkbox, Turnstile target and
+ * noscript notice are additions required by the marketing-worker contract.
+ * Behavior lives in src/scripts/wishlist-form.ts.
+ */
+import { wishlistForm } from "@/data/content";
+import { site } from "@/data/site";
+
+interface Props {
+  source: "hero" | "closing";
+}
+
+const { source } = Astro.props;
+const t = wishlistForm;
+const emailId = `wl-email-${source}`;
+const errorId = `wl-error-${source}`;
+const consentId = `wl-consent-${source}`;
+---
+
+<form
+  class="wl"
+  data-wishlist-form
+  data-source={source}
+  data-state="idle"
+  method="post"
+  action=""
+  novalidate
+>
+  <input type="hidden" name="source" value={source} />
+  <input type="hidden" name="lang" value={site.locale} />
+  <input type="hidden" name="consent_version" value={site.consentVersion} />
+  <div class="wl-hp" aria-hidden="true">
+    <label>{t.honeypotLabel} <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+  </div>
+  <div class="wl-stack">
+    <div class="wl-entry">
+      <label class="ynw-label" for={emailId}>{t.emailLabel}</label>
+      <div class="wl-row">
+        <input
+          class="ynw-input wl-input"
+          id={emailId}
+          name="email"
+          type="email"
+          placeholder={t.emailPlaceholder}
+          autocomplete="email"
+          maxlength="254"
+          aria-invalid="false"
+          aria-describedby={errorId}
+          data-wishlist-email
+        />
+        <button class="ynw-btn ynw-btn--primary ynw-btn--lg wl-submit" type="submit">
+          <span class="wl-submit-idle">{t.submit} <span class="arrow">→</span></span>
+          <span class="wl-submit-busy" role="status" aria-live="polite">{t.submitting}
+            <span class="ynw-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          </span>
+        </button>
+      </div>
+      <p class="wl-error" id={errorId} role="alert"></p>
+      <div class="wl-consent">
+        <input type="checkbox" id={consentId} name="consent_marketing" value="1" required data-wishlist-consent />
+        <label for={consentId}>{t.consentLabel} <a href="/privacy/">{t.privacyLink}</a></label>
+      </div>
+      <p class="wl-note">{t.note} <a href="/privacy/">{t.privacyLink}</a></p>
+      <div class="wl-turnstile" data-turnstile hidden></div>
+      <noscript>
+        <p class="wl-noscript">{t.noscript}</p>
+      </noscript>
+    </div>
+    <div class="wl-done" aria-live="polite">
+      <p class="wl-success">
+        <span class="wl-square">▪</span> {t.successLine} <span class="wl-square">▪</span>
+        <span data-form-time></span>
+      </p>
+      <p class="wl-question">{t.successQuestion}</p>
+      <div class="wl-chips">
+        {
+          t.chips.map((label) => (
+            <button class="ynw-btn ynw-btn--secondary ynw-btn--sm wl-chip" type="button" aria-pressed="false" data-use-case={label}>
+              {label}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</form>

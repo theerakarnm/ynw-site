@@ -1,0 +1,67 @@
+---
+/**
+ * Scene 01 - Avatars: one origin seat, three role cards (B swaps occupants),
+ * connector lines and a Thai demo thread.
+ */
+import Scene from "./Scene.astro";
+import { scenes, avatarsDemo as d } from "@/data/content";
+
+const meta = scenes[0];
+---
+
+<Scene {...meta} stageClass="stage-avatars" pin={150}>
+  <div class="seat-origin">
+    <span class="ynw-avatar ynw-avatar--lg">Y</span>
+    <span class="ynw-mono seat-origin-label">{d.originLabel}</span>
+  </div>
+  <svg class="seat-lines" viewBox="0 0 100 300" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 150 C 50 150 50 50 100 50"></path>
+    <path d="M0 150 L 100 150"></path>
+    <path d="M0 150 C 50 150 50 250 100 250"></path>
+  </svg>
+  <div class="seat-cards">
+    <div class="spine" aria-hidden="true"></div>
+    {
+      d.seats.map((seat) => (
+        <article class:list={["ynw-card", "seat-card", { "seat-card--b": seat.index === "B" }]}>
+          <div class="ynw-card-top">
+            <span class="seat-title">
+              <span class="ynw-card-index">{seat.index}</span>
+              <span class="ynw-h5">{seat.name}</span>
+            </span>
+            {seat.index === "B" ? (
+              <span class="seat-occ seat-occ--swap">
+                {d.swap.map((occ) => (
+                  <span class:list={["occ", occ.cls]} data-occ={occ.cls.replace("occ-", "")}>
+                    <span class:list={["ynw-avatar", "ynw-avatar--sm", { "ynw-avatar--agent": "agent" in occ && occ.agent }]}>{occ.initial}</span>
+                    <span class="ynw-mono">{occ.label}</span>
+                  </span>
+                ))}
+              </span>
+            ) : (
+              <span class="seat-occ">
+                <span class="ynw-avatar ynw-avatar--sm">{seat.occupantInitial}</span>
+                <span class="ynw-mono">{seat.occupant}</span>
+              </span>
+            )}
+          </div>
+          <ul class="ynw-list seat-list">
+            {d.seatList.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+  </div>
+  <div class="seat-thread">
+    <span class="ynw-eyebrow">{d.threadEyebrow}</span>
+    <div class="ynw-msg">
+      <span class="ynw-avatar">N</span>
+      <div>
+        <div class="ynw-msg-head">{d.threadAuthor}</div>
+        <div class="ynw-msg-body" lang="th">{d.threadMessage}</div>
+      </div>
+    </div>
+  </div>
+</Scene>

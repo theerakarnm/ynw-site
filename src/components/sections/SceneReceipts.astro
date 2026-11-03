@@ -1,0 +1,53 @@
+---
+/**
+ * Scene 05 - Receipts: MCP diagram (strokes draw on scroll) + action receipt.
+ * The diagram is inline SVG from the reference, labels come from content.ts.
+ */
+import Scene from "./Scene.astro";
+import { scenes, receiptsDemo as d } from "@/data/content";
+
+const meta = scenes[4];
+---
+
+<Scene {...meta} stageClass="stage-receipts">
+  <svg class="mcp-diagram" viewBox="0 0 560 320" role="img" aria-label={d.diagramLabel}>
+    <g class="dg-draw" fill="none">
+      <rect x="1" y="60" width="150" height="84" rx="6"></rect>
+      <rect x="215" y="60" width="130" height="84" rx="6"></rect>
+      <rect x="409" y="60" width="150" height="84" rx="6"></rect>
+      <path d="M151 102 H215"></path>
+      <path d="M345 102 H409"></path>
+      <path d="M280 144 V206"></path>
+      <path d="M70 206 H490"></path>
+      <path d="M70 206 V232"></path>
+      <path d="M210 206 V232"></path>
+      <path d="M350 206 V232"></path>
+      <path d="M490 206 V232"></path>
+    </g>
+    <g class="dg-fade">
+      <text class="dg-label" x="76" y="107" text-anchor="middle">{d.diagramBoxes[0]}</text>
+      <text class="dg-label dg-label--mcp" x="280" y="107" text-anchor="middle">{d.diagramBoxes[1]}</text>
+      <text class="dg-label" x="484" y="107" text-anchor="middle">{d.diagramBoxes[2]}</text>
+      <path class="dg-arrow" d="M207 97 L215 102 L207 107"></path>
+      <path class="dg-arrow" d="M401 97 L409 102 L401 107"></path>
+      <g transform="translate(58 240)" class="dg-ico"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></g>
+      <text class="dg-cat" x="70" y="288" text-anchor="middle">{d.diagramCats[0]}</text>
+      <g transform="translate(198 240)" class="dg-ico"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></g>
+      <text class="dg-cat" x="210" y="288" text-anchor="middle">{d.diagramCats[1]}</text>
+      <g transform="translate(338 240)" class="dg-ico"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></g>
+      <text class="dg-cat" x="350" y="288" text-anchor="middle">{d.diagramCats[2]}</text>
+      <g transform="translate(478 240)" class="dg-ico"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path></g>
+      <text class="dg-cat" x="490" y="288" text-anchor="middle">{d.diagramCats[3]}</text>
+    </g>
+  </svg>
+  <dl class="receipt">
+    {
+      d.receipt.map((line) => (
+        <div class="receipt-line">
+          <dt>{line.dt}</dt>
+          <dd>{line.dd}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</Scene>

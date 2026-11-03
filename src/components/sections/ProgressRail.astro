@@ -1,0 +1,32 @@
+---
+/**
+ * Progress rail (desktop: left column; mobile: one-line bar under the nav).
+ * Pure markup - motion.ts drives statuses, visibility and the live status line.
+ * Hidden entirely without JS (data-visible stays false).
+ */
+import { rail } from "@/data/content";
+---
+
+<aside class="rail" data-visible="false" data-complete="false" aria-label={rail.label}>
+  <p class="rail-status" id="rail-status" aria-live="polite"></p>
+  <ol class="rail-steps">
+    {
+      rail.steps.map((name, i) => {
+        const num = String(i + 1).padStart(2, "0");
+        return (
+          <li>
+            <button class="rail-step" type="button" data-status="pending" data-step={i + 1} aria-label={`${num} ${name}`}>
+              <span class="rail-mark">
+                <svg class="ynw-i xs" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              </span>
+              <span class="rail-num">{num}</span>
+              <span class="rail-name">{name}</span>
+            </button>
+          </li>
+        );
+      })
+    }
+  </ol>
+</aside>

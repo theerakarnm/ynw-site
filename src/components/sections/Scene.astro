@@ -1,0 +1,48 @@
+---
+/**
+ * Shared scene shell: numbered section head + stage + caption, with the
+ * reference's pin attributes for the scroll story.
+ */
+export interface SceneMeta {
+  id: string;
+  num: string;
+  label: string;
+  title: string;
+  lead: string;
+  caption?: string;
+  stageClass: string;
+  /** Pin percentage from the reference (150-250). Omit for unpinned scenes. */
+  pin?: number;
+  closing?: boolean;
+}
+
+interface Props extends SceneMeta {}
+
+const { id, num, label, title, lead, caption, stageClass, pin, closing = false } = Astro.props;
+---
+
+<section
+  class:list={["scene", { "scene--closing": closing }]}
+  id={id}
+  data-step={Number(num)}
+  data-pin={pin}
+  aria-labelledby={`h-${id}`}
+>
+  <div class="scene-pin">
+    <div class="scene-grid">
+      <header class="ynw-section-head scene-head">
+        <div class="head-rule"></div>
+        <div class="head-eyebrow">
+          <span class="ynw-eyebrow"><b>{num}</b>/{label}</span>
+        </div>
+        <h2 class="ynw-h2 head-title" id={`h-${id}`}>{title}</h2>
+        <p class="head-lead">{lead}</p>
+      </header>
+      <div class:list={["stage", stageClass]}>
+        <slot />
+      </div>
+      {caption && <p class="scene-caption ynw-mono">{caption}</p>}
+    </div>
+  </div>
+  <slot name="extra" />
+</section>
