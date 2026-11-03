@@ -1,0 +1,80 @@
+---
+/**
+ * The only layout. Owns: head (SEO, JSON-LD, font preload), skip link, site nav,
+ * main landmark and footer. Pages pass section content + per-page SEO/JSON-LD.
+ */
+import "@/styles/tokens.css";
+import "@/styles/global.css";
+import geistWoff2 from "@/assets/fonts/geist-latin-wght-normal.woff2?url";
+
+import SEO from "@/components/seo/SEO.astro";
+import JsonLd from "@/components/seo/JsonLd.astro";
+import SiteNav from "@/components/sections/SiteNav.astro";
+import SiteFooter from "@/components/sections/SiteFooter.astro";
+import { site, absoluteUrl } from "@/data/site";
+
+export interface Props {
+  title: string;
+  description: string;
+  path: string;
+  robots?: string;
+  /** Additional JSON-LD nodes for this page (WebPage is added automatically). */
+  jsonLd?: Record<string, unknown>[];
+}
+
+const { title, description, path, robots, jsonLd = [] } = Astro.props;
+
+const graph: Record<string, unknown>[] = [
+  {
+    "@type": "Organization",
+    "@id": `${site.url}/#organization`,
+    name: site.name,
+    url: site.url,
+    logo: absoluteUrl("/icon-512.png"),
+  },
+  {
+    "@type": "WebSite",
+    "@id": `${site.url}/#website`,
+    url: site.url,
+    name: site.name,
+    description: site.description,
+    inLanguage: site.locale,
+    publisher: { "@id": `${site.url}/#organization` },
+  },
+  {
+    "@type": "WebPage",
+    "@id": absoluteUrl(path),
+    url: absoluteUrl(path),
+    name: title,
+    description,
+    inLanguage: site.locale,
+    isPartOf: { "@id": `${site.url}/#website` },
+  },
+  ...jsonLd,
+];
+
+const graphWithTypes = graph.map((node) => ({
+  "@context": "https://schema.org",
+  ...node,
+}));
+---
+
+<!doctype html>
+<html lang={site.lang}>
+  <head>
+    <SEO {title} {description} {path} {robots} />
+    <link rel="preload" href={geistWoff2} as="font" type="font/woff2" crossorigin />
+    <JsonLd data={graphWithTypes} />
+  </head>
+  <body class="page" data-loop="run">
+    <a class="skip" href="#main">Skip to content</a>
+    <SiteNav />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter />
+    <script>
+      import "@/scripts/main";
+    </script>
+  </body>
+</html>

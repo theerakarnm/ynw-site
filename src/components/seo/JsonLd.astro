@@ -1,0 +1,13 @@
+---
+/**
+ * Renders one JSON-LD script tag. Pass a schema.org node or a @graph array.
+ */
+interface Props {
+  data: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { data } = Astro.props;
+const json = JSON.stringify(data);
+---
+
+<script type="application/ld+json" set:html={json} />
