@@ -15,5 +15,12 @@ if (document.querySelector("[data-profile-form]")) {
 }
 
 if (document.querySelector(".hero-wave")) {
-  void import("./motion").then((m) => m.initMotion());
+  // The scroll story is a progressive enhancement; boot it on idle so page load
+  // stays interactive (TBT) and the static final-state render is never blocked.
+  const boot = () => void import("./motion").then((mod) => mod.initMotion());
+  if ("requestIdleCallback" in window) {
+    (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => void }).requestIdleCallback(boot, { timeout: 2000 });
+  } else {
+    setTimeout(boot, 200);
+  }
 }
