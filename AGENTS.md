@@ -8,6 +8,7 @@ Conventions for any coding agent working in this repo. Read `docs/ANALYSIS.md` f
 - `npm run build` - typecheck + production build to `dist/` (also regenerates `dist/_headers` with env-aware CSP; needs Node >= 22.23.4).
 - `npm run preview` - serve the build.
 - `npm run check` - `astro check` (TypeScript strict + Astro diagnostics).
+- `npm run deploy` - production build (canonical origin from shell env or `.env`) + `wrangler deploy` (assets-only worker on ynw.app, config in `wrangler.jsonc`).
 Commit small and often; one logical change per commit (docs, tokens, layout, sections, integration, pages, SEO, fixes). Never one giant commit.
 
 ## Structure map

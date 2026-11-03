@@ -86,11 +86,13 @@ The full API contract (source of truth, identical to the worker repo) is reprodu
 | Self-hosted fonts, preload critical weight | Done |
 | Lighthouse mobile 95+, LCP < 2.5s, CLS < 0.05, INP < 200ms | Done - mobile 99/100/100/100 (LCP 0.8s, CLS 0), desktop 100s; see docs/VERIFICATION.md |
 
-## Deploy (Cloudflare Pages)
+## Deploy (Cloudflare Workers, custom domain ynw.app)
 
-1. Push the repo; create a Pages project (framework preset "Astro", build `npm run build`, output `dist`).
-2. Set env vars `PUBLIC_SITE_URL`, `PUBLIC_API_BASE`, `PUBLIC_TURNSTILE_SITE_KEY` for production and preview.
-3. `public/_headers` ships CSP, XCTO, Referrer-Policy, Permissions-Policy and immutable caching for `_astro/*`. CSP `connect-src` allows only `PUBLIC_API_BASE` and `https://challenges.cloudflare.com`; the headers file is generated with the env values at build time via a postbuild step if the origin differs, otherwise keep them in sync manually.
+1. `npm run deploy` - builds with the canonical origin and runs `wrangler deploy`. Config lives in `wrangler.jsonc`: assets-only worker (`dist/`), 404-page handling, custom domain `ynw.app`.
+2. Env values: `.env` (gitignored) supplies `PUBLIC_SITE_URL=https://ynw.app` and `PUBLIC_API_BASE` at build time; both `astro.config.mjs` and `scripts/build-headers.mjs` fall back to `.env` when the shell env is empty. `PUBLIC_TURNSTILE_SITE_KEY` must be set before the form works against the real worker (see CONFIRM notes).
+3. Security and caching headers ship via `dist/_headers` (Workers static assets support it): CSP, XCTO, Referrer-Policy, Permissions-Policy, HSTS, immutable caching for `_astro/*`. CSP `connect-src` allows only the site origin, `PUBLIC_API_BASE` and the Turnstile origin.
+
+Deployed 2026-11-03: https://ynw.app (worker `ynw-site`, version after the sitemap canonical fix).
 
 ## Deviations from the reference
 

@@ -9,7 +9,19 @@ import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const dist = join(root, "dist");
-const apiBase = (process.env.PUBLIC_API_BASE ?? "").replace(/\/$/, "");
+
+// process.env wins; fall back to .env (Astro loads it for the build, plain node does not).
+let apiBase = (process.env.PUBLIC_API_BASE ?? "").replace(/\/$/, "");
+if (!apiBase) {
+  try {
+    const { readFileSync } = await import("node:fs");
+    const dotenv = readFileSync(join(root, ".env"), "utf8");
+    const match = dotenv.match(/^PUBLIC_API_BASE=(.*)$/m);
+    if (match) apiBase = match[1].trim().replace(/\/$/, "");
+  } catch {
+    /* no .env - dev default */
+  }
+}
 
 const csp = [
   "default-src 'self'",

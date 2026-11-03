@@ -47,3 +47,11 @@ Mobile: FCP 0.8s, LCP 0.8s, CLS 0, TBT 120ms, Speed Index 1.0s. Desktop: FCP 0.2
 2. Confirm target keywords and the final title line (current: keyword-derived, 57 chars).
 3. Replace /privacy placeholder copy and the contact address in `src/data/content.ts` (marked CONFIRM), and set the legal entity name in `src/data/site.ts`.
 4. Bump `consentVersion` in `src/data/site.ts` if consent wording changes.
+
+## Production deploy (2026-11-03)
+
+- Target: Cloudflare Workers (assets-only, worker `ynw-site`), custom domain `https://ynw.app`.
+- Live checks: 200 on /, /robots.txt, /sitemap-index.xml, /llms.txt, /manifest.webmanifest, /thanks; 404 page served for unknown paths; security headers (CSP, XCTO, Referrer-Policy, Permissions-Policy, HSTS) present on every response; `_astro/*` served immutable.
+- Canonical, og:url, robots.txt Sitemap line and sitemap URLs all read `https://ynw.app`.
+- Fix shipped with the deploy: `astro.config.mjs` and `scripts/build-headers.mjs` now fall back to `.env` for `PUBLIC_SITE_URL` / `PUBLIC_API_BASE` (Astro does not load `.env` at config-evaluation time, and the postbuild script is plain node; without the fallback the sitemap kept `example.com`).
+- Pending owner input: real `PUBLIC_TURNSTILE_SITE_KEY` (form cannot pass the real worker without it) and confirmation of `PUBLIC_API_BASE=https://api.ynw.app`.
