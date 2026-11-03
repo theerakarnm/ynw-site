@@ -1,0 +1,18 @@
+# build output
+dist/
+.astro/
+
+# deps
+node_modules/
+
+# env
+.env
+.env.production
+
+# reference mockup (read-only source material, not part of the site)
+_reference/
+
+# tooling scratch
+/verification/
+*.log
+.DS_Store
