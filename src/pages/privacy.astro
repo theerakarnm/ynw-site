@@ -1,0 +1,34 @@
+---
+/**
+ * Privacy page. Copy is placeholder - flagged CONFIRM in content.ts.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { privacy } from "@/data/content";
+import { site } from "@/data/site";
+
+const title = `Privacy - ${site.name}`;
+const description = "What the YNW wishlist page collects, why, and how to unsubscribe.";
+---
+
+<BaseLayout title={title} description={description} path="/privacy/">
+  <div class="page-shell page-shell--narrow">
+    <div class="page-eyebrow-row">
+      <span class="ynw-eyebrow">{privacy.eyebrow}</span>
+      <h1 class="page-title" id="h-privacy">{privacy.title}</h1>
+      <p class="page-updated">{privacy.updated}</p>
+      <p class="page-lead">{privacy.lead}</p>
+    </div>
+    <div class="page-prose">
+      {
+        privacy.sections.map((section) => (
+          <section>
+            <h2>{section.h}</h2>
+            {section.p.map((para) => (
+              <p>{para}</p>
+            ))}
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

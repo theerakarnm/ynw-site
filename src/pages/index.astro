@@ -1,0 +1,43 @@
+---
+/**
+ * Landing page. Composes the reference sections in order and adds the page
+ * JSON-LD (SoftwareApplication) plus the boot script via the layout.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProgressRail from "@/components/sections/ProgressRail.astro";
+import Hero from "@/components/sections/Hero.astro";
+import CapabilityTicker from "@/components/sections/CapabilityTicker.astro";
+import SceneAvatars from "@/components/sections/SceneAvatars.astro";
+import SceneAgents from "@/components/sections/SceneAgents.astro";
+import SceneBackstage from "@/components/sections/SceneBackstage.astro";
+import SceneApprovals from "@/components/sections/SceneApprovals.astro";
+import SceneReceipts from "@/components/sections/SceneReceipts.astro";
+import SceneWorkspace from "@/components/sections/SceneWorkspace.astro";
+import SceneWishlist from "@/components/sections/SceneWishlist.astro";
+import { site } from "@/data/site";
+
+const softwareApp = {
+  "@type": "SoftwareApplication",
+  name: site.name,
+  applicationCategory: "CommunicationApplication",
+  operatingSystem: "Web, iOS, Android",
+  description: site.description,
+  url: site.url,
+  offers: undefined, // pre-launch: no price, do not invent one
+  publisher: { "@id": `${site.url}/#organization` },
+};
+---
+
+<BaseLayout title={site.title} description={site.description} path="/" jsonLd={[softwareApp]}>
+  <ProgressRail />
+  <div id="run" class="run-anchor" tabindex="-1"></div>
+  <Hero />
+  <CapabilityTicker />
+  <SceneAvatars />
+  <SceneAgents />
+  <SceneBackstage />
+  <SceneApprovals />
+  <SceneReceipts />
+  <SceneWorkspace />
+  <SceneWishlist />
+</BaseLayout>

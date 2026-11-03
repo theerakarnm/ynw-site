@@ -1,0 +1,24 @@
+---
+/**
+ * Unsubscribe confirmation. Reached from the worker's one-click unsubscribe
+ * redirect. noindex.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { unsubscribed as c } from "@/data/content";
+import { site } from "@/data/site";
+
+const title = `Unsubscribed - ${site.name}`;
+---
+
+<BaseLayout title={title} description={c.lead} path="/unsubscribed/" robots="noindex, follow">
+  <div class="page-shell page-shell--narrow">
+    <div class="page-eyebrow-row">
+      <span class="ynw-eyebrow">{c.eyebrow}</span>
+      <h1 class="page-title">{c.title}</h1>
+      <p class="page-lead">{c.lead}</p>
+    </div>
+    <div class="profile-actions">
+      <a class="ynw-btn ynw-btn--secondary" href="/">{c.back}</a>
+    </div>
+  </div>
+</BaseLayout>

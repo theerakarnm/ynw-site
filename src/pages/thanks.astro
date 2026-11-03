@@ -1,0 +1,83 @@
+---
+/**
+ * /thanks - reached from the marketing worker's confirm redirect
+ * (?t=<profile_token>&pos=<n>&ref=<code>). Shows the wishlist position, a
+ * copyable referral link and an optional second-step profile form.
+ * noindex. Behavior in src/scripts/thanks-page.ts.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { thanks as c } from "@/data/content";
+import { site } from "@/data/site";
+
+const title = `You are on the wishlist - ${site.name}`;
+---
+
+<BaseLayout title={title} description={c.lead} path="/thanks/" robots="noindex, follow">
+  <div class="page-shell page-shell--narrow">
+    <div class="page-eyebrow-row">
+      <span class="ynw-eyebrow">{c.eyebrow}</span>
+      <h1 class="page-title">{c.title}</h1>
+      <p class="page-lead">{c.lead}</p>
+    </div>
+
+    <div class="ynw-approval thanks-panel">
+      <div class="ynw-approval-head">
+        <svg class="ynw-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg>
+        <span class="ynw-eyebrow">{c.eyebrow}</span>
+      </div>
+      <div class="ynw-approval-body">
+        <p class="thanks-position">
+          <span class="wl-square">▪</span> {c.positionLabel} ▪ <span data-thanks-pos> -</span>
+        </p>
+        <div class="profile-field">
+          <span class="ynw-label" id="ref-label">{c.referralLabel}</span>
+          <div class="ref-row">
+            <input class="ynw-input ref-input" type="text" readonly aria-labelledby="ref-label" data-thanks-ref />
+            <button class="ynw-btn ynw-btn--secondary" type="button" data-thanks-copy>{c.copy}</button>
+          </div>
+          <p class="ynw-mono">{c.referralHint}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-eyebrow-row">
+      <h2 class="page-title" style="font-size: 28px;">{c.profileTitle}</h2>
+      <p class="page-lead">{c.profileLead}</p>
+    </div>
+
+    <form class="wl thanks-profile" data-profile-form method="post" action="" novalidate>
+      <input type="hidden" name="token" value="" data-profile-token />
+      <div class="wl-hp" aria-hidden="true">
+        <label>Company <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+      </div>
+      <div class="profile-fields">
+        <div class="profile-field">
+          <label class="ynw-label" for="profile-name">{c.nameLabel}</label>
+          <input class="ynw-input" id="profile-name" name="name" type="text" autocomplete="name" maxlength="120" placeholder={c.namePlaceholder} />
+        </div>
+        <div class="profile-field">
+          <label class="ynw-label" for="profile-role">{c.roleLabel}</label>
+          <select id="profile-role" name="role">
+            <option value="">{c.rolePlaceholder}</option>
+            {c.roles.map((role) => <option value={role}>{role}</option>)}
+          </select>
+        </div>
+        <div class="profile-field">
+          <label class="ynw-label" for="profile-usecase">{c.useCaseLabel}</label>
+          <textarea id="profile-usecase" name="use_case_text" maxlength="1000" placeholder={c.useCasePlaceholder}></textarea>
+        </div>
+        <p class="wl-error" role="alert" data-profile-error></p>
+        <div class="profile-actions">
+          <button class="ynw-btn ynw-btn--primary ynw-btn--lg" type="submit" data-profile-save>
+            <span class="profile-save-idle">{c.save} <span class="arrow">→</span></span>
+            <span class="profile-save-busy" role="status" aria-live="polite">{c.saving}
+              <span class="ynw-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            </span>
+          </button>
+          <button class="profile-skip" type="button" data-profile-skip>{c.skip}</button>
+        </div>
+        <noscript><p class="wl-noscript">{c.saveError}</p></noscript>
+      </div>
+    </form>
+  </div>
+</BaseLayout>

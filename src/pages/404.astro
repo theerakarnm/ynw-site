@@ -1,0 +1,22 @@
+---
+/**
+ * 404. noindex. Keeps the reference's design language.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { notFound as c } from "@/data/content";
+
+const title = `${c.title} - 404`;
+---
+
+<BaseLayout title={title} description={c.lead} path="/404" robots="noindex, follow">
+  <div class="page-shell page-shell--narrow">
+    <div class="page-eyebrow-row">
+      <span class="ynw-eyebrow">{c.code}</span>
+      <h1 class="page-title">{c.title}</h1>
+      <p class="page-lead">{c.lead}</p>
+    </div>
+    <div class="profile-actions">
+      <a class="ynw-btn ynw-btn--primary" href="/">{c.back} <span class="arrow">→</span></a>
+    </div>
+  </div>
+</BaseLayout>
