@@ -32,7 +32,7 @@ export interface WishlistPayload {
 
 export type WishlistErrorCode = "invalid_email" | "invalid_input" | "consent_required" | "turnstile_failed" | "rate_limited";
 
-export type WishlistResult = { ok: true; next: "check_email" };
+export type WishlistResult = { ok: true; next: "joined" };
 
 export interface ProfilePayload {
   token: string;
@@ -96,7 +96,7 @@ async function mockWishlist(payload: WishlistPayload): Promise<WishlistResult> {
   if (!payload.consent_marketing) throw new ApiError(400, "consent_required");
   if (!payload.turnstile_token && turnstileSiteKey) throw new ApiError(400, "turnstile_failed");
   // Honeypot silently "succeeds" on the real worker too.
-  return { ok: true, next: "check_email" };
+  return { ok: true, next: "joined" };
 }
 
 /* ---------- public API ---------- */
@@ -110,7 +110,7 @@ export async function submitWishlist(payload: WishlistPayload): Promise<Wishlist
   } catch {
     /* non-JSON error body -> network-classified below */
   }
-  if (res.ok && data.ok) return { ok: true, next: "check_email" };
+  if (res.ok && data.ok) return { ok: true, next: "joined" };
   if (res.status === 400 || res.status === 429) {
     throw new ApiError(res.status, data.error ?? "invalid_input");
   }

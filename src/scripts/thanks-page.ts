@@ -35,6 +35,12 @@ export function initThanksPage(): void {
     }
   });
 
+  // Without a profile token there is nothing to save, so the optional step is not offered.
+  if (!token) {
+    form?.remove();
+    document.querySelector("[data-profile-intro]")?.remove();
+    return;
+  }
   if (!form) return;
   form.querySelector<HTMLInputElement>("[data-profile-token]")!.value = token;
   const busyBtn = form.querySelector<HTMLButtonElement>("[data-profile-save]")!;

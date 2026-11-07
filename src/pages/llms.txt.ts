@@ -11,7 +11,7 @@ const GET: APIRoute = () => {
 
 YNW is an agentic chat product. This site is its pre-launch landing page: the
 product story (avatars, agents, backstage, approvals, receipts, workspace), the
-capability list, and a wishlist signup with double opt-in email confirmation.
+capability list, and a wishlist signup with a welcome email.
 
 ## Pages
 

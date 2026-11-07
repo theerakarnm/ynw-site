@@ -1,7 +1,7 @@
 ---
 /**
- * /thanks - reached from the marketing worker's confirm redirect
- * (?t=<profile_token>&pos=<n>&ref=<code>). Shows the wishlist position, a
+ * /thanks - reached from the link in the welcome email
+ * (?t=<profile_token>&pos=<n>&ref=<code>); old confirm links arrive without t. Shows the wishlist position, a
  * copyable referral link and an optional second-step profile form.
  * noindex. Behavior in src/scripts/thanks-page.ts.
  */
@@ -40,7 +40,7 @@ const title = `You are on the wishlist - ${site.name}`;
       </div>
     </div>
 
-    <div class="page-eyebrow-row">
+    <div class="page-eyebrow-row" data-profile-intro>
       <h2 class="page-title" style="font-size: 28px;">{c.profileTitle}</h2>
       <p class="page-lead">{c.profileLead}</p>
     </div>

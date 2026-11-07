@@ -172,7 +172,7 @@ export const footer = {
 export const thanks = {
   eyebrow: "WAITING FOR YOU",
   title: "You are on the wishlist.",
-  lead: "Confirm your email if you have not yet - your spot and referral link are live.",
+  lead: "Your spot and referral link are live.",
   positionLabel: "Wishlist position",
   referralLabel: "Your referral link",
   referralHint: "Every friend who joins through your link moves you up.",
