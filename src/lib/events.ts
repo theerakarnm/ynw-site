@@ -1,20 +1,21 @@
 /**
  * Lightweight product events -> POST /v1/events.
- * Batching: events queue and flush together (one beacon per event, fired in
- * one flush - the endpoint takes a single event per request). Transport is
+ * Batching: events queue and flush together as one JSON array per beacon
+ * (the endpoint takes 1-20 events per request). Transport is
  * navigator.sendBeacon with a JSON string body (text/plain content type, the
- * reliable beacon path), falling back to fetch keepalive.
+ * reliable beacon path), falling back to fetch.
  * Respect Do Not Track: when enabled, no events are sent at all.
  */
 import { apiBase } from "@/data/site";
-import { sendEvent } from "./api";
+import { sendEvent, type EventName } from "./api";
 import { getAttribution } from "./attribution";
 
 const SID_KEY = "ynw.sid";
 const FLUSH_MS = 2_000;
+const MAX_BATCH = 20;
 
 interface QueuedEvent {
-  name: string;
+  name: EventName;
   props?: Record<string, unknown>;
   session_id: string;
   attribution: ReturnType<typeof getAttribution>;
@@ -41,7 +42,7 @@ function sessionId(): string {
   }
 }
 
-export function track(name: string, props?: Record<string, unknown>): void {
+export function track(name: EventName, props?: Record<string, unknown>): void {
   if (!trackingAllowed()) return;
   queue.push({ name, props, session_id: sessionId(), attribution: getAttribution() });
   if (timer === null) timer = setTimeout(flush, FLUSH_MS);
@@ -54,17 +55,13 @@ export function flush(): void {
   }
   const events = queue;
   queue = [];
-  if (!apiBase) {
-    // Mock mode (dev): swallow events locally instead of beaconing at same-origin /v1.
-    for (const event of events) void sendEvent(event);
-    return;
-  }
-  for (const event of events) {
-    const body = JSON.stringify(event);
-    if (typeof navigator.sendBeacon === "function") {
-      navigator.sendBeacon(`${apiBase}/v1/events`, body);
+  for (let i = 0; i < events.length; i += MAX_BATCH) {
+    const batch = events.slice(i, i + MAX_BATCH);
+    // Mock mode (no apiBase) goes through sendEvent, which logs instead of beaconing at same-origin /v1.
+    if (apiBase && typeof navigator.sendBeacon === "function") {
+      navigator.sendBeacon(`${apiBase}/v1/events`, JSON.stringify(batch));
     } else {
-      void sendEvent(event);
+      void sendEvent(batch);
     }
   }
 }

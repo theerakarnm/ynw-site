@@ -16,11 +16,14 @@ The design reference lives in `_reference/` (read-only, never deployed). `docs/A
 
 ```bash
 npm install
-cp .env.example .env   # optional: point PUBLIC_API_BASE at the marketing worker
+(cd ../ynw-marketing-worker && npm run dev)   # local worker on http://localhost:8787, in its own terminal
 npm run dev
 ```
 
-Without `PUBLIC_API_BASE` the site runs against a built-in mock API (success, every error state and latency simulated) so the form is fully testable offline.
+`npm run dev` reads `.env.development` (committed, no secrets): `PUBLIC_API_BASE=http://localhost:8787` and Cloudflare's always-pass Turnstile test site key, which pairs with the worker's dev test secret.
+Dev values override `.env`, which holds the production values used by `npm run build`.
+For the built-in mock API instead (success, every error state and latency simulated, no worker needed), put `PUBLIC_API_BASE=` in `.env.development.local` (gitignored).
+The local worker sends real SMTP with its `.dev.vars` password; start it with `npx wrangler dev --var SMTP_HOST:127.0.0.1` to keep emails from leaving the machine.
 
 Requires Node >= 22.23.4 (Astro 7). With nvm: `nvm install 24 && nvm use 24`.
 
@@ -46,10 +49,10 @@ Requires Node >= 22.23.4 (Astro 7). With nvm: `nvm install 24 && nvm use 24`.
 | Variable | Purpose |
 | --- | --- |
 | `PUBLIC_SITE_URL` | Canonical site origin (canonical URLs, sitemap, referral links). Default `https://example.com` until the owner sets the real domain. |
-| `PUBLIC_API_BASE` | Marketing worker base URL, e.g. `https://api.example.com`. Unset in dev = mock API. |
-| `PUBLIC_TURNSTILE_SITE_KEY` | Cloudflare Turnstile site key. Unset in dev = widget skipped, empty token sent (mock accepts). |
+| `PUBLIC_API_BASE` | Marketing worker base URL: `https://api-marketing.ynw.app` in `.env`, `http://localhost:8787` in `.env.development`. Empty = mock API. |
+| `PUBLIC_TURNSTILE_SITE_KEY` | Cloudflare Turnstile site key. Dev uses the test key `1x00000000000000000000AA`. Empty = widget skipped, empty token sent (mock accepts). |
 
-Copy `.env.example` to `.env` for local dev. Values are compile-time (`import.meta.env`); nothing is hardcoded anywhere - this is a hard rule (see AGENTS.md).
+Copy `.env.example` to `.env` and fill in the production values before `npm run build`. Values are compile-time (`import.meta.env`); nothing is hardcoded anywhere - this is a hard rule (see AGENTS.md).
 
 ## Wishlist form integration (front-end only)
 
@@ -58,8 +61,8 @@ The page does not include a backend. It talks to the existing marketing worker:
 - `POST {PUBLIC_API_BASE}/v1/wishlist` - email, `lang`, `consent_marketing`, `consent_version`, `turnstile_token`, honeypot `company`, `variant` (form source: `hero` / `closing`), `referred_by` (from `?ref=`), and the full `attribution` object. Success (`next: "check_email"`) swaps the form to the reference success pane ("On the wishlist ▪ time") and fires the hero wave crest. Errors (`invalid_email`, `consent_required`, `turnstile_failed`, `rate_limited`, network) render inline, `aria-live="polite"`, localized. A filled honeypot pretends success. An existing email shows the same success state (never revealed).
 - Attribution (`src/lib/attribution.ts`): first touch wins, 30-day first-party cookie + sessionStorage mirror; captures utm_source/medium/campaign/content/term, referrer, landing path, fbclid, gclid, ttclid; `?ref=` maps to `referred_by`.
 - Turnstile: script loads lazily on first focus of any email field; invisible/explicit render; token attached at submit.
-- Events (`src/lib/events.ts`): `cta_click`, `form_view`, `form_start`, `form_submit` (+ `use_case_pick` from the chips) batched via `navigator.sendBeacon` to `POST /v1/events`, skipped when the user has Do Not Track enabled. The only cookie ever set is the attribution cookie.
-- `/thanks?t=<profile_token>&pos=<n>&ref=<code>` - position number, copyable referral link `{SITE_URL}/?ref={code}`, and a skippable second-step form (name, role, "what do you need?") posting to `/v1/wishlist/profile` with the token. `noindex`.
+- Events (`src/lib/events.ts`): `cta_click`, `form_view`, `form_start`, `form_submit` (a use-case chip pick is `cta_click` with `props.id = "use_case_pick"`, because the worker allowlists event names) batched as one JSON array per `navigator.sendBeacon` to `POST /v1/events`, skipped when the user has Do Not Track enabled. The only cookie ever set is the attribution cookie.
+- `/thanks/?t=<profile_token>&pos=<n>&ref=<code>` - position number, copyable referral link `{SITE_URL}/?ref={code}`, and a skippable second-step form (name, role, "what do you need?") posting to `/v1/wishlist/profile` with the token. `noindex`.
 - `/unsubscribed` - confirmation page, `noindex`.
 
 The full API contract (source of truth, identical to the worker repo) is reproduced in `AGENTS.md` and typed in `src/lib/api.ts`.

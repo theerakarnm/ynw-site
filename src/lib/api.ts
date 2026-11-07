@@ -41,8 +41,11 @@ export interface ProfilePayload {
   use_case_text?: string;
 }
 
+/** The worker drops any other name (still 204), so the type pins the allowlist. */
+export type EventName = "cta_click" | "scroll_depth" | "form_view" | "form_start" | "form_submit";
+
 export interface EventPayload {
-  name: string;
+  name: EventName;
   props?: Record<string, unknown>;
   session_id: string;
   attribution: Attribution;
@@ -124,7 +127,7 @@ export async function submitProfile(payload: ProfilePayload): Promise<void> {
 }
 
 /** Events are fire-and-forget; failures are intentionally swallowed. */
-export async function sendEvent(payload: EventPayload): Promise<void> {
+export async function sendEvent(payload: EventPayload | EventPayload[]): Promise<void> {
   if (!apiBase) {
     if (import.meta.env.DEV) console.debug("[mock /v1/events]", payload);
     return;

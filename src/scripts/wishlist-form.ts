@@ -127,12 +127,13 @@ export function initWishlistForms(): void {
     });
 
     // Use-case chips: first pick locks in (reference behavior) and fires an event.
+    // The worker allowlists event names, so the pick rides on cta_click.
     el.querySelectorAll<HTMLButtonElement>(".wl-chip").forEach((chip) => {
       chip.addEventListener("click", () => {
         const already = el.querySelector('.wl-chip[aria-pressed="true"]');
         if (already) return;
         chip.setAttribute("aria-pressed", "true");
-        track("use_case_pick", { label: chip.dataset.useCase, source: r.form.dataset.source });
+        track("cta_click", { id: "use_case_pick", label: chip.dataset.useCase, source: r.form.dataset.source });
       });
     });
   }

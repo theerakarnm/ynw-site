@@ -129,3 +129,16 @@ Key mechanics:
 - The use-case chips post a `use_case_pick` event to `/v1/events` (the contract has no dedicated use-case endpoint).
 - Target platform: Cloudflare Pages (`_headers` for CSP/caching), env vars via Astro `import.meta.env` with `PUBLIC_` prefix.
 - The mock dev API in `src/lib/api.ts` activates only when `PUBLIC_API_BASE` is unset.
+
+## Worker integration findings (2026-11-08)
+
+Verified end to end against the local marketing worker (`wrangler dev`, local D1) with Playwright and Chrome: signup -> confirm redirect -> `/thanks/` position and referral link -> profile save, all rows checked in D1.
+
+- `npm run dev` used to read the production `.env`, so a local dev session posted to `https://api-marketing.ynw.app`.
+  The wishlist POST failed CORS (the production worker allows only `https://ynw.app`), Turnstile failed with error 110200 (the production site key does not allow `localhost`), and the `text/plain` event beacons reached the production `events` table.
+  Fix: a committed `.env.development` points dev at `http://localhost:8787` with Cloudflare's always-pass Turnstile test site key.
+- Supersedes the rebuild decision above: the worker allowlists event names and drops `use_case_pick` silently (still `204`).
+  A chip pick is now `cta_click` with `props.id = "use_case_pick"`, and `EventName` in `src/lib/api.ts` pins the allowlist at compile time.
+- The `/thanks/` profile textarea allowed 1000 characters while the worker caps `use_case_text` at 500, so a long answer failed with `400 invalid_input`. The textarea now caps at 500.
+- `/v1/events` takes an array of 1-20 events, so each flush now sends one beacon instead of one per event.
+- The worker's wishlist limit is 5 per hour per IP; the rate-limit message now says "Try again in an hour" instead of "in a minute".

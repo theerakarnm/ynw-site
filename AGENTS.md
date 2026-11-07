@@ -4,7 +4,7 @@ Conventions for any coding agent working in this repo. Read `docs/ANALYSIS.md` f
 
 ## Commands
 
-- `npm run dev` - dev server (mock API active unless `PUBLIC_API_BASE` is set).
+- `npm run dev` - dev server against the local marketing worker (`.env.development`: `http://localhost:8787` + Turnstile test key). Start `npm run dev` in `../ynw-marketing-worker` first, or set `PUBLIC_API_BASE=` in `.env.development.local` for the built-in mock.
 - `npm run build` - typecheck + production build to `dist/` (also regenerates `dist/_headers` with env-aware CSP; needs Node >= 22.23.4).
 - `npm run preview` - serve the build.
 - `npm run check` - `astro check` (TypeScript strict + Astro diagnostics).
@@ -69,10 +69,10 @@ All routes under `/v1`, JSON, CORS restricted to the site origin. The typed clie
 - `POST /v1/wishlist`
   - body: `{ email, lang?, consent_marketing, consent_version, turnstile_token, company, variant?, referred_by?, attribution: { utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, landing_path, fbclid, gclid, ttclid } }`
   - `200 { ok: true, next: "check_email" }` | `400 { ok: false, error: "invalid_email" | "invalid_input" | "consent_required" | "turnstile_failed" }` | `429 { ok: false, error: "rate_limited" }`
-- `GET /v1/confirm?token=` - backend redirects to `SITE_URL/thanks?t=<profile_token>&pos=<n>&ref=<code>`
-- `POST /v1/wishlist/profile` - body `{ token, name?, role?, use_case_text? }` -> `200 { ok: true }`
+- `GET /v1/confirm?token=` - backend redirects to `SITE_URL/thanks/?t=<profile_token>&pos=<n>&ref=<code>`
+- `POST /v1/wishlist/profile` - body `{ token, name?, role?, use_case_text? (max 500) }` -> `200 { ok: true }` | `400 { ok: false, error: "invalid_input" | "invalid_token" }`
 - `POST /v1/contact` - body `{ name, email, message, turnstile_token, company }` -> `200 { ok: true }`
-- `POST /v1/events` - body `{ name, props?, session_id, attribution }` -> `204`
+- `POST /v1/events` - body `{ name, props?, session_id, attribution }` or an array of 1-20 of them -> `204` always. `name` is allowlisted: `cta_click` | `scroll_depth` | `form_view` | `form_start` | `form_submit`; other names are dropped silently, so new signals ride on `cta_click` with `props.id`. `props`: max 10 keys, string values max 200 chars.
 - `GET|POST /v1/unsubscribe?token=`
 
 Behavior rules: honeypot `company` filled -> pretend success. Never reveal whether an email already exists (always the success state). Events use `navigator.sendBeacon`, batched, no cookies beyond the attribution cookie, skipped when DNT is enabled. Turnstile loads lazily on first focus of an email field.
