@@ -1,0 +1,107 @@
+---
+/**
+ * /support tiers: thank-you gift cards (For you / For shops and teams) and the
+ * free-wishlist strip. One-time prices in USD; every card links to Buy Me a Coffee.
+ */
+import { support } from "@/data/content";
+import { donateUrl } from "@/data/site";
+
+const t = support.tiers;
+const you = t.list.filter((tier) => ["01", "02", "03"].includes(tier.index));
+const teams = t.list.filter((tier) => ["04", "05"].includes(tier.index));
+const ctaId = (name: string) => `sp_tier_${name.toLowerCase().replace(/\s+/g, "_")}`;
+---
+
+<section id="tiers" class="sp-section" aria-labelledby="sp-tiers-title">
+  <header class="ynw-section-head">
+    <div class="ynw-section-head-row">
+      <span class="ynw-eyebrow"><b>{t.eyebrowNum}</b>/{t.eyebrow}</span>
+      <span class="ynw-mono">{support.funding.coffeeLabel}</span>
+    </div>
+    <h2 class="ynw-h2" id="sp-tiers-title">{t.title}</h2>
+    <p>{t.lead}</p>
+  </header>
+
+  <span class="ynw-eyebrow">{t.youLabel}</span>
+  <div class="sp-tier-grid">
+    {
+      you.map((tier) => (
+        <article class:list={["ynw-card", "sp-tier", { "sp-tier--hl": "highlight" in tier }]}>
+          <div class="ynw-card-top">
+            <span class="ynw-card-index">{tier.index}</span>
+            <span class="ynw-badge ynw-badge--plain">{tier.badge}</span>
+          </div>
+          <h3 class="ynw-h4">{tier.name}</h3>
+          <div class="sp-price">
+            <span class="sp-price-num">{tier.price}</span>
+            <span class="ynw-mono">{t.oneTime}</span>
+          </div>
+          <p>{tier.blurb}</p>
+          {"plusLine" in tier && <p class="sp-plus">{tier.plusLine}</p>}
+          <ul class="ynw-list">
+            {tier.items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+          <a
+            class="ynw-btn ynw-btn--secondary sp-choose"
+            href={donateUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cta="bmc"
+            data-cta-id={ctaId(tier.name)}
+          >
+            {tier.cta}
+          </a>
+        </article>
+      ))
+    }
+  </div>
+
+  <span class="ynw-eyebrow sp-tier-label--gap">{t.teamsLabel}</span>
+  <div class="sp-tier-grid sp-tier-grid--teams">
+    {
+      teams.map((tier) => (
+        <article class="ynw-card sp-tier">
+          <div class="ynw-card-top">
+            <span class="ynw-card-index">{tier.index}</span>
+            <span class="ynw-badge ynw-badge--plain">{tier.badge}</span>
+          </div>
+          <h3 class="ynw-h4">{tier.name}</h3>
+          <div class="sp-price">
+            <span class="sp-price-num">{tier.price}</span>
+            <span class="ynw-mono">{t.oneTime}</span>
+          </div>
+          <p>{tier.blurb}</p>
+          {"plusLine" in tier && <p class="sp-plus">{tier.plusLine}</p>}
+          <ul class="ynw-list">
+            {tier.items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+          <a
+            class="ynw-btn ynw-btn--secondary sp-choose"
+            href={donateUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cta="bmc"
+            data-cta-id={ctaId(tier.name)}
+          >
+            {tier.cta}
+          </a>
+        </article>
+      ))
+    }
+  </div>
+
+  <div id="wishlist" class="sp-strip">
+    <div class="sp-strip-copy">
+      <span class="ynw-eyebrow"><b>{support.wishlistStrip.eyebrowNum}</b>/{support.wishlistStrip.eyebrow}</span>
+      <span class="sp-strip-title">{support.wishlistStrip.title}</span>
+      <span class="sp-strip-lead">{support.wishlistStrip.lead}</span>
+    </div>
+    <a class="ynw-btn ynw-btn--secondary" href="/#wishlist" data-cta="wishlist" data-cta-id="sp_strip_wishlist">
+      {support.wishlistStrip.cta} <span class="arrow">→</span>
+    </a>
+  </div>
+</section>

@@ -1,19 +1,51 @@
 ---
 /**
- * Site footer: three slogan lines, lockup, privacy link.
+ * Site footer (reference support-round Main.dc.html): slogan + Support YNW and
+ * Links columns, bar with copyright + payments note, giant YNW mark.
+ * On /support the support links are same-page anchors; elsewhere they point at
+ * /support/#... and Wishlist at the landing page's form.
  */
-import LogoLockup from "@/components/ui/LogoLockup.astro";
 import { footer } from "@/data/content";
+import { donateUrl } from "@/data/site";
+
+interface Props {
+  /** True on /support (same-page anchors for the support column). */
+  support?: boolean;
+}
+
+const { support = false } = Astro.props;
+
+const supportHref = (hash: string) => (support ? `#${hash}` : `/support/#${hash}`);
+const wishlistHref = support ? "#wishlist" : "/#wishlist";
 ---
 
-<footer class="site-footer">
-  <div class="site-footer-in">
+<footer class="ynw-footer">
+  <div class="ynw-footer-cols">
     <div class="ynw-slogan">
       {footer.slogan.map((line) => <span>{line}</span>)}
     </div>
-    <div class="site-footer-end">
-      <LogoLockup />
-      <a class="site-privacy" href="/privacy/">{footer.privacy}</a>
+    <div>
+      <h6 class="ynw-eyebrow">{footer.supportTitle}</h6>
+      {
+        footer.supportLinks.map((link) => (
+          <a href={supportHref(link.hash)} data-cta="anchor" data-cta-id={`footer_${link.hash}`}>
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+    <div>
+      <h6 class="ynw-eyebrow">{footer.linksTitle}</h6>
+      <a href={donateUrl} target="_blank" rel="noopener noreferrer" data-cta="bmc" data-cta-id="footer_bmc">
+        {footer.bmc}
+      </a>
+      <a href={wishlistHref} data-cta="wishlist" data-cta-id="footer_wishlist">{footer.wishlist}</a>
+      <a href="/privacy/" data-cta="page" data-cta-id="footer_privacy">{footer.privacy}</a>
     </div>
   </div>
+  <div class="ynw-footer-bar">
+    <span class="ynw-mono">{footer.copyright}</span>
+    <span class="ynw-mono">{footer.payments}</span>
+  </div>
+  <div class="ynw-wordmark ynw-footer-mark" aria-hidden="true">{footer.mark}</div>
 </footer>

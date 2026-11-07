@@ -1,0 +1,25 @@
+---
+/**
+ * /support - founding round page (Buy Me a Coffee tiers, how-to, FAQ).
+ * Ported from _reference/support-round/Main.dc.html; copy in content.ts.
+ * Static page: no motion module, no forms. Placeholders marked CONFIRM.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SupportHero from "@/components/sections/SupportHero.astro";
+import SupportTiers from "@/components/sections/SupportTiers.astro";
+import SupportHow from "@/components/sections/SupportHow.astro";
+import SupportFaq from "@/components/sections/SupportFaq.astro";
+import SupportClosing from "@/components/sections/SupportClosing.astro";
+
+const title = "Support YNW - Founding Round";
+const description =
+  "Help us build YNW. Join the founding round at any level: thank-you gifts for early backers, from one coffee to founding partner.";
+---
+
+<BaseLayout title={title} description={description} path="/support/" support>
+  <SupportHero />
+  <SupportTiers />
+  <SupportHow />
+  <SupportFaq />
+  <SupportClosing />
+</BaseLayout>
