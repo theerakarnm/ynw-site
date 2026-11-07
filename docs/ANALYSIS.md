@@ -129,3 +129,31 @@ Key mechanics:
 - The use-case chips post a `use_case_pick` event to `/v1/events` (the contract has no dedicated use-case endpoint).
 - Target platform: Cloudflare Pages (`_headers` for CSP/caching), env vars via Astro `import.meta.env` with `PUBLIC_` prefix.
 - The mock dev API in `src/lib/api.ts` activates only when `PUBLIC_API_BASE` is unset.
+
+
+---
+
+## Support YNW - founding round reference (analyzed 2026-11-07)
+
+Second design reference for the site: `_reference/support-round/` ("Support YNW - founding round", design-tool export in the same format as the landing mockup - `Main.dc.html` + `ds/ynw/components/bundle.css` + mockup runtime). Same design system, same tokens; the site's `tokens.css` already matched 1:1.
+
+### Page inventory (in order)
+
+1. **Nav** - in-flow (not fixed), wraps on narrow widths: text wordmark, anchor links (Tiers / How to donate / FAQ), `ynw-btn--secondary ynw-btn--sm` "Support YNW" -> `https://buymeacoffee.com/worknarairn`.
+2. **Hero header** - bottom-anchored 4-path accent contour SVG (280px, opacity 0.35, non-scaling strokes); eyebrow "00/Founding round"; h1 "Help us build YNW." + muted block line "Join early, at any level." (clamp 40-64px, -0.04em); 18px lead; primary "Buy us a coffee" (coffee icon) + ghost "How to donate ->". Right: funding card (surface, 24px padding): "Founding round" + success badge "Open", `$[RAISED]` (40px) toward `$[GOAL]`, 20-segment meter (`i.on` per 5% raised, role=img), "[N] backers so far" / "1 coffee = $5".
+3. **Tiers** (`#tiers`, 96px rhythm) - section head (border-top, 720px) with eyebrow row + mono "1 coffee = $5"; "For you": 3 cards (Supporter $5 "1 coffee", Early Bird $15 "3 coffees · First 300" with "Everything in Supporter, plus", Founder $40 "8 coffees" border-control highlight, "Everything in Early Bird, plus"); "For shops and teams" (label +16px): Business Founder $125 "25 coffees", Founding Partner $500+ "100+ coffees · 10-20 partners". Card anatomy: card-top (index + plain badge), `ynw-h4` name, 40px price + mono "one-time", blurb, optional mono 12px plus-line, square-bullet `ynw-list`, bottom-pinned secondary "Choose X" -> BMC. Then the **wishlist strip** (`#wishlist`, dashed border): "00/Wishlist · Free", "Just want to follow along? The wishlist is free.", secondary "Join the wishlist ->" -> `[WISHLIST URL]`.
+4. **How to donate** (`#how`) - 4 numbered step cards (3rd highlighted: type the wishlist email in BMC's Name field, tick "Make this message private") + example figure card: coffees badges 1/3/8 (8 accent), readonly Name "you@example.com" + hint, readonly Message "Founder" + hint, checked+disabled private checkbox, Total $40.
+5. **FAQ** (`#faq`) - 2-col `dl` grid, hairline tops, 4 Q&As ("[BETA DATE]" placeholder in the last).
+6. **Closing CTA** - surface card (radius-lg, 40px padding): "Your Next Wave" eyebrow, 28px "Thanks for being here early.", secondary lg "Buy us a coffee".
+7. **Footer** (new design, supersedes the landing's compact footer) - `ynw-footer-cols` (auto-fit minmax(180px,1fr), 1280px): slogan; "Support YNW" column (Tiers/How/FAQ); "Links" column (Buy Me a Coffee external, Wishlist -> #wishlist); `ynw-footer-bar` "© 2026 Eukron team" + "Payments by Buy Me a Coffee · Prices in USD"; giant text wordmark mark (clamp 120-320px, `--surface-hover`, -0.2em crop).
+
+### Port decisions (2026-11-07)
+
+- New route `/support/` (`src/pages/support.astro`) composed of `SupportHero / SupportTiers / SupportHow / SupportFaq / SupportClosing` sections; all copy in `content.ts` (`support` object); BMC URL as brand data `donateUrl` in `site.ts`. Static page - the reference ships no motion, so no JS was added beyond the global boot.
+- Design-system primitives the landing never needed were ported from the bundle: `.ynw-h4`, `.ynw-btn--ghost`, `.ynw-section-head-row`, `.ynw-meter-seg`, `.ynw-field`, `.ynw-hint`, `.ynw-choice`, `.ynw-nav-links`, `.ynw-wordmark`; support-specific layout under `sp-*` classes in a new "Support page" banner section.
+- The reference's data placeholders are kept verbatim and flagged `// CONFIRM` (`$[RAISED]`, `$[GOAL]`, `[N] backers`, `[N] days`, `[BETA DATE]`, `raisedPct`). No numbers were invented (AGENTS hard rule); the meter ships 0 lit.
+- Nav: the site keeps its fixed 56px SiteNav; on /support it gains the reference's anchor links (hidden < 768px - the fixed bar has no room; the reference's in-flow nav wraps instead) and swaps the CTA to the sm "Support YNW" BMC link. The hero's top padding (128px = 56px nav + 72px reference padding) lands content at the reference's y-position.
+- Footer: `SiteFooter` was rewritten to the reference footer and now renders on every page (it is the shared BaseLayout footer). Support column links are same-page anchors on /support and `/support/#...` elsewhere; Wishlist points at the landing's `#wishlist` scene; Privacy stays as a third Links entry (the site's forms link to /privacy; the reference footer has no privacy link). The old `.site-footer*` rules were removed.
+- Landing page: ghost lg CTA "Support the founding round ->" -> `/support/` under the hero wishlist form (stays visible after the form's success swap).
+- Events: the `cta_click` tracker in `wishlist-form.ts` now covers every `[data-cta]` element with `data-cta-id` (nav wishlist keeps id `nav_wishlist`; new ids: `hero_support`, `sp_hero_bmc`, `sp_hero_how`, `sp_tier_*`, `sp_strip_wishlist`, `sp_close_bmc`, `nav_bmc`, `footer_*`).
+- Verification summary in docs/VERIFICATION.md ("Support page (founding round)").
