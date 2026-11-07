@@ -1,8 +1,9 @@
 ---
 /**
- * Hero: glow, LED-wave canvas, giant wordmark, copy block and the first
- * wishlist form. Canvas is painted by motion.ts only when JS runs; the static
- * page shows the radial glow + copy so no-JS still renders the hero.
+ * Hero: glow, LED-wave canvas, giant wordmark, copy block, the first wishlist
+ * form and a ghost link to the founding-round page. Canvas is painted by
+ * motion.ts only when JS runs; the static page shows the radial glow + copy so
+ * no-JS still renders the hero.
  */
 import LogoWordmark from "@/components/ui/LogoWordmark.astro";
 import WishlistForm from "@/components/forms/WishlistForm.astro";
@@ -31,5 +32,8 @@ import { hero } from "@/data/content";
     </h1>
     <p class="hero-lead">{hero.lead}</p>
     <WishlistForm source="hero" />
+    <a class="ynw-btn ynw-btn--ghost ynw-btn--lg hero-support" href="/support/" data-cta="support" data-cta-id="hero_support">
+      {hero.supportCta} <span class="arrow">→</span>
+    </a>
   </div>
 </section>
