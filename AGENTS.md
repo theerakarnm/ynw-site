@@ -13,13 +13,13 @@ Commit small and often; one logical change per commit (docs, tokens, layout, sec
 
 ## Structure map
 
-- `src/pages/` - one file per route (`index`, `thanks`, `unsubscribed`, `privacy`, `404`). Pages compose sections and set per-page SEO props.
+- `src/pages/` - one file per route (`index`, `support`, `thanks`, `unsubscribed`, `privacy`, `404`). Pages compose sections and set per-page SEO props; `/support/` (founding round) passes `support` to the layout for the nav variant.
 - `src/layouts/BaseLayout.astro` - the only layout: `<html>`, head via `SEO.astro` + `JsonLd.astro`, font preloads, skip link, global styles, page scripts.
 - `src/components/seo/` - `SEO.astro` (all meta), `JsonLd.astro` (schema.org graph).
-- `src/components/sections/` - page sections in reference order (`SiteNav`, `ProgressRail`, `Hero`, `CapabilityTicker`, `SceneAvatars`, `SceneAgents`, `SceneBackstage`, `SceneApprovals`, `SceneReceipts`, `SceneWorkspace`, `SceneWishlist`, `SiteFooter`).
+- `src/components/sections/` - page sections in reference order (`SiteNav`, `ProgressRail`, `Hero`, `CapabilityTicker`, `SceneAvatars`, `SceneAgents`, `SceneBackstage`, `SceneApprovals`, `SceneReceipts`, `SceneWorkspace`, `SceneWishlist`, then the static `/support/` sections `SupportHero`, `SupportTiers`, `SupportHow`, `SupportFaq`, `SupportClosing`, and `SiteFooter`).
 - `src/components/ui/` - primitives reused inside sections (`Avatar`, `Icon`, `LogoLockup`, `LogoWordmark`).
 - `src/components/forms/WishlistForm.astro` - one form component used twice (hero + closing), plus the client module `src/scripts/wishlist-form.ts`.
-- `src/data/site.ts` - site config: brand, canonical URL, SEO defaults, keywords, consent version, env plumbing.
+- `src/data/site.ts` - site config: brand, canonical URL, SEO defaults, keywords, consent version, env plumbing, `donateUrl` (Buy Me a Coffee).
 - `src/data/content.ts` - ALL copy. No user-visible string may live in a component or layout.
 - `src/styles/tokens.css` - design tokens only (custom properties on `:root` + `@font-face`).
 - `src/styles/global.css` - base + all component/section CSS, ordered like the page, commented by section.

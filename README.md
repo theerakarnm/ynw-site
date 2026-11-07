@@ -1,8 +1,8 @@
 # ynw-site
 
-Marketing site for YNW ("Your Next Wave") - a pre-launch landing page for an agentic chat app, rebuilt from a design-tool mockup into a production-ready Astro site with full SEO and a front-end integration to the YNW marketing worker (wishlist, attribution, events).
+Marketing site for YNW ("Your Next Wave") - a pre-launch landing page for an agentic chat app, rebuilt from a design-tool mockup into a production-ready Astro site with full SEO and a front-end integration to the YNW marketing worker (wishlist, attribution, events). `/support/` is the founding-round page (Buy Me a Coffee tiers, how to donate, FAQ) ported from a second reference mockup.
 
-The design reference lives in `_reference/` (read-only, never deployed). `docs/ANALYSIS.md` documents the reference and every decision made while rebuilding it.
+The design references live in `_reference/` (read-only, never deployed): `_reference/` for the landing, `_reference/support-round/` for `/support/`. `docs/ANALYSIS.md` documents both references and every decision made while rebuilding them.
 
 ## Stack
 
@@ -38,8 +38,8 @@ Requires Node >= 22.23.4 (Astro 7). With nvm: `nvm install 24 && nvm use 24`.
 
 ## Editing content
 
-- All visible copy: `src/data/content.ts` (sections, hero, scenes, ticker, form strings, error messages, thanks/unsubscribed pages, privacy copy). The reference copy is the placeholder truth; items needing owner confirmation are marked `// CONFIRM`.
-- Site-level config (brand, URL, SEO defaults, keywords, consent version, env wiring): `src/data/site.ts`.
+- All visible copy: `src/data/content.ts` (sections, hero, scenes, ticker, form strings, error messages, support/founding-round page, thanks/unsubscribed pages, privacy copy). The reference copy is the placeholder truth; items needing owner confirmation are marked `// CONFIRM`. On `/support/` that includes the funding placeholders (`$[RAISED]`, `$[GOAL]`, `[N] backers`, `[N] days`, `[BETA DATE]`, `raisedPct`) - fill them before announcing the page.
+- Site-level config (brand, URL, SEO defaults, keywords, consent version, env wiring, `donateUrl`): `src/data/site.ts`.
 - Design tokens (colors, type, spacing, radii, shadows, motion): `src/styles/tokens.css`. Components must reference tokens, never raw hex values.
 - Layout/section CSS: `src/styles/global.css` (ordered, commented sections mirroring the reference).
 - Never edit `_reference/`.
@@ -109,7 +109,9 @@ Full rationale in `docs/ANALYSIS.md` ("Rebuild decisions"), evidence in `docs/VE
 6. The design-tool runtime (react dev builds, support.js) and ~60% of unused design-system CSS were dropped; motion.js ported to typed TS on npm GSAP.
 7. OG image, favicon set and manifest generated from the reference dot-grid geometry (mockup ships none).
 8. Nav lockup is a home link (mockup: plain image); visuals unchanged.
-9. The no-JS fallback copy tells visitors to email instead of the missing static form endpoint. fallback copy tells visitors to email instead of the missing static form endpoint.
+9. The no-JS fallback copy tells visitors to email instead of the missing static form endpoint.
+10. `/support/` keeps the founding-round reference's data placeholders verbatim (`$[RAISED]`, `$[GOAL]`, `[N]`, `[BETA DATE]`), all marked CONFIRM in `content.ts`; no numbers were invented.
+11. The reference footer (support columns + payments bar + giant mark) replaces the landing's compact footer on every page; a Privacy link was added to its Links column. On `/support/` the nav anchor links hide below 768px (fixed 56px bar; the reference's in-flow nav wraps instead).
 
 ## Verification summary
 

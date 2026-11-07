@@ -145,9 +145,11 @@ export function initWishlistForms(): void {
     });
   }
 
-  // Jump CTA in the nav (motion.ts intercepts on the landing page for smooth scroll).
-  document.querySelectorAll<HTMLElement>('[data-cta="jump-to-form"]').forEach((cta) => {
-    cta.addEventListener("click", () => track("cta_click", { id: "nav_wishlist" }));
+  // CTAs: the nav wishlist jump (motion.ts intercepts it on the landing page for
+  // smooth scroll) plus every other [data-cta] element (support/donation links,
+  // footer anchors). id comes from data-cta-id, falling back to data-cta.
+  document.querySelectorAll<HTMLElement>("[data-cta]").forEach((cta) => {
+    cta.addEventListener("click", () => track("cta_click", { id: cta.dataset.ctaId ?? cta.dataset.cta ?? "unknown" }));
   });
 }
 

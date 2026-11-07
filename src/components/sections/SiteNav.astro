@@ -2,31 +2,55 @@
 /**
  * Fixed top nav: YNW lockup + wishlist CTA. On the landing page the CTA is a
  * button that smooth-scrolls to the nearest wishlist form (motion.ts / main.ts);
- * elsewhere it links home.
+ * elsewhere it links home. On /support the nav also shows the reference's
+ * in-page anchors and a Buy Me a Coffee CTA.
  */
 import LogoLockup from "@/components/ui/LogoLockup.astro";
 import { nav } from "@/data/content";
+import { donateUrl } from "@/data/site";
 
 interface Props {
   /** True on the landing page (CTA jumps to the on-page form). */
   home?: boolean;
+  /** True on /support (anchors + BMC CTA instead of the wishlist jump). */
+  support?: boolean;
 }
 
-const { home = false } = Astro.props;
+const { home = false, support = false } = Astro.props;
 ---
 
 <nav class="ynw-nav site-nav" aria-label="Main">
   <a class="site-lockup-link" href="/" aria-label="YNW home">
     <LogoLockup />
   </a>
+  {
+    support && (
+      <div class="ynw-nav-links">
+        {nav.supportLinks.map((link) => (
+          <a href={link.href}>{link.label}</a>
+        ))}
+      </div>
+    )
+  }
   <div class="ynw-nav-end">
     {
-      home ? (
-        <button class="ynw-btn ynw-btn--secondary" type="button" data-cta="jump-to-form">
+      support ? (
+        <a
+          class="ynw-btn ynw-btn--secondary ynw-btn--sm"
+          href={donateUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-cta="bmc"
+          data-cta-id="nav_bmc"
+        >
+          {nav.supportCta}
+        </a>
+      ) : home ? (
+        <button class="ynw-btn ynw-btn--secondary" type="button" data-cta="jump-to-form" data-cta-id="nav_wishlist">
           {nav.cta}
         </button>
       ) : (
-        <a class="ynw-btn ynw-btn--secondary" href="/#top" data-cta="jump-to-form">
+        <a class="ynw-btn ynw-btn--secondary" href="/#top" data-cta="jump-to-form" data-cta-id="nav_wishlist">
           {nav.cta}
         </a>
       )

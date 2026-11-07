@@ -4,7 +4,7 @@
  * icons inside this page are always aria-hidden; add a label externally if needed.
  */
 interface Props {
-  name: "check" | "shield" | "database" | "file" | "globe" | "terminal";
+  name: "check" | "shield" | "database" | "file" | "globe" | "terminal" | "coffee";
   size?: "xs" | "sm" | "md";
   class?: string;
 }
@@ -21,6 +21,8 @@ const paths: Record<Props["name"], string> = {
     '<circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path>',
   terminal:
     '<polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line>',
+  coffee:
+    '<path d="M10 2v2"></path><path d="M14 2v2"></path><path d="M6 2v2"></path><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"></path>',
 };
 
 const { name, size, class: className } = Astro.props;

@@ -1,0 +1,66 @@
+---
+/**
+ * /support hero: contour-wave header, founding-round copy, coffee CTAs and the
+ * funding progress card. Static port of the reference (no motion module).
+ */
+import Icon from "@/components/ui/Icon.astro";
+import { support } from "@/data/content";
+import { donateUrl } from "@/data/site";
+
+const t = support.hero;
+const f = support.funding;
+const onSegments = Math.round(Math.max(0, Math.min(100, f.raisedPct)) / 5);
+const segments = Array.from({ length: 20 }, (_, i) => i < onSegments);
+---
+
+<header class="sp-hero" aria-labelledby="sp-title">
+  <svg class="sp-hero-waves" viewBox="0 0 1440 280" preserveAspectRatio="none" aria-hidden="true">
+    <path vector-effect="non-scaling-stroke" d="M0 250 C 240 170, 420 270, 720 200 S 1180 120, 1440 190"></path>
+    <path vector-effect="non-scaling-stroke" d="M0 262 C 260 190, 440 280, 730 218 S 1190 146, 1440 210"></path>
+    <path vector-effect="non-scaling-stroke" d="M0 272 C 280 212, 460 288, 740 236 S 1200 172, 1440 230"></path>
+    <path vector-effect="non-scaling-stroke" d="M0 280 C 300 234, 480 294, 750 254 S 1210 198, 1440 250"></path>
+  </svg>
+  <div class="sp-hero-grid">
+    <div class="sp-hero-copy">
+      <span class="ynw-eyebrow"><b>{t.eyebrowNum}</b>/{t.eyebrow}</span>
+      <h1 class="sp-hero-title" id="sp-title">
+        {t.title}<span class="sp-hero-sub">{t.titleSub}</span>
+      </h1>
+      <p class="sp-hero-lead">{t.lead}</p>
+      <div class="sp-hero-ctas">
+        <a
+          class="ynw-btn ynw-btn--primary ynw-btn--lg"
+          href={donateUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-cta="bmc"
+          data-cta-id="sp_hero_bmc"
+        >
+          <Icon name="coffee" />
+          {t.primaryCta}
+        </a>
+        <a class="ynw-btn ynw-btn--ghost ynw-btn--lg" href="#how" data-cta="anchor" data-cta-id="sp_hero_how">
+          {t.secondaryCta} <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <section class="ynw-card sp-funding" aria-label="Funding progress">
+      <div class="ynw-card-top">
+        <span class="ynw-eyebrow">{f.eyebrow}</span>
+        <span class="ynw-badge ynw-badge--success">{f.badge}</span>
+      </div>
+      <div class="sp-funding-figures">
+        <span class="sp-funding-raised">{f.raised}</span>
+        <span class="sp-funding-sub">{f.raisedLabel}</span>
+      </div>
+      <div class="ynw-meter-seg" role="img" aria-label={f.meterLabel}>
+        {segments.map((on) => <i class:list={[{ on }]}></i>)}
+      </div>
+      <div class="sp-funding-foot">
+        <span class="ynw-mono">{f.backersLabel}</span>
+        <span class="ynw-mono">{f.coffeeLabel}</span>
+      </div>
+    </section>
+  </div>
+</header>
