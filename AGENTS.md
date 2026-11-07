@@ -68,8 +68,8 @@ All routes under `/v1`, JSON, CORS restricted to the site origin. The typed clie
 
 - `POST /v1/wishlist`
   - body: `{ email, lang?, consent_marketing, consent_version, turnstile_token, company, variant?, referred_by?, attribution: { utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, landing_path, fbclid, gclid, ttclid } }`
-  - `200 { ok: true, next: "check_email" }` | `400 { ok: false, error: "invalid_email" | "invalid_input" | "consent_required" | "turnstile_failed" }` | `429 { ok: false, error: "rate_limited" }`
-- `GET /v1/confirm?token=` - backend redirects to `SITE_URL/thanks/?t=<profile_token>&pos=<n>&ref=<code>`
+  - `200 { ok: true, next: "joined" }` | `400 { ok: false, error: "invalid_email" | "invalid_input" | "consent_required" | "turnstile_failed" }` | `429 { ok: false, error: "rate_limited" }`
+- Signup is single step (no confirmation email). The welcome email links to `SITE_URL/thanks/?t=<profile_token>&pos=<n>&ref=<code>`. The legacy `GET /v1/confirm?token=` redirects to `SITE_URL/thanks/?pos=<n>&ref=<code>` with no `t`, so `/thanks/` hides the profile form when `t` is missing.
 - `POST /v1/wishlist/profile` - body `{ token, name?, role?, use_case_text? (max 500) }` -> `200 { ok: true }` | `400 { ok: false, error: "invalid_input" | "invalid_token" }`
 - `POST /v1/contact` - body `{ name, email, message, turnstile_token, company }` -> `200 { ok: true }`
 - `POST /v1/events` - body `{ name, props?, session_id, attribution }` or an array of 1-20 of them -> `204` always. `name` is allowlisted: `cta_click` | `scroll_depth` | `form_view` | `form_start` | `form_submit`; other names are dropped silently, so new signals ride on `cta_click` with `props.id`. `props`: max 10 keys, string values max 200 chars.
