@@ -20,9 +20,11 @@ export interface Props {
   robots?: string;
   /** Additional JSON-LD nodes for this page (WebPage is added automatically). */
   jsonLd?: Record<string, unknown>[];
+  /** True on /support: nav shows the support anchors + Buy Me a Coffee CTA. */
+  support?: boolean;
 }
 
-const { title, description, path, robots, jsonLd = [] } = Astro.props;
+const { title, description, path, robots, jsonLd = [], support = false } = Astro.props;
 
 const graph: Record<string, unknown>[] = [
   {
@@ -68,11 +70,11 @@ const graphWithTypes = graph.map((node) => ({
   </head>
   <body class="page" data-loop="run">
     <a class="skip" href="#main">Skip to content</a>
-    <SiteNav />
+    <SiteNav {support} />
     <main id="main">
       <slot />
     </main>
-    <SiteFooter />
+    <SiteFooter {support} />
     <script>
       import "@/scripts/main";
     </script>

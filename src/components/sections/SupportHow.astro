@@ -1,0 +1,68 @@
+---
+/**
+ * /support how-to: the four Buy Me a Coffee steps and the "what to type"
+ * example card (readonly fields mirroring the BMC form).
+ */
+import { support } from "@/data/content";
+
+const t = support.how;
+const ex = t.example;
+---
+
+<section id="how" class="sp-section" aria-labelledby="sp-how-title">
+  <header class="ynw-section-head">
+    <div class="ynw-section-head-row">
+      <span class="ynw-eyebrow"><b>{t.eyebrowNum}</b>/{t.eyebrow}</span>
+    </div>
+    <h2 class="ynw-h2" id="sp-how-title">{t.title}</h2>
+    <p>{t.lead}</p>
+  </header>
+
+  <div class="sp-how-grid">
+    <ol class="sp-steps">
+      {
+        t.steps.map((step, i) => (
+          <li class:list={["ynw-card", "sp-step", { "sp-step--hl": "highlight" in step }]}>
+            <span class="ynw-card-index">{`0${i + 1}`}</span>
+            <h3 class="ynw-h5">{step.title}</h3>
+            <p>{step.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <figure class="sp-example">
+      <figcaption class="ynw-eyebrow">{ex.caption}</figcaption>
+      <div class="sp-coffees">
+        <span class="sp-coffees-label">{ex.coffeesLabel}</span>
+        <span class="sp-coffee-counts">
+          {
+            ex.coffeeCounts.map((count, i) => (
+              <span class:list={["ynw-badge", "ynw-badge--plain", { "ynw-badge--accent": i === ex.coffeeHighlighted }]}>
+                {count}
+              </span>
+            ))
+          }
+        </span>
+      </div>
+      <div class="ynw-field">
+        <label class="ynw-label" for="ex-name">{ex.nameLabel}</label>
+        <input class="ynw-input" id="ex-name" type="text" readonly value={ex.nameValue} />
+        <span class="ynw-hint">{ex.nameHint}</span>
+      </div>
+      <div class="ynw-field">
+        <label class="ynw-label" for="ex-msg">{ex.messageLabel}</label>
+        <input class="ynw-input" id="ex-msg" type="text" readonly value={ex.messageValue} />
+        <span class="ynw-hint">{ex.messageHint}</span>
+      </div>
+      <label class="ynw-choice sp-choice">
+        <input type="checkbox" checked disabled />
+        {ex.privateLabel}
+      </label>
+      <div class="sp-total">
+        <span class="ynw-mono">{ex.totalLabel}</span>
+        <span class="sp-total-num">{ex.totalValue}</span>
+      </div>
+    </figure>
+  </div>
+</section>

@@ -16,6 +16,7 @@ capability list, and a wishlist signup with double opt-in email confirmation.
 ## Pages
 
 - [Home](${absoluteUrl("/")}): product story and wishlist signup
+- [Support YNW](${absoluteUrl("/support/")}) founding round: Buy Me a Coffee tiers, how to donate, FAQ
 - [Privacy](${absoluteUrl("/privacy/")}): what the wishlist collects, why, and how to unsubscribe
 
 ## Notes

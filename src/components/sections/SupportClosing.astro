@@ -1,0 +1,31 @@
+---
+/**
+ * /support closing: thanks card with the last Buy Me a Coffee CTA.
+ */
+import Icon from "@/components/ui/Icon.astro";
+import { support } from "@/data/content";
+import { donateUrl } from "@/data/site";
+
+const t = support.closing;
+---
+
+<section class="sp-section sp-section--last" aria-label={t.eyebrow}>
+  <div class="sp-close-card">
+    <div class="sp-close-copy">
+      <span class="ynw-eyebrow">{t.eyebrow}</span>
+      <h2 class="sp-close-title">{t.title}</h2>
+      <p class="sp-close-lead">{t.lead}</p>
+    </div>
+    <a
+      class="ynw-btn ynw-btn--secondary ynw-btn--lg"
+      href={donateUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-cta="bmc"
+      data-cta-id="sp_close_bmc"
+    >
+      <Icon name="coffee" />
+      {t.cta}
+    </a>
+  </div>
+</section>

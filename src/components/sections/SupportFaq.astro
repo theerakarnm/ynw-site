@@ -1,0 +1,27 @@
+---
+/**
+ * /support FAQ: two-column definition grid, reference verbatim.
+ */
+import { support } from "@/data/content";
+
+const t = support.faq;
+---
+
+<section id="faq" class="sp-section" aria-labelledby="sp-faq-title">
+  <header class="ynw-section-head">
+    <div class="ynw-section-head-row">
+      <span class="ynw-eyebrow"><b>{t.eyebrowNum}</b>/{t.eyebrow}</span>
+    </div>
+    <h2 class="ynw-h2" id="sp-faq-title">{t.title}</h2>
+  </header>
+  <dl class="sp-faq">
+    {
+      t.items.map((item) => (
+        <div class="sp-faq-item">
+          <dt class="ynw-h5">{item.q}</dt>
+          <dd>{item.a}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</section>

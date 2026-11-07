@@ -8,6 +8,9 @@ export const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
 export const siteUrl = (import.meta.env.PUBLIC_SITE_URL ?? "https://example.com").replace(/\/$/, "");
 
+/** Buy Me a Coffee page for the founding round (/support). Brand data, not env. */
+export const donateUrl = "https://buymeacoffee.com/worknarairn";
+
 export const site = {
   name: "YNW",
   legalName: "YNW", // CONFIRM: legal entity name for Privacy page
