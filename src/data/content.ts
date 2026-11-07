@@ -6,10 +6,18 @@
 
 export const nav = {
   cta: "Join the wishlist",
+  // /support nav: in-page anchors (reference Main.dc.html nav) + BMC CTA.
+  supportLinks: [
+    { href: "#tiers", label: "Tiers" },
+    { href: "#how", label: "How to donate" },
+    { href: "#faq", label: "FAQ" },
+  ],
+  supportCta: "Support YNW",
 } as const;
 
 export const hero = {
   eyebrow: "AGENTIC CHAT ▪ COMING SOON",
+  supportCta: "Support the founding round",
   titleLines: ["Your Next Wave.", "Your New World.", "Your Network Workspace."],
   lead: "One chat app for your life, your team and your business. Your AI agents plan, use tools and reply for you, and you decide what they can do alone.",
 } as const;
@@ -160,13 +168,196 @@ export const workspaceDemo = {
   ],
 } as const;
 
+/**
+ * /support - founding round page. Copy is a verbatim port of the reference
+ * mockup (_reference/support-round/Main.dc.html). Bracket placeholders
+ * ([RAISED], [GOAL], [N], [BETA DATE]) are the designer's data slots; each is
+ * marked CONFIRM and must be filled by the owner before the page is announced.
+ */
+export const support = {
+  nav: {
+    tiers: "Tiers",
+    how: "How to donate",
+    faq: "FAQ",
+  },
+  hero: {
+    eyebrowNum: "00",
+    eyebrow: "Founding round",
+    title: "Help us build YNW.",
+    titleSub: "Join early, at any level.",
+    lead: "YNW is one chat app for your everyday chats, your team and your business, with AI agents that plan, use tools and reply for you. We are a small team building it in the open. If you would like to support the beta, you can buy us a coffee or a few. If not, the free wishlist is a great way to follow along.",
+    primaryCta: "Buy us a coffee",
+    secondaryCta: "How to donate",
+  },
+  funding: {
+    eyebrow: "Founding round",
+    badge: "Open",
+    raised: "$[RAISED]", // CONFIRM: live total raised (e.g. "$120")
+    raisedLabel: "raised toward $[GOAL] for the beta", // CONFIRM: real goal once set
+    raisedPct: 0, // CONFIRM: 0-100; lights meter segments in 5% steps
+    backersLabel: "[N] backers so far", // CONFIRM: backer count
+    coffeeLabel: "1 coffee = $5",
+    meterLabel: "0% of goal raised",
+  },
+  tiers: {
+    eyebrowNum: "01",
+    eyebrow: "Tiers",
+    title: "Thank-you gifts for early backers",
+    lead: "Any amount helps. If you would like something back, here is what each level comes with. Every tier includes the one before it, and every price is a one-time payment in US dollars.",
+    youLabel: "For you",
+    teamsLabel: "For shops and teams",
+    oneTime: "one-time",
+    list: [
+      {
+        index: "01",
+        badge: "1 coffee",
+        name: "Supporter",
+        price: "$5",
+        blurb: "A small thank-you, and a say in what we build next.",
+        items: [
+          "Your name on the Founding supporters wall, only if you opt in",
+          "Supporter badge on your YNW profile",
+          "Monthly behind-the-scenes update",
+          "A vote on what we build next",
+        ],
+        cta: "Choose Supporter",
+      },
+      {
+        index: "02",
+        badge: "3 coffees · First 300",
+        name: "Early Bird",
+        price: "$15",
+        blurb: "Start using YNW on the first day of the beta.",
+        plusLine: "Everything in Supporter, plus",
+        items: [
+          "Beta access without waiting",
+          "3 months of the paid plan",
+          "1 extra avatar seat",
+        ],
+        cta: "Choose Early Bird",
+      },
+      {
+        index: "03",
+        badge: "8 coffees",
+        name: "Founder",
+        price: "$40",
+        blurb: "A full year of YNW, and a founder price you keep.",
+        plusLine: "Everything in Early Bird, plus",
+        highlight: true,
+        items: [
+          "12 months of the paid plan",
+          "Founder price locked while you stay subscribed",
+          "3 avatar seats",
+          "Monthly bonus agent credits",
+          "Private founder group on LINE",
+        ],
+        cta: "Choose Founder",
+      },
+      {
+        index: "04",
+        badge: "25 coffees",
+        name: "Business Founder",
+        price: "$125",
+        blurb: "An agent that answers your customers, set up together with you.",
+        items: [
+          "12 months of the Business plan",
+          "5 team seats",
+          "1:1 setup session to connect your LINE OA",
+          "1 agent built from your price list and FAQ",
+          "Priority support",
+        ],
+        cta: "Choose Business Founder",
+      },
+      {
+        index: "05",
+        badge: "100+ coffees · 10-20 partners",
+        name: "Founding Partner",
+        price: "$500+",
+        blurb: "Shape YNW with us and connect it to your own systems.",
+        plusLine: "Everything in Business Founder, plus",
+        items: [
+          "Co-design calls with the founder",
+          "Your logo in the Founding partners section",
+          "1 custom MCP connector to your own system",
+          "An optional case study",
+        ],
+        cta: "Choose Founding Partner",
+      },
+    ],
+  },
+  wishlistStrip: {
+    eyebrowNum: "00",
+    eyebrow: "Wishlist · Free",
+    title: "Just want to follow along? The wishlist is free.",
+    lead: "Launch email, a place in the queue, and a referral link to move up. You need it to donate too, so it is a good place to start.",
+    cta: "Join the wishlist",
+  },
+  how: {
+    eyebrowNum: "02",
+    eyebrow: "How to donate",
+    title: "Four steps on Buy Me a Coffee",
+    lead: "We match your donation to you by email, so the email you type on Buy Me a Coffee has to be the same one you used on the wishlist.",
+    steps: [
+      { title: "Join the wishlist", body: "Sign up with your email. Skip this if you are already on it." },
+      { title: "Pick the number of coffees", body: "Open Buy Me a Coffee and enter the coffees for your tier. 1 coffee is $5, so Founder is 8 coffees." },
+      { title: "Put your wishlist email in Name", body: 'Type your wishlist email in the Name field, and the tier name in the message. Tick "Make this message private" so your email is not shown publicly.', highlight: true },
+      { title: "Pay, and you are done", body: "We confirm by email within [N] days. Your perks start when the beta opens on [BETA DATE]." }, // CONFIRM: N + beta date
+    ],
+    example: {
+      caption: "Example · What to type",
+      coffeesLabel: "Coffees",
+      coffeeCounts: ["1", "3", "8"],
+      coffeeHighlighted: 2,
+      nameLabel: "Name or @yoursocial",
+      nameValue: "you@example.com",
+      nameHint: "The same email you used on the wishlist",
+      messageLabel: "Message",
+      messageValue: "Founder",
+      messageHint: "The tier you chose",
+      privateLabel: "Make this message private",
+      totalLabel: "Total",
+      totalValue: "$40",
+    },
+  },
+  faq: {
+    eyebrowNum: "03",
+    eyebrow: "FAQ",
+    title: "Good to know",
+    items: [
+      { q: "Is this a donation or a pre-order?", a: "A bit of both. You support the beta now, and the gifts for your tier arrive when YNW opens to backers." },
+      { q: "Why put my email in the Name field?", a: "It is how we find you on the wishlist and turn on your perks. Mark the message private so only we can see it." },
+      { q: "Will my name be public?", a: "Only if you opt in. The Founding supporters wall is opt-in for every tier." },
+      { q: "When does the beta open?", a: "[BETA DATE]. Early Bird and higher get in first, without waiting in the queue." }, // CONFIRM: beta date
+    ],
+  },
+  closing: {
+    eyebrow: "Your Next Wave",
+    title: "Thanks for being here early.",
+    lead: "Whether you donate or just join the wishlist, it helps.",
+    cta: "Buy us a coffee",
+  },
+} as const;
+
 export const closing = {
   eyebrow: "WAITING FOR YOU",
 } as const;
 
 export const footer = {
   slogan: ["Your Next Wave.", "Your New World.", "Your Network Workspace."],
+  supportTitle: "Support YNW",
+  linksTitle: "Links",
+  // hash targets resolve to same-page anchors on /support, /support/#... elsewhere.
+  supportLinks: [
+    { hash: "tiers", label: "Tiers" },
+    { hash: "how", label: "How to donate" },
+    { hash: "faq", label: "FAQ" },
+  ],
+  bmc: "Buy Me a Coffee",
+  wishlist: "Wishlist",
   privacy: "Privacy",
+  copyright: "© 2026 Eukron team",
+  payments: "Payments by Buy Me a Coffee · Prices in USD",
+  mark: "YNW",
 } as const;
 
 export const thanks = {
