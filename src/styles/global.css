@@ -525,20 +525,6 @@ html { background: var(--bg); scroll-padding-top: 72px; }
   .page[data-motion="story"] .seat-cards .spine { bottom: calc((100% - var(--space-2) * 2) / 6); }
 }
 
-
-/* Thanks page: profile form busy state (mirrors the wishlist submit pattern) */
-.profile-save-idle, .profile-save-busy { display: inline-flex; gap: var(--space-2); align-items: center; }
-.profile-save-busy { display: none; }
-.thanks-profile[data-state="submitting"] .profile-save-idle { display: none; }
-.thanks-profile[data-state="submitting"] .profile-save-busy { display: inline-flex; }
-.thanks-profile[data-state="submitting"] .ynw-btn--primary { box-shadow: var(--shadow-glow); }
-.thanks-profile[data-state="success"] .profile-fields > *:not(.profile-actions) { opacity: 0.5; }
-
-@media (prefers-reduced-motion: reduce) {
-  .rail-mark, .ynw-dots i, .ynw-ticker-track { animation: none !important; }
-  .rail, .wl-submit, .wl-submit .arrow { transition: none; }
-}
-
 /* =================== Additions (consent, Turnstile, utility pages) =================== */
 
 /* ---------- Links (reference helmet block) ---------- */
