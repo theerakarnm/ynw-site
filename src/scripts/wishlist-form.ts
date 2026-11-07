@@ -25,6 +25,8 @@ interface FormRefs {
 
 const runStart = performance.now();
 let formViewTracked = false;
+// Both forms reflect one signup: success on either one switches every form.
+const allForms: FormRefs[] = [];
 
 function refs(form: HTMLFormElement): FormRefs {
   return {
@@ -58,9 +60,12 @@ function successTime(): string {
   return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
 }
 
-function finishSuccess(r: FormRefs): void {
-  setState(r, "success");
-  r.time.textContent = successTime();
+function finishSuccess(): void {
+  const time = successTime();
+  for (const f of allForms) {
+    setState(f, "success");
+    f.time.textContent = time;
+  }
   window.dispatchEvent(
     new CustomEvent("ynw:signup", { detail: { runSeconds: Math.max(1, Math.round((performance.now() - runStart) / 1000)) } }),
   );
@@ -89,6 +94,7 @@ export function initWishlistForms(): void {
 
   for (const el of forms) {
     const r = refs(el);
+    allForms.push(r);
 
     // form_view: once per page when the first form becomes visible.
     if (!formViewTracked) {
@@ -126,13 +132,14 @@ export function initWishlistForms(): void {
       void handleSubmit(r);
     });
 
-    // Use-case chips: first pick locks in (reference behavior) and fires an event.
-    // The worker allowlists event names, so the pick rides on cta_click.
+    // Use-case chips: first pick locks in on every form (reference behavior) and
+    // fires an event. The worker allowlists event names, so the pick rides on cta_click.
     el.querySelectorAll<HTMLButtonElement>(".wl-chip").forEach((chip) => {
       chip.addEventListener("click", () => {
-        const already = el.querySelector('.wl-chip[aria-pressed="true"]');
-        if (already) return;
-        chip.setAttribute("aria-pressed", "true");
+        if (document.querySelector('.wl-chip[aria-pressed="true"]')) return;
+        document
+          .querySelectorAll<HTMLButtonElement>(`.wl-chip[data-use-case="${CSS.escape(chip.dataset.useCase ?? "")}"]`)
+          .forEach((same) => same.setAttribute("aria-pressed", "true"));
         track("cta_click", { id: "use_case_pick", label: chip.dataset.useCase, source: r.form.dataset.source });
       });
     });
@@ -152,7 +159,7 @@ async function handleSubmit(r: FormRefs): Promise<void> {
 
   // Honeypot: pretend success, send nothing.
   if (company) {
-    finishSuccess(r);
+    finishSuccess();
     return;
   }
 
@@ -205,7 +212,7 @@ async function handleSubmit(r: FormRefs): Promise<void> {
     await submitWishlist(payload);
     track("form_submit", { source: r.form.dataset.source, status: "ok" });
     window.dispatchEvent(new CustomEvent("ynw:dots", { detail: { on: false } }));
-    finishSuccess(r);
+    finishSuccess();
   } catch (error) {
     track("form_submit", { source: r.form.dataset.source, status: error instanceof ApiError ? error.code : "network" });
     window.dispatchEvent(new CustomEvent("ynw:dots", { detail: { on: false } }));
