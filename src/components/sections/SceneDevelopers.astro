@@ -1,0 +1,39 @@
+---
+/**
+ * Scene 07 - Developers: an illustrative HTTP request beside the phone, a Run request
+ * button, and two MCP notes. The HTTP API is Planned; MCP is part of v1 (no tag).
+ * Markup is the final state; scripts/scenes/developers.ts plays the request from the start.
+ */
+import Scene from "./Scene.astro";
+import PhoneFrame from "@/components/ui/PhoneFrame.astro";
+import PhoneBubble from "@/components/ui/PhoneBubble.astro";
+import { scenes, developersDemo as d } from "@/data/content";
+
+const meta = scenes[6];
+---
+
+<Scene {...meta} stageClass="stage-developers">
+  <div slot="controls" class="dev-controls">
+    <section class="dev-code" aria-label={d.codeAria}>
+      <div class="dev-code-head">
+        <span class="ynw-eyebrow">{d.codeLabel}</span>
+        <span class="ynw-badge ynw-badge--plain ynw-badge--accent">{d.tag}</span>
+        <span class="dev-code-note ynw-mono">{d.illustrative}</span>
+      </div>
+      <pre class="dev-code-body ynw-mono" tabindex="0"><code>{d.request.map((line, i) => <span class="dev-line" data-beat={`line-${i}`}>{line}{"\n"}</span>)}<span class="dev-line dev-line--res" data-beat="response">{d.response}</span></code></pre>
+    </section>
+    <section class="dev-mcp" aria-labelledby="dev-mcp-title">
+      <h3 class="ynw-eyebrow" id="dev-mcp-title">{d.notesTitle}</h3>
+      <ul class="dev-mcp-list">
+        {d.notes.map((n) => <li><b>{n.name}</b> {n.text}</li>)}
+      </ul>
+    </section>
+  </div>
+  <PhoneFrame {...d.header} lang="th">
+    <PhoneBubble who={d.header.name} initial={d.header.initials} lang="th" data-beat="bubble">{d.bubble}</PhoneBubble>
+    <div slot="panel" class="dev-panel" data-beat="panel">
+      <span class="dev-panel-name">{d.panelTitle}</span>
+      <span class="dev-panel-note">{d.panelNote}</span>
+    </div>
+  </PhoneFrame>
+</Scene>

@@ -1,0 +1,31 @@
+---
+/**
+ * Scene 06 - Agent relay: the owner asks the Assistant to carry an order from the shop
+ * chat to the team group as a PDF. Markup is the final state; scripts/scenes/relay.ts
+ * plays it from the start.
+ */
+import Scene from "./Scene.astro";
+import PhoneFrame from "@/components/ui/PhoneFrame.astro";
+import PhoneBubble from "@/components/ui/PhoneBubble.astro";
+import { scenes, relayDemo as d } from "@/data/content";
+
+const meta = scenes[5];
+---
+
+<Scene {...meta} stageClass="stage-relay">
+  <PhoneFrame {...d.header} lang="th">
+    <PhoneBubble who={d.order.who} initial={d.order.initial} lang="th" data-beat="order">{d.order.text}</PhoneBubble>
+    <PhoneBubble me data-beat="ask"><span class="mention">{d.mention}</span>{d.ask}</PhoneBubble>
+    <p class="phone-sys" data-beat="sys">{d.sys}</p>
+    <div slot="panel" class="relay" data-beat="panel">
+      <p class="relay-title">{d.panelTitle}</p>
+      <div class="relay-row">
+        <span class="relay-chat" data-beat="from">{d.from}</span>
+        <span class="relay-arrow" data-beat="arrow" aria-hidden="true">&rarr;</span>
+        <span class="relay-chat" data-beat="to">{d.to}</span>
+      </div>
+      <p class="relay-file ynw-mono" data-beat="file">{d.file}</p>
+      <p class="relay-done" data-beat="done">{d.delivered}</p>
+    </div>
+  </PhoneFrame>
+</Scene>

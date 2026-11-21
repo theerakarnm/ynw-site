@@ -1,0 +1,24 @@
+---
+/**
+ * Scene 08 - Planned: small cards, no phone and no pin. Every card carries the
+ * Planned tag and no date. This is the only place LINE OA and voice calls appear.
+ */
+import Scene from "./Scene.astro";
+import { scenes, planned } from "@/data/content";
+
+const meta = scenes[7];
+---
+
+<Scene {...meta} stageClass="stage-planned">
+  <ul class="planned-list">
+    {
+      planned.items.map((item) => (
+        <li class="planned-card">
+          <span class="ynw-badge ynw-badge--plain">{planned.tag}</span>
+          <h3 class="planned-name">{item.name}</h3>
+          <p class="planned-text">{item.text}</p>
+        </li>
+      ))
+    }
+  </ul>
+</Scene>

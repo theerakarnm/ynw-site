@@ -10,6 +10,8 @@ import { buildAssistant } from "./assistant";
 import { buildAccounts } from "./accounts";
 import { buildApprovalModes } from "./approval-modes";
 import { buildWorkflows } from "./workflows";
+import { buildRelay } from "./relay";
+import { buildDevelopers } from "./developers";
 
 export interface SceneCtx {
   reduced: boolean;
@@ -150,4 +152,6 @@ export const sceneBuilders: Record<string, SceneBuilder> = {
   accounts: buildAccounts,
   "approval-modes": buildApprovalModes,
   workflows: buildWorkflows,
+  relay: buildRelay,
+  developers: buildDevelopers,
 };

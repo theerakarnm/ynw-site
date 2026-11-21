@@ -131,7 +131,10 @@ export const scenes = [
     id: "developers", num: "07", label: "Developers", phone: true,
     title: "Connect your own system.",
     lead: "Your server can operate one of your Accounts over HTTP, like a chat platform API. The HTTP API is planned. MCP is part of v1.",
+    receipt: "Account: Baan Khanom | Actor: Integration (order-sync)",
+    receiptTag: "Planned",
     replay: "Run request",
+    replayText: "Run request",
     caption: "Product concept. Interface and data are illustrative.",
   },
   {
@@ -270,6 +273,54 @@ export const workflowsDemo = {
   on: "Workflow on",
   note: "A model is called only in AI steps.",
   run: "Ran Friday 17:00. Actor: Workflow.",
+} as const;
+
+export const relayDemo = {
+  header: { initials: "บข", name: "Baan Khanom", sub: "Shop Account" },
+  order: { who: "Nok", initial: "น", text: "สั่งเค้ก 2 กล่อง รับวันเสาร์" },
+  mention: "@Assistant",
+  ask: " send this to the team as a PDF",
+  panelTitle: "Relay",
+  from: "Baan Khanom chat",
+  to: "Shop team group",
+  file: "order-0142.pdf",
+  delivered: "Posted in Shop team group",
+  sys: "Assistant sent order-0142.pdf to Shop team",
+} as const;
+
+export const developersDemo = {
+  header: { initials: "บข", name: "Baan Khanom", sub: "Operated by an integration" },
+  codeLabel: "HTTP API",
+  tag: "Planned",
+  illustrative: "Illustrative request",
+  request: [
+    "POST /accounts/baan-khanom/messages",
+    "Authorization: Bearer <integration-token>",
+    "",
+    '{ "chat": "Shop team",',
+    '  "text": "Order 0142 received" }',
+  ],
+  response: "202 Accepted",
+  codeAria: "Illustrative HTTP request",
+  bubble: "Order 0142 received",
+  panelTitle: "Integration (order-sync)",
+  panelNote: "Planned. Operates this Account.",
+  notesTitle: "MCP, part of v1",
+  notes: [
+    { name: "MCP out", text: "Add Connections and set Grants per Account. Tool calls follow the Approval Mode." },
+    { name: "MCP in", text: "An external AI client, such as Claude or ChatGPT, connects to one Account with OAuth." },
+  ],
+} as const;
+
+export const planned = {
+  tag: "Planned",
+  items: [
+    { name: "Workspaces", text: "Shared spaces and channels for teams." },
+    { name: "Guest links", text: "Let someone join a chat without an Account." }, // CONFIRM: not in product-v1
+    { name: "LINE OA bridging", text: "Connect a LINE Official Account, Messenger or web chat." },
+    { name: "Voice calls", text: "Voice and video calls." },
+    { name: "Developer API", text: "An HTTP API so your server can operate one of your Accounts." },
+  ],
 } as const;
 
 /**

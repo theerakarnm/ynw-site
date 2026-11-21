@@ -320,6 +320,36 @@ html { background: var(--bg); scroll-padding-top: 72px; }
 .wf-confirm.is-on { border: var(--bw-hairline) solid var(--success); background: transparent; color: var(--success); }
 .wf-note { font-family: var(--font-mono); font-size: 10px; line-height: 1.4; color: var(--text-muted); }
 
+/* ---------- 06 Agent relay ---------- */
+.relay { margin: var(--space-2) var(--space-3) 0; padding: var(--space-3); display: grid; gap: var(--space-2); border: var(--bw-hairline) solid var(--border-strong); border-radius: var(--panel-radius); background: var(--surface); }
+.relay-title { margin: 0; font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); }
+.relay-row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: var(--space-2); }
+.relay-chat { padding: 6px var(--space-2); border: var(--bw-hairline) solid var(--border); border-radius: var(--radius-md); background: var(--surface-raised); font-size: 12px; line-height: 1.3; text-align: center; }
+.relay-arrow { color: var(--accent-text); font-size: 16px; }
+.relay-file { justify-self: center; margin: 0; padding: 4px var(--space-3); border: var(--bw-hairline) solid var(--border-strong); border-radius: var(--radius-full); font-size: 11px; color: var(--text-primary); }
+.relay-done { margin: 0; font-family: var(--font-mono); font-size: 10px; text-align: center; color: var(--success); }
+
+/* ---------- 07 Developers ---------- */
+.dev-controls { width: 100%; min-width: 0; display: grid; gap: var(--space-4); }
+.dev-code { min-width: 0; border: var(--bw-hairline) solid var(--border-strong); border-radius: var(--panel-radius); background: var(--surface); overflow: hidden; }
+.dev-code-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); border-bottom: var(--bw-hairline) solid var(--border); }
+.dev-code-note { margin-left: auto; font-size: 10px; color: var(--text-muted); }
+.dev-code-body { margin: 0; padding: var(--space-3); overflow-x: auto; font-size: 12px; line-height: 1.6; color: var(--text-primary); }
+.dev-code-body code { font: inherit; }
+.dev-line--res { display: block; margin-top: var(--space-1); color: var(--success); }
+.dev-mcp h3 { margin: 0 0 var(--space-2); }
+.dev-mcp-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); font-size: 13px; line-height: 1.45; color: var(--text-secondary); }
+.dev-mcp-list b { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-primary); }
+.dev-panel { margin: var(--space-2) var(--space-3) 0; padding: var(--space-3); display: grid; gap: 2px; border: var(--bw-hairline) solid var(--border-strong); border-radius: var(--panel-radius); background: var(--surface); }
+.dev-panel-name { font-size: 13px; font-weight: 500; }
+.dev-panel-note { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); }
+
+/* ---------- 08 Planned ---------- */
+.planned-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: var(--space-3); }
+.planned-card { display: grid; align-content: start; justify-items: start; gap: var(--space-2); padding: var(--space-4); border: var(--bw-hairline) solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
+.planned-name { margin: 0; font-size: 16px; font-weight: 600; }
+.planned-text { margin: 0; font-size: 13px; line-height: 1.5; color: var(--text-secondary); }
+
 /* ---------- 09 Wishlist ---------- */
 .scene.scene--closing { padding-bottom: 180px; overflow: clip; }
 .closing-card { max-width: 640px; }
