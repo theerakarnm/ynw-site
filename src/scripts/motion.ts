@@ -471,9 +471,9 @@ export function mount(root: HTMLElement) {
         pin: true,
         anticipatePin: 1,
         invalidateOnRefresh: true,
-        onEnter: player.play,
         onLeave: player.finish,
       });
+      ScrollTrigger.create({ trigger: scene, start: "top 25%", once: true, onEnter: player.play });
     } else {
       const stage = scene.querySelector<HTMLElement>(".stage")!;
       ScrollTrigger.create({ trigger: stage, start: "top 65%", end: "bottom top", onEnter: player.play, onLeave: player.finish });
