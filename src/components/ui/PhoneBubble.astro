@@ -1,0 +1,31 @@
+---
+/**
+ * One chat bubble inside the phone. Pass `lang="th"` for Thai demo text.
+ * Extra attributes (data-beat, ...) land on the root so scene timelines can find it.
+ */
+interface Props {
+  who?: string;
+  initial?: string;
+  me?: boolean;
+  /** No bubble around the slot (stickers). */
+  bare?: boolean;
+  lang?: string;
+  [attr: string]: unknown;
+}
+
+const { who, initial, me = false, bare = false, lang, ...rest } = Astro.props;
+---
+
+<div class:list={["msg", { me }]} {...rest}>
+  {!me && initial && <span class="av" lang={lang}>{initial}</span>}
+  {
+    bare ? (
+      <slot />
+    ) : (
+      <div class="b" lang={lang}>
+        {!me && who && <span class="who">{who}</span>}
+        <slot />
+      </div>
+    )
+  }
+</div>

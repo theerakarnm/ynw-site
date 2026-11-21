@@ -1,0 +1,9 @@
+<!-- CONFIRM: placeholder art, replace with Sticker Pack art from the official YNW Account -->
+<svg viewBox="0 0 84 84" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8 62 C8 34 26 14 48 14 C64 14 74 26 72 38 C70 48 58 50 54 42 C51 36 56 30 62 32 C58 24 46 24 40 32 C32 42 34 58 46 62 Z" style="fill:var(--sticker-body)"/>
+  <path d="M8 62 Q42 70 76 62 L76 72 Q42 80 8 72 Z" style="fill:var(--sticker-shade)"/>
+  <circle cx="30" cy="44" r="3.2" style="fill:var(--sticker-ink)"/>
+  <circle cx="42" cy="42" r="3.2" style="fill:var(--sticker-ink)"/>
+  <path d="M31 52 Q36 56 41 51" style="fill:none;stroke:var(--sticker-ink);stroke-width:2.4;stroke-linecap:round"/>
+  <circle cx="25" cy="50" r="3" style="fill:var(--sticker-blush)"/>
+</svg>

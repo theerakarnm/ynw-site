@@ -1,0 +1,34 @@
+---
+/**
+ * The only phone markup. 340 x 560, identical in every scene, decorative:
+ * the same facts live as real text in the scene's copy column.
+ * Slots: default = thread, `badge` = right side of the header, `panel` = under the thread.
+ */
+import { phone } from "@/data/content";
+
+interface Props {
+  initials: string;
+  name: string;
+  sub: string;
+  /** Language of the initials and name when they are not English. */
+  lang?: string;
+}
+
+const { initials, name, sub, lang } = Astro.props;
+---
+
+<div class="phone" aria-hidden="true">
+  <div class="phone-screen">
+    <header class="phone-bar">
+      <span class="phone-avatar" data-phone-avatar lang={lang}>{initials}</span>
+      <span class="phone-who">
+        <span class="phone-name" data-phone-name lang={lang}>{name}</span>
+        <span class="phone-sub" data-phone-sub>{sub}</span>
+      </span>
+      <slot name="badge" />
+    </header>
+    <div class="phone-thread"><slot /></div>
+    <div class="phone-panel"><slot name="panel" /></div>
+    <div class="phone-composer"><span class="phone-input">{phone.composer}</span></div>
+  </div>
+</div>

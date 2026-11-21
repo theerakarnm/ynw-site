@@ -134,10 +134,12 @@
   --dur-slow: 320ms;
   --dur-pulse: 1200ms;
   --dur-ticker: 40s;
+  --dur-bob: 1600ms;
 
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-out: cubic-bezier(0, 0, 0, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-linear: linear;
 
   --z-base: 0;
@@ -161,6 +163,22 @@
   --grid-max: 1280px;
   --chat-max: 760px;
   --sidebar-w: 264px;
+
+  --phone-w: 340px;
+  --phone-h: 560px;
+  --phone-pad: 10px;
+  --phone-radius: 36px;
+  --phone-screen-radius: 28px;
+  --bubble-radius: 14px;
+  --bubble-tail: 4px;
+  --panel-radius: 16px;
+
+  --sticker-size: 84px;
+  --sticker-body: #ed662e;
+  --sticker-shade: #eab46c;
+  --sticker-ink: #0b0a0b;
+  --sticker-blush: #f59a68;
+  --sticker-paper: #f4efec;
 
   --icon-stroke: 1.5px;
   --icon-xs: 12px;

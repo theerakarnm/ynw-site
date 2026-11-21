@@ -1,8 +1,11 @@
 ---
 /**
- * Shared scene shell: numbered section head + stage + caption, with the
- * reference's pin attributes for the scroll story.
+ * Shared scene shell. Phone scenes: copy column (head, steps, receipt, Replay,
+ * caption) beside a stage that holds the PhoneFrame. Other scenes: head, stage, caption.
+ * The markup is always the final state; motion.ts only animates it in.
  */
+import SceneHead from "./SceneHead.astro";
+
 export interface SceneMeta {
   id: string;
   num: string;
@@ -10,38 +13,71 @@ export interface SceneMeta {
   title: string;
   lead: string;
   caption?: string;
-  stageClass: string;
-  /** Pin percentage from the reference (150-250). Omit for unpinned scenes. */
-  pin?: number;
+  stageClass?: string;
+  steps?: readonly string[];
+  /** Final-state receipt line, announced politely when it appears. */
+  receipt?: string;
+  /** Accessible label of the Replay button; shown by motion.ts on animated branches only. */
+  replay?: string;
+  /** Scene shows the phone beside its copy and is pinned on desktop. */
+  phone?: boolean;
   closing?: boolean;
 }
 
 interface Props extends SceneMeta {}
 
-const { id, num, label, title, lead, caption, stageClass, pin, closing = false } = Astro.props;
+const { id, num, label, title, lead, caption, stageClass, steps, receipt, replay, phone = false, closing = false } = Astro.props;
+const head = { id, num, label, title, lead };
 ---
 
 <section
-  class:list={["scene", { "scene--closing": closing }]}
+  class:list={["scene", { "scene--closing": closing, "scene--phone": phone }]}
   id={id}
   data-step={Number(num)}
-  data-pin={pin}
+  data-pin={phone || undefined}
   aria-labelledby={`h-${id}`}
 >
   <div class="scene-pin">
     <div class="scene-grid">
-      <header class="ynw-section-head scene-head">
-        <div class="head-rule"></div>
-        <div class="head-eyebrow">
-          <span class="ynw-eyebrow"><b>{num}</b>/{label}</span>
-        </div>
-        <h2 class="ynw-h2 head-title" id={`h-${id}`}>{title}</h2>
-        <p class="head-lead">{lead}</p>
-      </header>
-      <div class:list={["stage", stageClass]}>
-        <slot />
-      </div>
-      {caption && <p class="scene-caption ynw-mono">{caption}</p>}
+      {
+        phone ? (
+          <div class="scene-body">
+            <div class="scene-copy">
+              <SceneHead {...head} />
+              {steps && (
+                <ol class="scene-steps">
+                  {steps.map((step) => (
+                    <li>{step}</li>
+                  ))}
+                </ol>
+              )}
+              {receipt && (
+                <p class="scene-receipt ynw-mono" aria-live="polite">
+                  {receipt}
+                </p>
+              )}
+              <slot name="controls" />
+              {replay && (
+                <button class="ynw-btn ynw-btn--secondary ynw-btn--sm scene-replay" type="button" aria-label={replay} data-replay hidden>
+                  Replay
+                </button>
+              )}
+              {caption && <p class="scene-caption ynw-mono">{caption}</p>}
+            </div>
+            <div class:list={["stage", stageClass]}>
+              <slot />
+            </div>
+          </div>
+        ) : (
+          <>
+            <SceneHead {...head} />
+            <div class:list={["stage", stageClass]}>
+              <slot />
+            </div>
+            {caption && <p class="scene-caption ynw-mono">{caption}</p>}
+          </>
+        )
+      }
     </div>
   </div>
   <slot name="extra" />

@@ -1,0 +1,25 @@
+---
+/**
+ * Inline sticker art. The SVGs are inlined (`?raw` + `set:html`) so their
+ * `var(--sticker-*)` fills resolve against tokens.css. Decorative by default.
+ */
+import wave from "@/assets/stickers/placeholder-wave.svg?raw";
+import thumbsUp from "@/assets/stickers/placeholder-thumbs-up.svg?raw";
+import heart from "@/assets/stickers/placeholder-heart.svg?raw";
+import ok from "@/assets/stickers/placeholder-ok.svg?raw";
+import { phone } from "@/data/content";
+
+const art = { wave, "thumbs-up": thumbsUp, heart, ok };
+
+interface Props {
+  name: keyof typeof art;
+  class?: string;
+}
+
+const { name, class: className, ...rest } = Astro.props;
+---
+
+<span class:list={["sticker", className]} {...rest}>
+  <span class="sticker-art" set:html={art[name]} />
+  <span class="sticker-label">{phone.stickerLabel}</span>
+</span>
