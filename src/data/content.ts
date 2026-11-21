@@ -96,18 +96,13 @@ export const scenes = [
     id: "approval-modes", num: "04", label: "Approval Modes", phone: true,
     title: "You decide what it does alone.",
     lead: "Pick how much your Assistant may do without asking. New Accounts start on Auto.",
-    steps: [
-      "Allow: the Assistant acts at once.",
-      "Auto: a Decision Model checks the action first. Routine actions go through.",
-      "Ask: the Assistant waits for your approval.",
-    ],
     replay: "Replay Approval Modes scene",
     caption: "Product concept. Interface and data are illustrative.",
   },
   {
     id: "workflows", num: "05", label: "Workflows", phone: true,
     title: "Say it once. It runs every time.",
-    lead: "Describe a routine in plain language. The Assistant turns it into visible steps once. You confirm, and it runs on schedule.",
+    lead: "Describe a routine in plain language. The Assistant turns it into visible steps once. You confirm, and it runs on schedule. Confirming never removes the actions that always ask.",
     steps: [
       "You type the routine.",
       "The Assistant compiles it into blocks.",
@@ -196,6 +191,85 @@ export const assistantDemo = {
   ],
   send: 'Send "I\'ll bring dessert"',
   edit: "Edit",
+} as const;
+
+export const accountsDemo = {
+  switcherHint: "Switch Account",
+  accounts: [
+    {
+      id: "personal", kind: "Personal", initials: "พิ", name: "Pim", assistant: "Assistant: Ask",
+      contacts: [
+        { initial: "ม", name: "Mali", line: "ไปเที่ยวกันไหม", lang: "th" },
+        { initial: "พ", name: "Ploy", line: "See you Sunday", lang: "en" },
+        { initial: "แ", name: "แม่", line: "กินข้าวหรือยัง", lang: "th" },
+      ],
+    },
+    {
+      id: "shop", kind: "Shop", initials: "บข", name: "Baan Khanom", assistant: "Assistant: Auto",
+      contacts: [
+        { initial: "น", name: "Nok", line: "สั่งเค้ก 2 กล่อง", lang: "th" },
+        { initial: "L", name: "Lamyai Farm", line: "Delivery is on Thursday", lang: "en" },
+        { initial: "S", name: "Shop team", line: "Packing today", lang: "en" },
+      ],
+    },
+    {
+      id: "team", kind: "Team", initials: "LT", name: "Lamyai Team", assistant: "Assistant: Ask",
+      contacts: [
+        { initial: "A", name: "Arm", line: "Review is ready", lang: "en" },
+        { initial: "B", name: "Beer", line: "Moved the call to 10:00", lang: "en" },
+        { initial: "D", name: "Design group", line: "New logo options", lang: "en" },
+      ],
+    },
+  ],
+  active: "team",
+  sub: "Account",
+} as const;
+
+export const approvalDemo = {
+  header: { initials: "ม", name: "Mali", sub: "Friend" },
+  modesLabel: "Approval Mode",
+  modes: [
+    { id: "allow", name: "Allow", text: "The Assistant acts at once. The reply to Mali is sent." },
+    { id: "auto", name: "Auto", text: "A Decision Model checks each action. The routine reply is sent after the check." },
+    { id: "ask", name: "Ask", text: "The Assistant waits for you. The reply to Mali waits for your approval." },
+  ],
+  defaultMode: "auto",
+  incoming: "เจอกันวันศุกร์ได้ไหม",
+  action: "Reply to Mali",
+  reply: "Friday works",
+  sent: "Sent by Assistant",
+  checked: "Decision Model checked: routine reply",
+  askTitle: "Assistant asks",
+  askBody: "Reply to Mali: Friday works",
+  waiting: "Waiting for you",
+  approve: "Approve",
+  deny: "Deny",
+  payment: "Pay a 1,200 baht invoice",
+  alwaysAskTag: "Always Ask",
+  alwaysAskTitle: "Always Ask, in every mode",
+  alwaysAsk: [
+    "Spending money, such as the 1,200 baht invoice",
+    "Deleting external data",
+    "Contacting an Account with no prior conversation",
+    "Moving data between Accounts",
+  ],
+} as const;
+
+export const workflowsDemo = {
+  header: { initials: "บข", name: "Baan Khanom", sub: "Assistant on" },
+  mention: "@Assistant",
+  ask: " Every Friday 17:00 send the team the week's orders as a PDF",
+  panelTitle: "Workflow: Weekly orders",
+  blocks: [
+    { kind: "Trigger", text: "Every Friday 17:00" },
+    { kind: "Step", text: "Collect the week's orders" },
+    { kind: "AI step", text: "Write the summary", ai: true },
+    { kind: "Output", text: "PDF to Team group" },
+  ],
+  confirm: "Confirm",
+  on: "Workflow on",
+  note: "A model is called only in AI steps.",
+  run: "Ran Friday 17:00. Actor: Workflow.",
 } as const;
 
 /**

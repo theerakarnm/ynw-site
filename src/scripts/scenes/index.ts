@@ -7,6 +7,9 @@ import type gsap from "gsap";
 type Timeline = ReturnType<typeof gsap.timeline>;
 import { buildChat } from "./chat";
 import { buildAssistant } from "./assistant";
+import { buildAccounts } from "./accounts";
+import { buildApprovalModes } from "./approval-modes";
+import { buildWorkflows } from "./workflows";
 
 export interface SceneCtx {
   reduced: boolean;
@@ -144,4 +147,7 @@ export function createSceneCtx(scene: HTMLElement, reduced: boolean): SceneCtx {
 export const sceneBuilders: Record<string, SceneBuilder> = {
   chat: buildChat,
   assistant: buildAssistant,
+  accounts: buildAccounts,
+  "approval-modes": buildApprovalModes,
+  workflows: buildWorkflows,
 };

@@ -1,0 +1,48 @@
+---
+/**
+ * Scene 03 - Accounts: one User, several equal Accounts, each with its own contacts
+ * and Assistant permissions. Markup is the final state (Team active); the timeline in
+ * scripts/scenes/accounts.ts cycles Personal, Shop, Team by setting data-account.
+ */
+import Scene from "./Scene.astro";
+import PhoneFrame from "@/components/ui/PhoneFrame.astro";
+import { scenes, accountsDemo as d } from "@/data/content";
+
+const meta = scenes[2];
+const active = d.accounts.find((a) => a.id === d.active)!;
+---
+
+<Scene {...meta} stageClass="stage-accounts" attrs={{ "data-account": d.active }}>
+  <PhoneFrame initials={active.initials} name={active.name} sub={d.sub} lang="th">
+    {
+      d.accounts.map((a) => (
+        <div class="acc-contacts" data-account-for={a.id} data-beat={`contacts-${a.id}`}>
+          {a.contacts.map((c) => (
+            <div class="acc-contact">
+              <span class="av" lang={c.lang}>{c.initial}</span>
+              <span class="acc-contact-text">
+                <span class="acc-contact-name" lang={c.lang}>{c.name}</span>
+                <span class="acc-contact-line" lang={c.lang}>{c.line}</span>
+              </span>
+            </div>
+          ))}
+        </div>
+      ))
+    }
+    <div slot="panel" class="acc-panel" data-beat="panel">
+      <p class="acc-hint">{d.switcherHint}</p>
+      {
+        d.accounts.map((a) => (
+          <div class="acc-row" data-account-row={a.id} data-beat={`row-${a.id}`}>
+            <span class="phone-avatar" lang="th">{a.initials}</span>
+            <span class="acc-row-text">
+              <span class="acc-row-name">{a.name}</span>
+              <span class="acc-row-sub">{a.kind} | {a.assistant}</span>
+            </span>
+            <span class="acc-mark" aria-hidden="true"></span>
+          </div>
+        ))
+      }
+    </div>
+  </PhoneFrame>
+</Scene>

@@ -1,0 +1,84 @@
+---
+/**
+ * Scene 04 - Approval Modes: one action played three ways (Allow, Auto, Ask) plus an
+ * action that always asks. The mode lives in data-mode on the section: CSS switches the
+ * phone, scripts/approval-modes.ts owns the buttons, scripts/scenes/approval-modes.ts
+ * plays the intro and the change. Markup is the Auto state.
+ */
+import Scene from "./Scene.astro";
+import PhoneFrame from "@/components/ui/PhoneFrame.astro";
+import PhoneBubble from "@/components/ui/PhoneBubble.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { scenes, approvalDemo as d } from "@/data/content";
+
+const meta = scenes[3];
+---
+
+<Scene {...meta} stageClass="stage-approval" attrs={{ "data-mode": d.defaultMode, "data-approval-modes": "" }}>
+  <div slot="controls" class="am-controls">
+    <div class="am-modes" role="group" aria-label={d.modesLabel}>
+      {
+        d.modes.map((m) => (
+          <button
+            class="am-mode"
+            type="button"
+            data-mode-button={m.id}
+            aria-pressed={m.id === d.defaultMode ? "true" : "false"}
+            data-cta="approval-mode"
+            data-cta-id={`approval_mode_${m.id}`}
+          >
+            <b>{m.name}</b>
+            <span>{m.text}</span>
+          </button>
+        ))
+      }
+    </div>
+    <section class="am-always" aria-labelledby="am-always-title">
+      <h3 class="am-always-title ynw-eyebrow" id="am-always-title">{d.alwaysAskTitle}</h3>
+      <ul class="am-always-list">
+        {d.alwaysAsk.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+  </div>
+
+  <PhoneFrame {...d.header} lang="th">
+    <span slot="badge" class="phone-badge am-badge">
+      {d.modes.map((m) => <span data-for={m.id}>{m.name}</span>)}
+    </span>
+    <PhoneBubble who={d.header.name} initial={d.header.initials} lang="th" data-beat="incoming">{d.incoming}</PhoneBubble>
+    <div data-for="allow">
+      <PhoneBubble me data-beat="allow-sent">{d.reply}</PhoneBubble>
+      <p class="phone-private">{d.sent}</p>
+    </div>
+    <div data-for="auto">
+      <p class="am-chip" data-beat="auto-chip">{d.checked}</p>
+      <PhoneBubble me data-beat="auto-sent">{d.reply}</PhoneBubble>
+      <p class="phone-private">{d.sent}</p>
+    </div>
+    <div data-for="ask">
+      <div class="am-card" data-beat="ask-card">
+        <p class="am-card-title">{d.askTitle}</p>
+        <p class="am-card-body">{d.askBody}</p>
+        <div class="am-card-acts">
+          <span class="asst-act asst-act--primary">{d.approve}</span>
+          <span class="asst-act asst-act--ghost">{d.deny}</span>
+          <span class="am-card-wait">{d.waiting}</span>
+        </div>
+      </div>
+    </div>
+    <div slot="panel" class="am-panel" data-beat="panel">
+      <div class="am-card am-card--lock" data-beat="pay-card">
+        <p class="am-card-title">
+          <Icon name="lock" size="xs" />
+          <span>{d.alwaysAskTag}</span>
+        </p>
+        <p class="am-card-body">{d.payment}</p>
+        <div class="am-card-acts">
+          <span class="asst-act asst-act--primary">{d.approve}</span>
+          <span class="asst-act asst-act--ghost">{d.deny}</span>
+          <span class="am-card-wait">{d.waiting}</span>
+        </div>
+      </div>
+    </div>
+  </PhoneFrame>
+</Scene>

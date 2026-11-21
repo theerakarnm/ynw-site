@@ -13,6 +13,8 @@ import { SplitText } from "gsap/SplitText";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import { CustomEase } from "gsap/CustomEase";
 import { createSceneCtx, sceneBuilders, type SceneBuilder } from "./scenes";
+import { animateApprovalMode } from "./scenes/approval-modes";
+import type { ApprovalMode } from "./approval-modes";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin, CustomEase, ScrollToPlugin);
 
@@ -476,14 +478,25 @@ export function mount(root: HTMLElement) {
       const stage = scene.querySelector<HTMLElement>(".stage")!;
       ScrollTrigger.create({ trigger: stage, start: "top 65%", end: "bottom top", onEnter: player.play, onLeave: player.finish });
     }
+    const disposers: Array<() => void> = [];
     const replay = scene.querySelector<HTMLButtonElement>("[data-replay]");
-    if (!replay) return () => {};
-    replay.hidden = false;
-    replay.addEventListener("click", player.replay);
-    return () => {
-      replay.hidden = true;
-      replay.removeEventListener("click", player.replay);
-    };
+    if (replay) {
+      replay.hidden = false;
+      replay.addEventListener("click", player.replay);
+      disposers.push(() => {
+        replay.hidden = true;
+        replay.removeEventListener("click", player.replay);
+      });
+    }
+    if (scene.hasAttribute("data-approval-modes")) {
+      const onMode = (e: Event) => {
+        player.finish();
+        animateApprovalMode(scene, (e as CustomEvent<ApprovalMode>).detail);
+      };
+      scene.addEventListener("ynw:approval-mode", onMode);
+      disposers.push(() => scene.removeEventListener("ynw:approval-mode", onMode));
+    }
+    return () => disposers.forEach((dispose) => dispose());
   }
 
   mm.add({ pin: PIN, story: STORY, flow: FLOW, reduced: REDUCED }, (context) => {

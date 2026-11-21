@@ -1,0 +1,37 @@
+---
+/**
+ * Scene 05 - Workflows: one plain-language line becomes visible blocks, the Operator
+ * confirms, the Workflow runs. Markup is the final state; scripts/scenes/workflows.ts
+ * plays it from the start.
+ */
+import Scene from "./Scene.astro";
+import PhoneFrame from "@/components/ui/PhoneFrame.astro";
+import PhoneBubble from "@/components/ui/PhoneBubble.astro";
+import { scenes, workflowsDemo as d } from "@/data/content";
+
+const meta = scenes[4];
+---
+
+<Scene {...meta} stageClass="stage-workflows">
+  <PhoneFrame {...d.header} lang="th">
+    <PhoneBubble me data-beat="ask"><span class="mention">{d.mention}</span>{d.ask}</PhoneBubble>
+    <p class="phone-sys" data-beat="run">{d.run}</p>
+    <div slot="panel" class="wf" data-beat="panel">
+      <p class="wf-title" data-beat="title">{d.panelTitle}</p>
+      <ol class="wf-blocks">
+        {
+          d.blocks.map((b, i) => (
+            <li class:list={["wf-block", { "wf-block--ai": "ai" in b }]} data-beat={`block-${i}`}>
+              <span class="wf-kind">{b.kind}</span>
+              <span class="wf-text">{b.text}</span>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="wf-foot" data-beat="foot">
+        <span class="asst-act asst-act--primary wf-confirm is-on" data-beat="confirm">{d.on}</span>
+        <span class="wf-note">{d.note}</span>
+      </div>
+    </div>
+  </PhoneFrame>
+</Scene>
