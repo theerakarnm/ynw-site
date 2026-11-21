@@ -1,0 +1,41 @@
+---
+/**
+ * Scene 01 - Chat: add a friend by QR, a one to one thread, a group, a sticker.
+ * Markup is the final state (group thread, no QR panel); the timeline in
+ * scripts/scenes/chat.ts plays the story from the start.
+ */
+import Scene from "./Scene.astro";
+import PhoneFrame from "@/components/ui/PhoneFrame.astro";
+import PhoneBubble from "@/components/ui/PhoneBubble.astro";
+import Sticker from "@/components/ui/Sticker.astro";
+import { scenes, chatDemo as d } from "@/data/content";
+
+const meta = scenes[0];
+const qrRows = ['11111110101111111', '10000010001000001', '10111010001011101', '10111010001011101', '10111010001011101', '10000010101000001', '11111110101111111', '00000000000000000', '01101010101111010', '00000000110110000', '11111110010111000', '10000010011001000', '10111010010111011', '10111010111010111', '10111010101100011', '10000010000101101', '11111110010001000'];
+const qrCells = qrRows.flatMap((row, y) => [...row].flatMap((bit, x) => (bit === "1" ? [{ x, y }] : [])));
+const [mali, you, ploy] = d.groupMessages;
+---
+
+<Scene {...meta} stageClass="stage-chat">
+  <PhoneFrame {...d.group} lang="th">
+    <p class="phone-sys" data-beat="sys-added">{d.added}</p>
+    <PhoneBubble me data-beat="dm-me">{d.hello}</PhoneBubble>
+    <PhoneBubble who={d.reply.who} initial={d.reply.initial} lang="th" data-beat="dm-them">{d.reply.text}</PhoneBubble>
+    <p class="phone-sys" data-beat="sys-group">{d.groupStarted}</p>
+    <PhoneBubble who={mali.who} initial={mali.initial} lang="th" data-beat="g-mali">{mali.text}</PhoneBubble>
+    <PhoneBubble me lang="th" data-beat="g-you">{you.text}</PhoneBubble>
+    <PhoneBubble who={ploy.who} initial={ploy.initial} data-beat="g-ploy">{ploy.text}</PhoneBubble>
+    <PhoneBubble me bare data-beat="sticker"><Sticker name="thumbs-up" /></PhoneBubble>
+    <div slot="panel" class="chat-qr" data-beat="qr">
+      <div class="chat-qr-card">
+        <div class="qr-box">
+          <svg viewBox="0 0 17 17" shape-rendering="crispEdges" aria-hidden="true">
+            {qrCells.map((c) => <rect x={c.x} y={c.y} width="1" height="1" />)}
+          </svg>
+          <span class="qr-scan" data-beat="qr-scan"></span>
+        </div>
+        <span class="qr-label">{d.qrLabel}</span>
+      </div>
+    </div>
+  </PhoneFrame>
+</Scene>

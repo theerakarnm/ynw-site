@@ -1,0 +1,50 @@
+---
+/**
+ * Scene 02 - Assistant: 200 unread in the family group, one @Assistant line,
+ * a private answer with a quiet trail, a summary and one reply ready to send.
+ * Markup is the final state; scripts/scenes/assistant.ts plays it from the start.
+ */
+import Scene from "./Scene.astro";
+import PhoneFrame from "@/components/ui/PhoneFrame.astro";
+import PhoneBubble from "@/components/ui/PhoneBubble.astro";
+import Sticker from "@/components/ui/Sticker.astro";
+import { scenes, assistantDemo as d } from "@/data/content";
+
+const meta = scenes[1];
+---
+
+<Scene {...meta} stageClass="stage-assistant">
+  <PhoneFrame {...d.header} lang="th">
+    <span slot="badge" class="phone-badge zero" data-beat="unread">0</span>
+    {
+      d.messages.map((m, i) => (
+        <PhoneBubble who={m.who} initial={m.initial} lang="th" bare={"sticker" in m} data-beat={`msg-${i}`}>
+          {"sticker" in m ? <Sticker name="wave" /> : m.text}
+        </PhoneBubble>
+      ))
+    }
+    <PhoneBubble me lang="th" data-beat="ask"><span class="mention">{d.mention}</span>{d.ask}</PhoneBubble>
+    <p class="phone-private" data-beat="private">{d.private}</p>
+    <p class="phone-sys" data-beat="notice">{d.notice}</p>
+    <div slot="panel" class="asst" data-beat="panel">
+      <div class="asst-head">
+        <span class="asst-dot" data-beat="dot"></span>
+        <span class="asst-working">{d.panelWorking}</span>
+        <span class="asst-done">{d.panelDone}</span>
+        <span class="asst-only">{d.only}</span>
+      </div>
+      <ul class="asst-trail">
+        {d.trail.map((line, i) => <li data-beat={`trail-${i}`}>{line}</li>)}
+      </ul>
+      <div class="asst-sum" data-beat="sum">
+        <ul>
+          {d.summary.map((line, i) => <li lang="en" data-beat={`sum-${i}`}>{line}</li>)}
+        </ul>
+        <div class="asst-acts" data-beat="acts">
+          <span class="asst-act asst-act--primary">{d.send}</span>
+          <span class="asst-act asst-act--ghost">{d.edit}</span>
+        </div>
+      </div>
+    </div>
+  </PhoneFrame>
+</Scene>
