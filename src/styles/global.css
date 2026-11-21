@@ -434,7 +434,7 @@ html { background: var(--bg); scroll-padding-top: 72px; }
 }
 
 /* ---------- Footer (reference support-round Main.dc.html) ---------- */
-.ynw-footer { border-top: var(--bw-hairline) solid var(--border); padding: var(--space-10) var(--space-6) 0; overflow: hidden; display: grid; gap: var(--space-8); }
+.ynw-footer { border-top: var(--bw-hairline) solid var(--border); padding: var(--space-10) var(--space-6) 0; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
 .ynw-footer-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-6); max-width: 1280px; width: 100%; margin-inline: auto; }
 .ynw-footer-cols h6 { margin: 0 0 var(--space-3); }
 .ynw-footer-cols a { display: block; font-size: 13px; color: var(--text-secondary); text-decoration: none; padding: 3px 0; }
