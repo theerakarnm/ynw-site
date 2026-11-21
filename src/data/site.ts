@@ -19,19 +19,21 @@ export const site = {
   locale: "en",
   lang: "en",
   themeColor: "#0b0a0b",
-  title: "YNW - Agentic Chat App. One Chat for Life, Team, Business",
+  title: "YNW - A Chat App With Your Own AI Assistant",
   description:
-    "One chat app for your life, your team and your business. Your AI agents plan, use tools and reply for you, and you decide what they can do alone.",
+    "A chat app with your own AI Assistant. Add friends by QR code, send stickers, and let it catch you up and draft replies. You decide what it does alone.",
   // CONFIRM: target keywords are derived from the reference copy, not owner-supplied.
   keywords: [
     "AI chat app",
-    "AI agents",
-    "agentic chat",
-    "AI agents for business",
-    "multi-agent workspace",
+    "AI assistant in chat",
+    "group chat summary",
+    "chat app with stickers",
+    "multiple accounts chat app",
+    "chat workflows",
+    "MCP chat app",
   ],
   ogImage: "/og.png",
-  ogImageAlt: "YNW - agentic chat app. Orange LED wave of dots forming a wave under the YNW wordmark.",
+  ogImageAlt: "YNW - a chat app with an AI Assistant. Orange LED wave of dots forming a wave under the YNW wordmark.",
   consentVersion: "2026-11", // CONFIRM: bump whenever consent text changes
 } as const;
 

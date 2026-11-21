@@ -16,15 +16,15 @@ Commit small and often; one logical change per commit (docs, tokens, layout, sec
 - `src/pages/` - one file per route (`index`, `support`, `thanks`, `unsubscribed`, `privacy`, `404`). Pages compose sections and set per-page SEO props; `/support/` (founding round) passes `support` to the layout for the nav variant.
 - `src/layouts/BaseLayout.astro` - the only layout: `<html>`, head via `SEO.astro` + `JsonLd.astro`, font preloads, skip link, global styles, page scripts.
 - `src/components/seo/` - `SEO.astro` (all meta), `JsonLd.astro` (schema.org graph).
-- `src/components/sections/` - page sections in reference order (`SiteNav`, `ProgressRail`, `Hero`, `CapabilityTicker`, `SceneAvatars`, `SceneAgents`, `SceneBackstage`, `SceneApprovals`, `SceneReceipts`, `SceneWorkspace`, `SceneWishlist`, then the static `/support/` sections `SupportHero`, `SupportTiers`, `SupportHow`, `SupportFaq`, `SupportClosing`, and `SiteFooter`).
-- `src/components/ui/` - primitives reused inside sections (`Avatar`, `Icon`, `LogoLockup`, `LogoWordmark`).
+- `src/components/sections/` - page sections in reference order (`SiteNav`, `ProgressRail`, `Hero`, `CapabilityTicker`, the phone scenes `SceneChat` and `SceneAssistant` (built on `Scene.astro` + `SceneHead.astro`), `SceneWishlist`, then the static `/support/` sections `SupportHero`, `SupportTiers`, `SupportHow`, `SupportFaq`, `SupportClosing`, and `SiteFooter`).
+- `src/components/ui/` - primitives reused inside sections (`PhoneFrame` is the only phone markup, `PhoneBubble`, `Sticker`, `Icon`, `LogoLockup`, `LogoWordmark`).
 - `src/components/forms/WishlistForm.astro` - one form component used twice (hero + closing), plus the client module `src/scripts/wishlist-form.ts`.
 - `src/data/site.ts` - site config: brand, canonical URL, SEO defaults, keywords, consent version, env plumbing, `donateUrl` (Buy Me a Coffee).
 - `src/data/content.ts` - ALL copy. No user-visible string may live in a component or layout.
 - `src/styles/tokens.css` - design tokens only (custom properties on `:root` + `@font-face`).
 - `src/styles/global.css` - base + all component/section CSS, ordered like the page, commented by section.
 - `src/lib/` - `api.ts` (typed marketing-worker client + dev mock), `attribution.ts` (first-touch capture), `events.ts` (batched beacons).
-- `src/scripts/` - browser modules: `motion.ts` (GSAP port of the reference `motion.js`), `wishlist-form.ts`, `main.ts` (boot).
+- `src/scripts/` - browser modules: `motion.ts` (hero, reveals, rail, scene player), `scenes/` (one `build<Name>(scene, ctx)` timeline per phone scene plus the registry and `SceneCtx` in `scenes/index.ts`), `wishlist-form.ts`, `main.ts` (boot).
 - `public/` - `robots.txt`, `llms.txt`, `manifest.webmanifest`, `_headers`, favicons, `og.png`.
 
 ## CSS rules
@@ -59,7 +59,7 @@ Commit small and often; one logical change per commit (docs, tokens, layout, sec
 ## JavaScript rules
 
 - Zero JS by default; only three client modules ship: `motion.ts` (the scroll story - the reference is a scroll-driven experience), `wishlist-form.ts`, `main.ts` (attribution + events boot). Keep each self-contained.
-- `motion.ts` is a faithful typed port of `_reference/motion.js`; do not redesign its timings. GSAP comes from npm (3.13+, all plugins free). Never vendor plugin files into the repo.
+- Scene timelines are time-based (not scrubbed) and built from the final-state markup: the player in `motion.ts` prepares a scene below the fold, plays it once when it is in view (desktop: when its pin starts), shows the final state when it is left, and `[data-replay]` rebuilds and replays it. GSAP comes from npm (3.13+, all plugins free). Never vendor plugin files into the repo.
 - New dependencies need a README note. Do not add a framework island for anything CSS or `<details>` can do.
 
 ## API contract (source of truth - identical to the marketing worker repo)

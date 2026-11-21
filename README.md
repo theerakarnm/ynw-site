@@ -1,6 +1,6 @@
 # ynw-site
 
-Marketing site for YNW ("Your Next Wave") - a pre-launch landing page for an agentic chat app, rebuilt from a design-tool mockup into a production-ready Astro site with full SEO and a front-end integration to the YNW marketing worker (wishlist, attribution, events). `/support/` is the founding-round page (Buy Me a Coffee tiers, how to donate, FAQ) ported from a second reference mockup.
+Marketing site for YNW ("Your Next Wave") - a pre-launch landing page for a chat app with a built-in AI Assistant, rebuilt from a design-tool mockup into a production-ready Astro site with full SEO and a front-end integration to the YNW marketing worker (wishlist, attribution, events). `/support/` is the founding-round page (Buy Me a Coffee tiers, how to donate, FAQ) ported from a second reference mockup.
 
 The design references live in `_reference/` (read-only, never deployed): `_reference/` for the landing, `_reference/support-round/` for `/support/`. `docs/ANALYSIS.md` documents both references and every decision made while rebuilding them.
 
@@ -8,7 +8,7 @@ The design references live in `_reference/` (read-only, never deployed): `_refer
 
 - Astro 7, static output, TypeScript strict. No UI framework.
 - Plain CSS with custom properties (design tokens). No Tailwind.
-- One JS motion module (GSAP + ScrollTrigger/SplitText/DrawSVG/CustomEase/ScrollTo, npm, free license) for the scroll-driven story. All other behavior is small vanilla TypeScript modules.
+- One JS motion module (GSAP + ScrollTrigger/SplitText/DrawSVG/CustomEase/ScrollTo, npm, free license) plus per-scene timelines in `src/scripts/scenes/` for the phone story. All other behavior is small vanilla TypeScript modules.
 - Self-hosted fonts (Geist variable, Geist Mono variable, IBM Plex Sans Thai) via Fontsource. No runtime font CDN requests.
 - @astrojs/sitemap, hand-rolled SEO + JSON-LD components, astro:assets.
 
@@ -71,7 +71,7 @@ The full API contract (source of truth, identical to the worker repo) is reprodu
 
 | Item | Status |
 | --- | --- |
-| Unique title 50-60 chars, keyword-led | Done - "YNW - Agentic Chat App. One Chat for Life, Team, Business" (owner: confirm final brand line) |
+| Unique title 50-60 chars, keyword-led | Done - "YNW - A Chat App With Your Own AI Assistant" (owner: confirm final brand line) |
 | Meta description 140-160 chars | Done - reference copy, 147 chars |
 | Canonical, charset, viewport, theme-color | Done |
 | robots meta (index,follow,max-image-preview:large) on index + privacy; noindex on /thanks, /unsubscribed, /404 | Done |
