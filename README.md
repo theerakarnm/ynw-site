@@ -8,7 +8,7 @@ The design references live in `_reference/` (read-only, never deployed): `_refer
 
 - Astro 7, static output, TypeScript strict. No UI framework.
 - Plain CSS with custom properties (design tokens). No Tailwind.
-- One JS motion module (GSAP + ScrollTrigger/SplitText/DrawSVG/CustomEase/ScrollTo, npm, free license) plus per-scene timelines in `src/scripts/scenes/` for the phone story. All other behavior is small vanilla TypeScript modules.
+- One JS motion module (GSAP + ScrollTrigger/SplitText/DrawSVG/CustomEase/ScrollTo, npm, free license) plus per-scene timelines in `src/scripts/scenes/` for the phone story (nine scenes: Chat, Assistant, Accounts, Approval Modes, Workflows, Agent relay, Developers, Planned, Wishlist; one shared `PhoneFrame`, each phone scene pinned on desktop, Planned is plain cards). All other behavior is small vanilla TypeScript modules (`approval-modes.ts` owns the Approval Mode toggle and works without GSAP).
 - Self-hosted fonts (Geist variable, Geist Mono variable, IBM Plex Sans Thai) via Fontsource. No runtime font CDN requests.
 - @astrojs/sitemap, hand-rolled SEO + JSON-LD components, astro:assets.
 
@@ -38,7 +38,7 @@ Requires Node >= 22.23.4 (Astro 7). With nvm: `nvm install 24 && nvm use 24`.
 
 ## Editing content
 
-- All visible copy: `src/data/content.ts` (sections, hero, scenes, ticker, form strings, error messages, support/founding-round page, thanks/unsubscribed pages, privacy copy). The reference copy is the placeholder truth; items needing owner confirmation are marked `// CONFIRM`. On `/support/` that includes the funding placeholders (`$[RAISED]`, `$[GOAL]`, `[N] backers`, `[N] days`, `[BETA DATE]`, `raisedPct`) - fill them before announcing the page.
+- All visible copy: `src/data/content.ts` (sections, hero, scenes and their demo data, ticker, form strings, error messages, support/founding-round page, thanks/unsubscribed pages, privacy copy). The reference copy is the placeholder truth; items needing owner confirmation are marked `// CONFIRM`. On `/support/` that includes the funding placeholders (`$[RAISED]`, `$[GOAL]`, `[N] backers`, `[N] days`, `[BETA DATE]`, `raisedPct`) - fill them before announcing the page.
 - Site-level config (brand, URL, SEO defaults, keywords, consent version, env wiring, `donateUrl`): `src/data/site.ts`.
 - Design tokens (colors, type, spacing, radii, shadows, motion): `src/styles/tokens.css`. Components must reference tokens, never raw hex values.
 - Layout/section CSS: `src/styles/global.css` (ordered, commented sections mirroring the reference).
