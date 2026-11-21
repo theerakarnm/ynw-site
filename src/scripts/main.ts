@@ -6,9 +6,11 @@
 import { captureAttribution } from "@/lib/attribution";
 import { initWishlistForms } from "./wishlist-form";
 import { initThanksPage } from "./thanks-page";
+import { initApprovalModes } from "./approval-modes";
 
 captureAttribution();
 initWishlistForms();
+initApprovalModes();
 
 if (document.querySelector("[data-profile-form]")) {
   initThanksPage();

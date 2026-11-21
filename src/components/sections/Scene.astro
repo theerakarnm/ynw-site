@@ -22,11 +22,13 @@ export interface SceneMeta {
   /** Scene shows the phone beside its copy and is pinned on desktop. */
   phone?: boolean;
   closing?: boolean;
+  /** Extra attributes on the section (a scene's own state, e.g. data-mode). */
+  attrs?: Record<string, string>;
 }
 
 interface Props extends SceneMeta {}
 
-const { id, num, label, title, lead, caption, stageClass, steps, receipt, replay, phone = false, closing = false } = Astro.props;
+const { id, num, label, title, lead, caption, stageClass, steps, receipt, replay, phone = false, closing = false, attrs = {} } = Astro.props;
 const head = { id, num, label, title, lead };
 ---
 
@@ -36,6 +38,7 @@ const head = { id, num, label, title, lead };
   data-step={Number(num)}
   data-pin={phone || undefined}
   aria-labelledby={`h-${id}`}
+  {...attrs}
 >
   <div class="scene-pin">
     <div class="scene-grid">
