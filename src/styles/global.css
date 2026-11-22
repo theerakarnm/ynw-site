@@ -279,7 +279,7 @@ html { background: var(--bg); scroll-padding-top: 72px; }
 .as-feed-head { margin: 0; font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); }
 .as-feed-head span { color: var(--text-muted); }
 /* The top rows fade out instead of being cut, so no bubble is ever half visible. */
-.as-flow { height: 320px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: var(--space-2); -webkit-mask-image: linear-gradient(to bottom, transparent, #000 96px); mask-image: linear-gradient(to bottom, transparent, #000 96px); }
+.as-flow { height: 320px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: var(--space-2); -webkit-mask-image: linear-gradient(to bottom, transparent 32px, #000 112px); mask-image: linear-gradient(to bottom, transparent 32px, #000 112px); }
 .as-row { flex: none; max-width: 90%; display: flex; align-items: flex-end; gap: var(--space-2); }
 .as-row--me { align-self: flex-end; }
 .as-av { flex: none; width: 28px; height: 28px; display: grid; place-items: center; border: var(--bw-hairline) solid var(--border); border-radius: var(--radius-full); background: var(--surface-raised); font-size: 14px; line-height: 1; color: var(--text-secondary); }
