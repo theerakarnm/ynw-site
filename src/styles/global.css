@@ -437,9 +437,9 @@ html { background: var(--bg); scroll-padding-top: 72px; }
 .rl-receipt { width: min(100%, 300px); margin-inline: auto; padding: var(--space-5) var(--space-5) var(--space-6); background: var(--text-primary); color: var(--bg); rotate: 1.5deg; -webkit-mask: conic-gradient(from -45deg at bottom, transparent, black 1deg 89deg, transparent 90deg) bottom / 14px 100% repeat-x; mask: conic-gradient(from -45deg at bottom, transparent, black 1deg 89deg, transparent 90deg) bottom / 14px 100% repeat-x; }
 .rl-receipt-title { margin: 0 0 var(--space-3); padding-bottom: var(--space-2); border-bottom: var(--bw-hairline) dashed var(--border-control); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
 .rl-rows { display: grid; gap: var(--space-1); margin: 0; font-size: 13px; }
-.rl-row { --u: 100%; display: flex; justify-content: space-between; gap: var(--space-3); padding: 4px var(--space-2); margin-inline: calc(var(--space-2) * -1); background: linear-gradient(var(--accent), var(--accent)) left / 0 100% no-repeat; }
-.rl-row.is-actor { background-size: var(--u) 100%; font-weight: 600; }
-.rl-row dt, .rl-row dd { margin: 0; }
+.rl-row { --u: 100%; color: var(--bg); display: flex; justify-content: space-between; gap: var(--space-3); padding: 4px var(--space-2); margin-inline: calc(var(--space-2) * -1); background: linear-gradient(var(--accent), var(--accent)) left / 0 100% no-repeat; }
+.rl-row.is-actor { background-size: var(--u) 100%; font-weight: 600; color: var(--on-accent); }
+.rl-row dt, .rl-row dd { margin: 0; color: inherit; }
 @media (min-width: 640px) {
   .rl-wins { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-12); }
   .win--to { margin-top: var(--space-12); }
