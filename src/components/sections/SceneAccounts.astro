@@ -64,6 +64,10 @@ const meta = scenes[2];
           <th scope="row">{d.compare.assistant}</th>
           {d.accounts.map((a) => <td data-account-id={a.id}>{a.mode}</td>)}
         </tr>
+        <tr>
+          <th scope="row">{d.compare.workflows}</th>
+          {d.accounts.map((a) => <td data-account-id={a.id}>{a.workflows.length ? a.workflows.join(", ") : d.compare.none}</td>)}
+        </tr>
       </tbody>
     </table>
   </div>

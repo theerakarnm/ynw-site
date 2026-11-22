@@ -370,6 +370,11 @@ html { background: var(--bg); scroll-padding-top: 72px; }
 .am-card-body { margin: 0; font-size: 14px; font-weight: 500; line-height: 1.4; }
 .am-card-state { margin: 0; font-family: var(--font-mono); font-size: 11px; line-height: 1.4; color: var(--text-secondary); }
 .am-card-acts { --shown: flex; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-top: var(--space-1); }
+/* Approve/Deny keep their height when hidden so the lanes and the Always Ask box below do not jump between modes. */
+.scene[data-mode] .am-card-acts[data-for] { display: flex; visibility: hidden; }
+.scene[data-mode="allow"] .am-card-acts[data-for~="allow"],
+.scene[data-mode="auto"] .am-card-acts[data-for~="auto"],
+.scene[data-mode="ask"] .am-card-acts[data-for~="ask"] { visibility: visible; }
 .am-card-wait { font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); }
 .am-always { display: grid; gap: var(--space-4); align-items: center; padding: var(--space-5); border: var(--bw-hairline) dashed var(--border-strong); border-radius: var(--panel-radius); background: var(--surface); }
 .am-always-title { margin: 0 0 var(--space-2); display: flex; align-items: center; gap: var(--space-2); color: var(--text-secondary); }

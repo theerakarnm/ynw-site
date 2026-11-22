@@ -197,10 +197,13 @@ export const accountsDemo = {
     caption: "Accounts compared",
     contacts: "Contacts",
     assistant: "Assistant mode",
+    // source: ynw GLOSSARY.md "Workflow" and ADR 0015 (a Workflow belongs to one Account)
+    workflows: "Workflows",
+    none: "None yet",
   },
   accounts: [
     {
-      id: "personal", kind: "Personal", name: "Pim", assistant: "Assistant: Ask", mode: "Ask",
+      id: "personal", kind: "Personal", name: "Pim", assistant: "Assistant: Ask", mode: "Ask", workflows: [],
       contacts: [
         { name: "Mali", lang: "en" },
         { name: "Ploy", lang: "en" },
@@ -208,7 +211,7 @@ export const accountsDemo = {
       ],
     },
     {
-      id: "shop", kind: "Shop", name: "Baan Khanom", assistant: "Assistant: Auto", mode: "Auto",
+      id: "shop", kind: "Shop", name: "Baan Khanom", assistant: "Assistant: Auto", mode: "Auto", workflows: ["Weekly orders"],
       contacts: [
         { name: "Nok", lang: "en" },
         { name: "Lamyai Farm", lang: "en" },
@@ -216,7 +219,7 @@ export const accountsDemo = {
       ],
     },
     {
-      id: "team", kind: "Team", name: "Lamyai Team", assistant: "Assistant: Ask", mode: "Ask",
+      id: "team", kind: "Team", name: "Lamyai Team", assistant: "Assistant: Ask", mode: "Ask", workflows: [],
       contacts: [
         { name: "Arm", lang: "en" },
         { name: "Beer", lang: "en" },
