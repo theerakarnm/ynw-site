@@ -100,7 +100,7 @@ export const scenes = [
     caption: "Product concept. Interface and data are illustrative.",
   },
   {
-    id: "workflows", num: "05", label: "Workflows", phone: true,
+    id: "workflows", num: "05", label: "Workflows", layout: "copy-left",
     title: "Say it once. It runs every time.",
     lead: "Describe a routine in plain language. The Assistant turns it into visible steps once. You confirm, and it runs on schedule. Confirming never removes the actions that always ask.",
     steps: [
@@ -109,12 +109,11 @@ export const scenes = [
       "You confirm the steps.",
       "The Workflow runs. A model is called only in AI steps.",
     ],
-    receipt: "Ran Friday 17:00. Actor: Workflow.",
     replay: "Replay Workflows scene",
     caption: "Product concept. Interface and data are illustrative.",
   },
   {
-    id: "relay", num: "06", label: "Agent relay", phone: true,
+    id: "relay", num: "06", label: "Agent relay", layout: "copy-right",
     title: "One message. Two chats.",
     lead: "Ask your Assistant to carry a message from one chat to another. The receipt shows which Account it used and who asked.",
     steps: [
@@ -123,7 +122,6 @@ export const scenes = [
       "The Assistant creates order-0142.pdf.",
       "It posts the file in the Shop team group.",
     ],
-    receipt: "Account: Baan Khanom | Actor: Assistant | Asked by: Mali",
     replay: "Replay Agent relay scene",
     caption: "Product concept. Interface and data are illustrative.",
   },
@@ -275,33 +273,48 @@ export const approvalDemo = {
 } as const;
 
 export const workflowsDemo = {
-  header: { initials: "บข", name: "Baan Khanom", sub: "Assistant on" },
-  mention: "@Assistant",
-  ask: " Every Friday 17:00 send the team the week's orders as a PDF",
   panelTitle: "Workflow: Weekly orders",
+  /** The routine as one sentence. Each phrase is underlined in the colour of the block it becomes. */
+  sentence: [
+    { text: "Every Friday 17:00", tone: "trigger" },
+    { text: ", " },
+    { text: "collect the week's orders", tone: "step" },
+    { text: ", " },
+    { text: "write the summary", tone: "ai" },
+    { text: " and " },
+    { text: "send a PDF to the Team group", tone: "output" },
+    { text: "." },
+  ], // source: same routine as the blocks below (product-v1 Workflows, ADR 0015)
   blocks: [
-    { kind: "Trigger", text: "Every Friday 17:00" },
-    { kind: "Step", text: "Collect the week's orders" },
-    { kind: "AI step", text: "Write the summary", ai: true },
-    { kind: "Output", text: "PDF to Team group" },
+    { tone: "trigger", kind: "Trigger", text: "Every Friday 17:00" },
+    { tone: "step", kind: "Step", text: "Collect the week's orders" },
+    { tone: "ai", kind: "AI step", text: "Write the summary" },
+    { tone: "output", kind: "Output", text: "PDF to Team group" },
   ],
   confirm: "Confirm",
   on: "Workflow on",
-  note: "A model is called only in AI steps.",
+  lastRun: "Last run", // UI label, no claim
   run: "Ran Friday 17:00. Actor: Workflow.",
+  note: "A model is called only in AI steps.",
 } as const;
 
 export const relayDemo = {
-  header: { initials: "บข", name: "Baan Khanom", sub: "Shop Account" },
-  order: { who: "Nok", initial: "น", text: "สั่งเค้ก 2 กล่อง รับวันเสาร์" },
-  mention: "@Assistant",
-  ask: " send this to the team as a PDF",
-  panelTitle: "Relay",
+  groupLabel: "Relay",
   from: "Baan Khanom chat",
   to: "Shop team group",
+  order: { who: "Nok", initial: "N", text: "สั่งเค้ก 2 กล่อง รับวันเสาร์" },
+  assistant: { who: "Assistant", initial: "A" }, // source: Actor: Assistant in the receipt below
+  mention: "@Assistant",
+  ask: " send this to the team as a PDF",
   file: "order-0142.pdf",
   delivered: "Posted in Shop team group",
   sys: "Assistant sent order-0142.pdf to Shop team",
+  receiptTitle: "Receipt",
+  receipt: [
+    { key: "Account", value: "Baan Khanom" },
+    { key: "Actor", value: "Assistant", actor: true },
+    { key: "Asked by", value: "Mali" },
+  ],
 } as const;
 
 export const developersDemo = {

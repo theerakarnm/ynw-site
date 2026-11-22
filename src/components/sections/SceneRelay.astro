@@ -1,31 +1,63 @@
 ---
 /**
- * Scene 06 - Agent relay: the owner asks the Assistant to carry an order from the shop
- * chat to the team group as a PDF. Markup is the final state; scripts/scenes/relay.ts
- * plays it from the start.
+ * Scene 06 - Agent relay: two separate chat windows, a PDF that flies from one to the other,
+ * and the receipt printed below with the Actor line highlighted. The flight path is drawn at
+ * run time from the measured windows (scripts/scenes/relay.ts), so the markup holds only the
+ * final state: the file is already posted and the receipt is whole.
  */
 import Scene from "./Scene.astro";
-import PhoneFrame from "@/components/ui/PhoneFrame.astro";
-import PhoneBubble from "@/components/ui/PhoneBubble.astro";
 import { scenes, relayDemo as d } from "@/data/content";
 
 const meta = scenes[5];
 ---
 
 <Scene {...meta} stageClass="stage-relay">
-  <PhoneFrame {...d.header} lang="th">
-    <PhoneBubble who={d.order.who} initial={d.order.initial} lang="th" data-beat="order">{d.order.text}</PhoneBubble>
-    <PhoneBubble me data-beat="ask"><span class="mention">{d.mention}</span>{d.ask}</PhoneBubble>
-    <p class="phone-sys" data-beat="sys">{d.sys}</p>
-    <div slot="panel" class="relay" data-beat="panel">
-      <p class="relay-title">{d.panelTitle}</p>
-      <div class="relay-row">
-        <span class="relay-chat" data-beat="from">{d.from}</span>
-        <span class="relay-arrow" data-beat="arrow" aria-hidden="true">&rarr;</span>
-        <span class="relay-chat" data-beat="to">{d.to}</span>
-      </div>
-      <p class="relay-file ynw-mono" data-beat="file">{d.file}</p>
-      <p class="relay-done" data-beat="done">{d.delivered}</p>
+  <div class="rl" role="group" aria-label={d.groupLabel}>
+    <div class="rl-wins" data-beat="wins">
+      <article class="rl-win" data-beat="win-from">
+        <header class="rl-bar"><span class="rl-dots" aria-hidden="true"><i></i><i></i><i></i></span>{d.from}</header>
+        <div class="rl-body">
+          <div class="rl-msg" data-beat="order">
+            <span class="rl-av" aria-hidden="true">{d.order.initial}</span>
+            <div class="rl-bubble" lang="th"><span class="rl-who">{d.order.who}</span>{d.order.text}</div>
+          </div>
+          <div class="rl-msg rl-msg--me" data-beat="ask">
+            <div class="rl-bubble"><span class="mention">{d.mention}</span>{d.ask}</div>
+          </div>
+          <p class="rl-sys" data-beat="sys">{d.sys}</p>
+        </div>
+      </article>
+
+      <article class="rl-win rl-win--to" data-beat="win-to">
+        <header class="rl-bar"><span class="rl-dots" aria-hidden="true"><i></i><i></i><i></i></span>{d.to}</header>
+        <div class="rl-body">
+          <div class="rl-msg" data-beat="posted">
+            <span class="rl-av" aria-hidden="true">{d.assistant.initial}</span>
+            <div class="rl-bubble">
+              <span class="rl-who">{d.assistant.who}</span>
+              <span class="rl-file ynw-mono" data-beat="chip"><b>PDF</b>{d.file}</span>
+              <span class="rl-delivered ynw-mono">{d.delivered}</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <svg class="rl-trail" aria-hidden="true"><path data-beat="trail"></path></svg>
+      <span class="rl-file rl-file--fly ynw-mono" data-beat="fly" aria-hidden="true"><b>PDF</b>{d.file}</span>
     </div>
-  </PhoneFrame>
+
+    <section class="rl-receipt" data-beat="receipt" aria-label={d.receiptTitle}>
+      <p class="rl-receipt-title ynw-mono">{d.receiptTitle}</p>
+      <dl class="rl-rows ynw-mono">
+        {
+          d.receipt.map((row) => (
+            <div class:list={["rl-row", { "is-actor": "actor" in row }]} data-beat={"actor" in row ? "actor" : undefined}>
+              <dt>{row.key}</dt>
+              <dd>{row.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+  </div>
 </Scene>
