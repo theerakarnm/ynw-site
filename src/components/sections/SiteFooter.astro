@@ -5,8 +5,12 @@
  * On /support the support links are same-page anchors; elsewhere they point at
  * /support/#... and Wishlist at the landing page's form.
  */
-import { footer } from "@/data/content";
+import { copyOf, pageLocale } from "@/lib/page-copy";
+import { localizePath } from "@/lib/locale";
 import { donateUrl } from "@/data/site";
+
+const locale = pageLocale(Astro.url);
+const { footer } = copyOf(Astro.url);
 
 interface Props {
   /** True on /support (same-page anchors for the support column). */
@@ -15,8 +19,8 @@ interface Props {
 
 const { support = false } = Astro.props;
 
-const supportHref = (hash: string) => (support ? `#${hash}` : `/support/#${hash}`);
-const wishlistHref = support ? "#wishlist" : "/#wishlist";
+const supportHref = (hash: string) => (support ? `#${hash}` : `${localizePath("/support/", locale)}#${hash}`);
+const wishlistHref = support ? "#wishlist" : `${localizePath("/", locale)}#wishlist`;
 ---
 
 <footer class="ynw-footer">
@@ -40,7 +44,7 @@ const wishlistHref = support ? "#wishlist" : "/#wishlist";
         {footer.bmc}
       </a>
       <a href={wishlistHref} data-cta="wishlist" data-cta-id="footer_wishlist">{footer.wishlist}</a>
-      <a href="/privacy/" data-cta="page" data-cta-id="footer_privacy">{footer.privacy}</a>
+      <a href={localizePath("/privacy/", locale)} data-cta="page" data-cta-id="footer_privacy">{footer.privacy}</a>
     </div>
   </div>
   <div class="ynw-footer-bar">

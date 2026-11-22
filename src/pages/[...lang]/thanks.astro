@@ -6,10 +6,13 @@
  * noindex. Behavior in src/scripts/thanks-page.ts.
  */
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { thanks as c } from "@/data/content";
-import { site } from "@/data/site";
+import { copyOf, localeStaticPaths } from "@/lib/page-copy";
 
-const title = `You are on the wishlist - ${site.name}`;
+export const getStaticPaths = localeStaticPaths;
+
+const { thanks: c, meta } = copyOf(Astro.url);
+
+const title = meta.thanks.title;
 ---
 
 <BaseLayout title={title} description={c.lead} path="/thanks/" robots="noindex, follow">

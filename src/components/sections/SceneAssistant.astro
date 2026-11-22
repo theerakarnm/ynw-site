@@ -1,0 +1,72 @@
+---
+/**
+ * Scene 02 - Assistant: a big unread counter beside a flowing message stream, then a three
+ * point summary card that only the asker sees. Decorative, the copy column carries the same
+ * facts. Markup is the final state; scripts/scenes/assistant.ts plays it from the start.
+ */
+import Scene from "./Scene.astro";
+import Sticker from "@/components/ui/Sticker.astro";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, assistantDemo: d } = copyOf(Astro.url);
+
+const meta = scenes[1];
+---
+
+<Scene {...meta} stageClass="stage-assistant">
+  <div class="as" aria-hidden="true">
+    <div class="as-top">
+      <p class="as-count">
+        <span class="as-num" data-beat="count">200</span>
+        <span class="as-unit">{d.unread}</span>
+      </p>
+      <div class="as-feed">
+        <p class="as-feed-head" lang="en">{d.stream.name} <span>{d.stream.sub}</span></p>
+        <div class="as-flow">
+          {
+            d.messages.map((m, i) => (
+              <div class="as-row" data-beat={`msg-${i}`} lang="th">
+                <span class="as-av">{m.initial}</span>
+                {"sticker" in m ? (
+                  <Sticker name="wave" />
+                ) : (
+                  <div class="as-bubble">
+                    <span class="as-who">{m.who}</span>
+                    {m.text}
+                  </div>
+                )}
+              </div>
+            ))
+          }
+          <div class="as-row as-row--me" data-beat="ask" lang="th">
+            <div class="as-bubble"><span class="mention">{d.mention}</span>{d.ask}</div>
+          </div>
+          <p class="as-sys" data-beat="notice">{d.notice}</p>
+        </div>
+      </div>
+    </div>
+
+    <svg class="as-link" viewBox="0 0 100 48" preserveAspectRatio="none">
+      <path data-beat="link" d="M 82 0 C 82 30, 18 18, 18 48" vector-effect="non-scaling-stroke" />
+    </svg>
+
+    <div class="as-card" data-beat="card">
+      <div class="as-card-head">
+        <span class="as-dot"></span>
+        <span class="as-working">{d.panelWorking}</span>
+        <span class="as-done">{d.panelDone}</span>
+        <span class="as-tag">{d.private}</span>
+      </div>
+      <ol class="as-points" lang="en">
+        {d.summary.map((line, i) => <li data-beat={`sum-${i}`}>{line}</li>)}
+      </ol>
+      <ul class="as-trail">
+        {d.trail.map((line, i) => <li data-beat={`trail-${i}`}>{line}</li>)}
+      </ul>
+      <div class="as-acts" data-beat="acts">
+        <button class="ynw-btn ynw-btn--primary ynw-btn--sm" type="button" tabindex="-1">{d.send}</button>
+        <button class="ynw-btn ynw-btn--secondary ynw-btn--sm" type="button" tabindex="-1">{d.edit}</button>
+      </div>
+    </div>
+  </div>
+</Scene>

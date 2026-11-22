@@ -9,9 +9,9 @@ const GET: APIRoute = () => {
 
 > ${site.description} Pre-launch: the wishlist is open, the product ships soon.
 
-YNW is an agentic chat product. This site is its pre-launch landing page: the
-product story (avatars, agents, backstage, approvals, receipts, workspace), the
-capability list, and a wishlist signup with a welcome email.
+YNW is a chat app with a built-in Assistant. This site is its pre-launch landing
+page: the product story (chat, Assistant, Accounts, Approval Modes, Workflows,
+agent relay, developers, planned features), and a wishlist signup with a welcome email.
 
 ## Pages
 

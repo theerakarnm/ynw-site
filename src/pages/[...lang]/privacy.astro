@@ -3,11 +3,13 @@
  * Privacy page. Copy is placeholder - flagged CONFIRM in content.ts.
  */
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { privacy } from "@/data/content";
-import { site } from "@/data/site";
+import { copyOf, localeStaticPaths } from "@/lib/page-copy";
 
-const title = `Privacy - ${site.name}`;
-const description = "What the YNW wishlist page collects, why, and how to unsubscribe.";
+export const getStaticPaths = localeStaticPaths;
+
+const { privacy, meta } = copyOf(Astro.url);
+
+const { title, description } = meta.privacy;
 ---
 
 <BaseLayout title={title} description={description} path="/privacy/">

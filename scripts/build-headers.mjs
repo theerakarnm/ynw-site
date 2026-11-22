@@ -3,7 +3,8 @@
  * (connect-src gets PUBLIC_API_BASE + the Turnstile origin).
  * Runs automatically after `npm run build`.
  */
-import { mkdir, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { mkdir, readdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -23,9 +24,36 @@ if (!apiBase) {
   }
 }
 
+// Astro only writes the root 404 as 404.html; Cloudflare serves the nearest 404.html up the path,
+// so /en/* needs dist/en/404.html as well.
+await rename(join(dist, "en", "404", "index.html"), join(dist, "en", "404.html"));
+await rm(join(dist, "en", "404"), { recursive: true });
+
+// The locale boot script is inline, so CSP allows exactly its hash; every page must carry the same text.
+async function htmlFiles(dir) {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const nested = await Promise.all(
+    entries.map((entry) => (entry.isDirectory() ? htmlFiles(join(dir, entry.name)) : entry.name.endsWith(".html") ? [join(dir, entry.name)] : [])),
+  );
+  return nested.flat();
+}
+
+async function localeBootHash() {
+  const hashes = new Set();
+  for (const file of await htmlFiles(dist)) {
+    const match = (await readFile(file, "utf8")).match(/<script id="locale-boot"[^>]*>([\s\S]*?)<\/script>/);
+    if (!match) throw new Error(`No locale-boot script in ${file}`);
+    hashes.add(createHash("sha256").update(match[1]).digest("base64"));
+  }
+  if (hashes.size !== 1) throw new Error(`Expected one locale-boot script across pages, found ${hashes.size}`);
+  return [...hashes][0];
+}
+
+const bootHash = await localeBootHash();
+
 const csp = [
   "default-src 'self'",
-  "script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com",
+  `script-src 'self' 'sha256-${bootHash}' https://challenges.cloudflare.com https://static.cloudflareinsights.com`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "font-src 'self'",

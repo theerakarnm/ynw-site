@@ -4,7 +4,9 @@
  * Pure markup - motion.ts drives statuses, visibility and the live status line.
  * Hidden entirely without JS (data-visible stays false).
  */
-import { rail } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { rail } = copyOf(Astro.url);
 ---
 
 <aside class="rail" data-visible="false" data-complete="false" aria-label={rail.label}>

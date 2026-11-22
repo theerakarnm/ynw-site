@@ -1,0 +1,50 @@
+---
+/**
+ * Scene 05 - Workflows: one plain-language sentence, its key phrases underlined in the colour of
+ * the block each becomes, and the blocks on a rail. The model is called only in AI steps (ADR 0015),
+ * so the last run row says so. Decorative: the copy column carries the same facts.
+ * Markup is the final state; scripts/scenes/workflows.ts plays it from the start.
+ */
+import Scene from "./Scene.astro";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, workflowsDemo: d } = copyOf(Astro.url);
+
+const meta = scenes[4];
+---
+
+<Scene {...meta} stageClass="stage-workflows">
+  <div class="wf">
+    <p class="wf-sentence" data-beat="sentence">
+      {d.sentence.map((part) => ("tone" in part ? <span class={`wf-phrase wf-tone--${part.tone}`} data-phrase>{part.text}</span> : part.text))}
+    </p>
+
+    <div class="wf-flow">
+      <div class="wf-flow-head">
+        <span class="wf-flow-title ynw-mono">{d.panelTitle}</span>
+        <span class="wf-chip is-on" data-beat="confirm">{d.on}</span>
+      </div>
+      <div class="wf-rail">
+        <svg class="wf-line" viewBox="0 0 2 100" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="1" y1="0" x2="1" y2="100" vector-effect="non-scaling-stroke" data-beat="line"></line>
+        </svg>
+        <ol class="wf-blocks">
+          {
+            d.blocks.map((b) => (
+              <li class={`wf-block wf-tone--${b.tone}`} data-block>
+                <span class="wf-kind">{b.kind}</span>
+                <span class="wf-text">{b.text}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+
+    <div class="wf-runs" data-beat="runs">
+      <span class="wf-runs-label ynw-mono">{d.lastRun}</span>
+      <span class="wf-run ynw-mono" aria-live="polite">{d.run}</span>
+      <span class="wf-note">{d.note}</span>
+    </div>
+  </div>
+</Scene>

@@ -1,0 +1,86 @@
+---
+/**
+ * Scene 01 - Chat: four titled columns in story order (QR card, one to one thread, group card,
+ * stickers). Each column carries its number and sentence from scenes[0].steps as a real heading
+ * and holds only its own decorative demo. Four across from 1100px, one stacked column below.
+ * Markup is the final state; scripts/scenes/chat.ts fades each piece in inside its own column.
+ */
+import Scene from "./Scene.astro";
+import Sticker from "@/components/ui/Sticker.astro";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, chatDemo: d } = copyOf(Astro.url);
+
+const { steps, ...meta } = scenes[0];
+const qrRows = ['11111110101111111', '10000010001000001', '10111010001011101', '10111010001011101', '10111010001011101', '10000010101000001', '11111110101111111', '00000000000000000', '01101010101111010', '00000000110110000', '11111110010111000', '10000010011001000', '10111010010111011', '10111010111010111', '10111010101100011', '10000010000101101', '11111110010001000'];
+const qrCells = qrRows.flatMap((row, y) => [...row].flatMap((bit, x) => (bit === "1" ? [{ x, y }] : [])));
+const lang = (text: string) => (/[\u0E00-\u0E7F]/.test(text) ? "th" : "en");
+const stickers = ["thumbs-up", "wave", "heart"] as const;
+---
+
+<Scene {...meta} stageClass="stage-chat">
+  <ol class="cc">
+    <li class="cc-col">
+      <h3 class="cc-title" data-col><span class="cc-num" aria-hidden="true">01</span>{steps[0]}</h3>
+      <div class="cc-demo" aria-hidden="true">
+    <div class="cc-piece cc-qr" data-beat="qr">
+      <div class="cc-qr-card">
+        <span class="cc-qr-title">{d.qr.title}</span>
+        <svg viewBox="0 0 17 17" shape-rendering="crispEdges">
+          {qrCells.map((c) => <rect x={c.x} y={c.y} width="1" height="1" />)}
+        </svg>
+        <span class="cc-qr-hint">{d.qr.hint}</span>
+        <span class="cc-qr-label">{d.qr.label}</span>
+      </div>
+    </div>
+      </div>
+    </li>
+
+    <li class="cc-col">
+      <h3 class="cc-title" data-col><span class="cc-num" aria-hidden="true">02</span>{steps[1]}</h3>
+      <div class="cc-demo" aria-hidden="true">
+    <div class="cc-dm">
+      <p class="cc-sys" data-beat="sys-added">{d.added}</p>
+      <div class="cc-piece cc-bubble cc-bubble--me" data-beat="dm-me">{d.hello}</div>
+      <div class="cc-piece cc-bubble" data-beat="dm-them" lang="th">
+        <span class="cc-who" lang="en">{d.friend.name} <span class="cc-who-sub">{d.friend.sub}</span></span>
+        {d.reply.text}
+      </div>
+    </div>
+      </div>
+    </li>
+
+    <li class="cc-col">
+      <h3 class="cc-title" data-col><span class="cc-num" aria-hidden="true">03</span>{steps[2]}</h3>
+      <div class="cc-demo" aria-hidden="true">
+    <div class="cc-piece cc-group" data-beat="group">
+      <div class="cc-group-head">
+        <span class="cc-group-name">{d.group.name}</span>
+        <span class="cc-group-sub">{d.group.sub}</span>
+      </div>
+      <div class="cc-avs">
+        {d.groupMessages.map((m) => <span class:list={["cc-av", { "cc-av--me": "me" in m }]} lang={lang(m.initial)}>{m.initial}</span>)}
+      </div>
+      <p class="cc-sys" data-beat="g-sys">{d.groupStarted}</p>
+      {
+        d.groupMessages.map((m, i) => (
+          <div class:list={["cc-gmsg", { "cc-gmsg--me": "me" in m }]} data-beat={`g-${i}`} lang={lang(m.text)}>
+            {!("me" in m) && <span class="cc-who" lang="en">{m.who}</span>}
+            {m.text}
+          </div>
+        ))
+      }
+    </div>
+      </div>
+    </li>
+
+    <li class="cc-col">
+      <h3 class="cc-title" data-col><span class="cc-num" aria-hidden="true">04</span>{steps[3]}</h3>
+      <div class="cc-demo" aria-hidden="true">
+    <div class="cc-stickers">
+      {stickers.map((name, i) => <div class={`cc-piece cc-sticker cc-sticker--${i + 1}`} data-beat={`sticker-${i}`}><Sticker name={name} /></div>)}
+    </div>
+      </div>
+    </li>
+  </ol>
+</Scene>

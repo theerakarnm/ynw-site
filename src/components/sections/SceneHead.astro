@@ -1,0 +1,21 @@
+---
+/** Numbered section head: hairline, eyebrow, h2, lead. Revealed by motion.ts. */
+interface Props {
+  id: string;
+  num: string;
+  label: string;
+  title: string;
+  lead: string;
+}
+
+const { id, num, label, title, lead } = Astro.props;
+---
+
+<header class="ynw-section-head scene-head">
+  <div class="head-rule"></div>
+  <div class="head-eyebrow">
+    <span class="ynw-eyebrow"><b>{num}</b>/{label}</span>
+  </div>
+  <h2 class="ynw-h2 head-title" id={`h-${id}`}>{title}</h2>
+  <p class="head-lead">{lead}</p>
+</header>

@@ -1,10 +1,9 @@
 /**
- * YNW landing motion. Faithful TypeScript port of the reference motion.js
- * (_reference/motion.js): one gsap.matchMedia() with four branches -
- * pin (desktop, pinned + scrubbed), story (phones/tablets, CSS sticky + scrub),
- * flow (short windows, play once), reduced (fades only).
- * CSS default of every scene is its final state; this module only animates
- * hidden -> visible, so no-JS users see the complete page.
+ * YNW landing motion: hero, section reveals, progress rail and the scene player.
+ * One gsap.matchMedia() with two branches - animated (every scene plays once when its stage
+ * scrolls into view; nothing is pinned) and reduced (fades only).
+ * CSS default of every scene is its final state; scene timelines (scripts/scenes)
+ * only animate hidden -> visible, so no-JS and reduced-motion users see the complete page.
  */
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,13 +11,14 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { SplitText } from "gsap/SplitText";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import { CustomEase } from "gsap/CustomEase";
+import { createSceneCtx, sceneBuilders, type SceneBuilder } from "./scenes";
+import { animateApprovalMode } from "./scenes/approval-modes";
+import type { ApprovalModeChange } from "./approval-modes";
+import { format, strings } from "@/lib/i18n";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin, CustomEase, ScrollToPlugin);
 
-const PIN = "(min-width: 1024px) and (min-height: 700px) and (max-height: 1700px) and (prefers-reduced-motion: no-preference)";
-const STORY = "(max-width: 1023.98px) and (min-height: 600px) and (max-height: 1700px) and (prefers-reduced-motion: no-preference)";
-const FLOW =
-  "(max-width: 1023.98px) and (max-height: 599.98px) and (prefers-reduced-motion: no-preference), (min-width: 1024px) and (max-height: 699.98px) and (prefers-reduced-motion: no-preference), (min-height: 1700.02px) and (prefers-reduced-motion: no-preference)";
+const ANIMATED = "(prefers-reduced-motion: no-preference)";
 const REDUCED = "(prefers-reduced-motion: reduce)";
 
 CustomEase.create("ynw-standard", "0.2,0,0,1");
@@ -198,190 +198,50 @@ function createWave(canvas: HTMLCanvasElement, hero: HTMLElement, reduced: boole
   };
 }
 
-/* ---------- Scene timelines. Positions are fractions of the scene, 0 to 1. ---------- */
-
-type SceneMode = "pin" | "story" | "flow" | "reduced";
-
-/* One fromTo per target instead of a stagger: nested stagger tweens lose their start state when a
-   refresh invalidates the timeline, which left later items visible before their turn. */
-function each(tl: gsap.core.Timeline, targets: gsap.TweenTarget, from: gsap.TweenVars, to: gsap.TweenVars, at: number, gap: number) {
-  gsap.utils.toArray(targets).forEach((el, i) => {
-    tl.fromTo(el as gsap.TweenTarget, { ...from }, { ...to }, at + i * gap);
-  });
-}
-
-/* Story mode only: the headline is read first, then it hands its space to the demo. */
-function collapseHead(tl: gsap.core.Timeline, scene: HTMLElement, at: number) {
-  const head = scene.querySelector<HTMLElement>(".scene-head")!;
-  const stage = scene.querySelector<HTMLElement>(".stage")!;
-  tl.to(head, { autoAlpha: 0, y: -16, duration: 0.05 }, at);
-  tl.fromTo(stage, { y: 0 }, { y: () => head.offsetTop - stage.offsetTop, duration: 0.07 }, at);
-}
+/* ---------- Scene player ---------- */
 
 type MotionApi = {
   setRail: (rail: { active: number; visible: boolean }) => void;
   setDots: (dots: boolean) => void;
   setHeroLoop: (heroLoop: boolean) => void;
-  getApproval: () => ApprovalState;
-  setApproval: (approval: ApprovalState) => void;
 };
 
-type ApprovalState = "pending" | "approved" | "denied";
+/* A scene is prepared when it is still below the fold (hidden start state set), played once
+   when it is in view, and shown in its final state when it is left or replayed. */
+function createScenePlayer(scene: HTMLElement, build: SceneBuilder) {
+  let timeline: gsap.core.Timeline | null = null;
+  let revertTimeline: (() => void) | null = null;
+  let played = false;
 
-function buildAvatars(tl: gsap.core.Timeline, scene: HTMLElement, mode: SceneMode) {
-  const q = gsap.utils.selector(scene);
-  const pin = mode === "pin";
-  const story = mode === "story";
-  const stage = q(".stage")[0] as HTMLElement;
-  const origin = q(".seat-origin")[0] as HTMLElement;
-  const cards = q(".seat-card");
-  const you = q(".occ-you")[0] as HTMLElement;
-  const agent = q(".occ-agent")[0] as HTMLElement;
-  const mali = q(".occ-mali")[0] as HTMLElement;
-  if (pin || story) {
-    const dx = () => stage.offsetWidth / 2 - (origin.offsetLeft + origin.offsetWidth / 2);
-    tl.fromTo(origin, { x: dx, scale: story ? 1.4 : 1.6 }, { x: 0, scale: 1, duration: 0.3 }, 0.25);
+  function prepare() {
+    if (timeline) return;
+    const ctx = createSceneCtx(scene, false);
+    const gsapContext = gsap.context(() => {
+      timeline = build(scene, ctx);
+    }, scene);
+    revertTimeline = () => {
+      gsapContext.revert();
+      ctx.revert();
+    };
   }
-  if (story) collapseHead(tl, scene, 0.2);
-  each(tl, cards, { autoAlpha: 0, x: 24 }, { autoAlpha: 1, x: 0, duration: 0.16 }, 0.28, 0.035);
-  if (!pin) tl.fromTo(q(".spine"), { scaleY: 0 }, { scaleY: 1, duration: 0.3 }, 0.28);
-  each(tl, q(".seat-lines path"), { drawSVG: "0%" }, { drawSVG: "100%", duration: 0.2 }, 0.3, 0.03);
-  tl.fromTo(q(".seat-thread"), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.07 }, 0.55);
-  if (story) tl.to([cards[0], cards[2]], { opacity: 0.35, duration: 0.06 }, 0.58);
-  gsap.set(you, { autoAlpha: 1 });
-  gsap.set([agent, mali], { autoAlpha: 0 });
-  tl.to(you, { autoAlpha: 0, duration: 0.02 }, 0.68);
-  tl.to(agent, { autoAlpha: 1, duration: 0.02 }, 0.69);
-  tl.to(agent, { autoAlpha: 0, duration: 0.02 }, 0.84);
-  tl.to(mali, { autoAlpha: 1, duration: 0.02 }, 0.85);
-  tl.to({}, { duration: 0.01 }, 0.99);
-}
-
-function buildAgents(tl: gsap.core.Timeline, scene: HTMLElement, mode: SceneMode, api: MotionApi) {
-  const q = gsap.utils.selector(scene);
-  const steps = q(".ynw-step") as unknown as HTMLElement[];
-  const tools = q(".agents-tool") as unknown as HTMLElement[];
-  if (mode === "story") collapseHead(tl, scene, 0.1);
-  tl.fromTo(q(".agents-nok"), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.1 }, 0.02);
-  tl.fromTo(q(".agents-agent"), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0.15);
-  tl.fromTo(q(".agents-plan"), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.06 }, 0.22);
-  tl.fromTo(tools[0], { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.09 }, 0.3);
-  tl.fromTo(tools[1], { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.09 }, 0.46);
-  tl.to(q(".agents-agent"), { autoAlpha: 0, duration: 0.03 }, 0.3);
-  tl.fromTo(q(".agents-handoff"), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.08 }, 0.7);
-  tl.to({}, { duration: 0.01 }, 0.99);
-
-  function status(el: HTMLElement, value: string) {
-    if (el.getAttribute("data-status") !== value) el.setAttribute("data-status", value);
+  function play() {
+    if (played) return;
+    played = true;
+    prepare();
+    timeline!.play(0);
   }
-  function run(el: HTMLElement, value: string) {
-    if (el.getAttribute("data-run") !== value) el.setAttribute("data-run", value);
+  function finish() {
+    if (!timeline) return;
+    played = true;
+    timeline.progress(1, false);
   }
-  let dots = false;
-  function apply() {
-    const p = tl.progress();
-    status(steps[0], p < 0.3 ? "pending" : p < 0.45 ? "running" : "done");
-    status(steps[1], p < 0.45 ? "pending" : p < 0.6 ? "running" : "done");
-    status(steps[2], p < 0.85 ? "pending" : "running");
-    run(tools[0], p < 0.45 ? "running" : "done");
-    run(tools[1], p < 0.6 ? "running" : "done");
-    const dotsOn = p >= 0.14 && p < 0.33;
-    if (dotsOn !== dots) {
-      dots = dotsOn;
-      api.setDots(dotsOn);
-    }
+  function replay() {
+    revertTimeline?.();
+    timeline = null;
+    played = false;
+    play();
   }
-  tl.eventCallback("onUpdate", apply);
-  apply();
-  return function restore() {
-    status(steps[0], "done");
-    status(steps[1], "done");
-    status(steps[2], "running");
-    run(tools[0], "done");
-    run(tools[1], "done");
-    if (dots) api.setDots(false);
-  };
-}
-
-function buildBackstage(tl: gsap.core.Timeline, scene: HTMLElement, mode: SceneMode) {
-  const q = gsap.utils.selector(scene);
-  const pin = mode === "pin";
-  const story = mode === "story";
-  const front = q(".split-front")[0] as HTMLElement;
-  if (pin) {
-    const dx = () => front.offsetWidth / 2 + 20;
-    tl.fromTo(front, { x: dx }, { x: 0, duration: 0.3 }, 0.02);
-    tl.fromTo(q(".split-rule"), { scaleY: 0 }, { scaleY: 1, duration: 0.2 }, 0.14);
-    tl.fromTo(q(".split-back"), { autoAlpha: 0, x: 24 }, { autoAlpha: 1, x: 0, duration: 0.14 }, 0.24);
-  } else {
-    if (story) {
-      collapseHead(tl, scene, 0.14);
-      tl.fromTo(front, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.1 }, 0.02);
-      tl.fromTo(q(".split-rule"), { scaleX: 0 }, { scaleX: 1, duration: 0.14 }, 0.16);
-    }
-    tl.fromTo(q(".split-back"), { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.14 }, 0.24);
-  }
-  tl.fromTo(q(".back-summary"), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.08 }, 0.4);
-  tl.fromTo(q(".back-mali"), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.08 }, 0.5);
-  tl.fromTo(q(".back-draft"), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.08 }, 0.6);
-  if (pin || story) {
-    gsap.set(q(".layer-home"), { autoAlpha: 0, y: 12 });
-    tl.to(q(".layer-work"), { autoAlpha: 0, y: -12, duration: 0.08 }, 0.72);
-    tl.to(q(".layer-home"), { autoAlpha: 1, y: 0, duration: 0.08 }, 0.8);
-  } else {
-    tl.fromTo(q(".layer-home"), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.1 }, 0.78);
-  }
-  tl.to({}, { duration: 0.01 }, 0.99);
-}
-
-function buildApprovals(tl: gsap.core.Timeline, scene: HTMLElement, mode: SceneMode, page: HTMLElement) {
-  const q = gsap.utils.selector(scene);
-  const pin = mode === "pin";
-  const story = mode === "story";
-  const col = q(".approve-col")[0] as HTMLElement;
-  const card = q(".approval-card")[0] as HTMLElement;
-  const marker = q(".ladder-marker")[0] as HTMLElement;
-  const ladder = q(".ladder-col")[0] as HTMLElement;
-  /* Story mode shows the card and the ladder one after the other in the same space. */
-  const at = story ? { rule: 0.66, row: 0.68, marker: 0.76, ask: 0.82, move: 0.9 } : { rule: 0.55, row: 0.57, marker: 0.66, ask: 0.76, move: 0.86 };
-  if (pin) {
-    const dx = () => (col.offsetWidth + 40) / 2;
-    const dim = [q(".scene-head")[0], q(".approve-nok")[0], q(".scene-caption")[0], page.querySelector(".rail-steps")];
-    tl.fromTo(dim, { opacity: 1 }, { opacity: 0.3, duration: 0.2 }, 0);
-    tl.fromTo(card, { y: 48, x: dx }, { y: 0, x: dx, duration: 0.2 }, 0);
-    tl.to(card, { x: 0, duration: 0.05 }, 0.52);
-    tl.to(dim, { opacity: 1, duration: 0.05 }, 0.52);
-    tl.set(ladder, { autoAlpha: 1 }, 0.54);
-    gsap.set(ladder, { autoAlpha: 0 });
-  }
-  if (story) {
-    const dimStory = [q(".approve-nok")[0], q(".scene-caption")[0], page.querySelector(".rail-steps")];
-    collapseHead(tl, scene, 0.1);
-    tl.fromTo(dimStory, { opacity: 1 }, { opacity: 0.3, duration: 0.2 }, 0);
-    tl.fromTo(card, { autoAlpha: 0, y: 48 }, { autoAlpha: 1, y: 0, duration: 0.12 }, 0.08);
-    tl.to(dimStory, { opacity: 1, duration: 0.05 }, 0.52);
-    tl.to(col, { autoAlpha: 0, y: -16, duration: 0.05 }, 0.62);
-    tl.set(ladder, { autoAlpha: 1 }, 0.66);
-    gsap.set(ladder, { autoAlpha: 0 });
-  }
-  each(tl, q(".ladder-rule"), { scaleX: 0 }, { scaleX: 1, duration: 0.1 }, at.rule, 0.015);
-  each(tl, q(".ladder-row > :not(.ladder-rule)"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.08 }, at.row, 0.004);
-  gsap.set(marker, { y: 0, yPercent: 100, autoAlpha: 0 });
-  tl.to(marker, { autoAlpha: 1, duration: 0.03 }, at.marker);
-  tl.fromTo(q(".ladder-ask"), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.07 }, at.ask);
-  tl.to(marker, { yPercent: 200, duration: 0.08 }, at.move);
-  tl.to({}, { duration: 0.01 }, 0.99);
-}
-
-function buildWorkspace(tl: gsap.core.Timeline, scene: HTMLElement, mode: SceneMode) {
-  const q = gsap.utils.selector(scene);
-  const story = mode === "story";
-  if (story) collapseHead(tl, scene, 0.08);
-  each(tl, q(".net-card"), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.14 }, story ? 0.14 : 0.02, 0.05);
-  if (mode !== "pin") tl.fromTo(q(".spine"), { scaleY: 0 }, { scaleY: 1, duration: 0.3 }, 0.32);
-  each(tl, q(".net-lines path"), { drawSVG: "0%" }, { drawSVG: "100%", duration: 0.18 }, 0.32, 0.03);
-  tl.fromTo(q(".net-node"), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.12 }, 0.7);
-  tl.to({}, { duration: 0.01 }, 0.99);
+  return { prepare, play, finish, replay };
 }
 
 /* ---------- Section reveal: hairline, eyebrow, headline lines, lead ---------- */
@@ -424,16 +284,14 @@ export function mount(root: HTMLElement) {
   const railEl = root.querySelector<HTMLElement>(".rail");
   const statusEl = root.querySelector<HTMLElement>("#rail-status");
   const railSteps = root.querySelectorAll<HTMLElement>(".rail-step");
-  const approvalCard = root.querySelector<HTMLElement>(".approval-card");
 
   const ui = {
-    positions: [] as { top: number; pinned: boolean }[],
-    mode: "flow" as SceneMode,
+    positions: [] as { step: number; top: number }[],
+    reduced: false,
     active: 0,
     railVisible: false,
     complete: false,
     runSeconds: 0,
-    approval: "pending" as ApprovalState,
     dots: false,
     heroLoop: true,
     wave: null as ReturnType<typeof createWave> | null,
@@ -443,22 +301,15 @@ export function mount(root: HTMLElement) {
     root.setAttribute("data-loop", ui.dots ? "dots" : ui.heroLoop ? "hero" : "run");
   }
 
-  function applyApproval(next: ApprovalState) {
-    if (!approvalCard) return;
-    approvalCard.setAttribute("data-approval", next);
-    const resolved = next !== "pending";
-    approvalCard.querySelectorAll<HTMLButtonElement>("[data-approval-action]").forEach((b) => (b.disabled = resolved));
-  }
-
   function railStatusText(): string {
+    const t = strings().rail;
     if (ui.complete) {
       const m = Math.floor(ui.runSeconds / 60);
       const s = ui.runSeconds % 60;
-      return `Run complete ▪ Finished in ${m ? `${m}m ` : ""}${s}s`;
+      const duration = format(m ? t.durationMinutes : t.durationSeconds, { m, s });
+      return format(t.complete, { duration });
     }
-    if (ui.active === 4 && ui.approval === "pending") return "Waiting for approval";
-    if (ui.active === 7) return "Waiting for you";
-    return `Running step ${Math.max(ui.active, 1)} of ${railSteps.length}`;
+    return format(t.running, { n: Math.max(ui.active, 1), total: railSteps.length });
   }
 
   function renderRail() {
@@ -492,22 +343,10 @@ export function mount(root: HTMLElement) {
       ui.heroLoop = heroLoop;
       applyLoop();
     },
-    getApproval: () => ui.approval,
-    setApproval(approval) {
-      if (approval === ui.approval) return;
-      ui.approval = approval;
-      applyApproval(approval);
-      onApproval(approval);
-      renderRail();
-    },
   };
 
   function measure() {
-    ui.positions = sections.map((el) => {
-      const box = el.parentElement && (el.parentElement as HTMLElement).classList.contains("pin-spacer") ? el.parentElement : el;
-      const held = box !== el || (ui.mode === "story" && el.hasAttribute("data-pin"));
-      return { top: (box as HTMLElement).getBoundingClientRect().top + window.scrollY, pinned: held };
-    });
+    ui.positions = sections.map((el) => ({ step: Number(el.dataset.step), top: el.getBoundingClientRect().top + window.scrollY }));
     updateRail();
   }
 
@@ -516,13 +355,13 @@ export function mount(root: HTMLElement) {
     const y = window.scrollY;
     const half = window.innerHeight * 0.5;
     let active = 0;
-    for (let i = 0; i < ui.positions.length; i++) if (ui.positions[i].top - half <= y) active = i + 1;
+    for (const pos of ui.positions) if (pos.top - half <= y) active = pos.step;
     const railVisible = active > 0;
     api.setRail({ active, visible: railVisible });
   }
 
   function scrollToY(y: number, then?: () => void) {
-    const instant = ui.mode === "reduced";
+    const instant = ui.reduced;
     gsap.to(window, {
       duration: instant ? 0 : 0.9,
       ease: "ynw-standard",
@@ -533,13 +372,13 @@ export function mount(root: HTMLElement) {
   }
 
   function barOffset() {
-    return window.innerWidth >= 1024 ? 72 : 112;
+    return window.innerWidth >= 1440 ? 72 : 112;
   }
 
   function jumpToStep(n: number) {
-    const pos = ui.positions[n - 1];
+    const pos = ui.positions.find((p) => p.step === n);
     if (!pos) return;
-    scrollToY(pos.pinned ? pos.top + 1 : pos.top - barOffset() + 56);
+    scrollToY(pos.top - barOffset() + 56);
   }
 
   function jumpToForm(focusInput: boolean) {
@@ -556,27 +395,6 @@ export function mount(root: HTMLElement) {
     });
   }
 
-  let approvalTween: gsap.core.Timeline | null = null;
-  function onApproval(next: ApprovalState) {
-    const q = gsap.utils.selector(root);
-    const glow = q(".approval-glow")[0] as HTMLElement;
-    const sent = q(".approve-sent")[0] as HTMLElement;
-    if (!glow || !sent) return;
-    if (approvalTween) approvalTween.kill();
-    const instant = ui.mode === "reduced";
-    if (next === "pending") {
-      approvalTween = gsap
-        .timeline()
-        .set(sent, { clearProps: "opacity,transform" })
-        .to(glow, { opacity: 1, duration: instant ? 0 : 0.2, ease: "ynw-standard" });
-    } else {
-      approvalTween = gsap.timeline().to(glow, { opacity: 0, duration: instant ? 0 : 0.32, ease: "ynw-standard" });
-      if (next === "approved") {
-        approvalTween.fromTo(sent, { opacity: 0, y: instant ? 0 : 12 }, { opacity: 1, y: 0, duration: instant ? 0 : 0.32, ease: "ynw-out" }, 0.08);
-      }
-    }
-  }
-
   function onSignup(runSeconds: number) {
     ui.complete = true;
     ui.runSeconds = runSeconds;
@@ -584,13 +402,6 @@ export function mount(root: HTMLElement) {
     if (railEl) railEl.setAttribute("data-complete", "true");
     renderRail();
   }
-
-  /* Approval demo buttons */
-  approvalCard?.querySelectorAll<HTMLButtonElement>("[data-approval-action]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      api.setApproval(btn.dataset.approvalAction === "approve" ? "approved" : "denied");
-    });
-  });
 
   /* Rail step buttons + nav CTA */
   railSteps.forEach((step) => {
@@ -643,39 +454,35 @@ export function mount(root: HTMLElement) {
     };
   }
 
-  function approvalRules(scene: HTMLElement, pin: boolean) {
-    if (pin) {
-      return (self: ScrollTrigger) => {
-        const p = self.progress;
-        const prev = (self as unknown as { __prevP?: number }).__prevP === undefined ? p : (self as unknown as { __prevP?: number }).__prevP!;
-        (self as unknown as { __prevP?: number }).__prevP = p;
-        if (p > 0.5 && api.getApproval() === "pending") api.setApproval("approved");
-        if (prev >= 0.2 && p < 0.2 && api.getApproval() !== "pending") api.setApproval("pending");
-      };
+  function playScene(scene: HTMLElement, build: SceneBuilder) {
+    const player = createScenePlayer(scene, build);
+    ScrollTrigger.create({ trigger: scene, start: "top 100%", once: true, onEnter: player.prepare });
+    const stage = scene.querySelector<HTMLElement>(".stage")!;
+    ScrollTrigger.create({ trigger: stage, start: "top 70%", end: "bottom top", onEnter: player.play, onLeave: player.finish });
+    const disposers: Array<() => void> = [];
+    const replay = scene.querySelector<HTMLButtonElement>("[data-replay]");
+    if (replay) {
+      replay.hidden = false;
+      replay.addEventListener("click", player.replay);
+      disposers.push(() => {
+        replay.hidden = true;
+        replay.removeEventListener("click", player.replay);
+      });
     }
-    const card = scene.querySelector<HTMLElement>(".approval-card")!;
-    ScrollTrigger.create({
-      trigger: card,
-      start: "top 96%",
-      end: "bottom 28%",
-      onLeave: () => {
-        if (api.getApproval() === "pending") api.setApproval("approved");
-      },
-      onLeaveBack: () => {
-        if (api.getApproval() !== "pending") api.setApproval("pending");
-      },
-    });
-    return null;
+    if (scene.hasAttribute("data-approval-modes")) {
+      const onMode = (e: Event) => {
+        player.finish();
+        animateApprovalMode(scene, (e as CustomEvent<ApprovalModeChange>).detail);
+      };
+      scene.addEventListener("ynw:approval-mode", onMode);
+      disposers.push(() => scene.removeEventListener("ynw:approval-mode", onMode));
+    }
+    return () => disposers.forEach((dispose) => dispose());
   }
 
-  mm.add({ pin: PIN, story: STORY, flow: FLOW, reduced: REDUCED }, (context) => {
-    const cond = context.conditions as Record<string, boolean>;
-    const mode: SceneMode = cond.pin ? "pin" : cond.story ? "story" : cond.reduced ? "reduced" : "flow";
-    ui.mode = mode;
-    root.setAttribute("data-motion", mode);
-    const pin = mode === "pin";
-    const story = mode === "story";
-    const reduced = mode === "reduced";
+  mm.add({ animated: ANIMATED, reduced: REDUCED }, (context) => {
+    const reduced = Boolean((context.conditions as Record<string, boolean>).reduced);
+    ui.reduced = reduced;
     const q = gsap.utils.selector(root);
     const cleanups: Array<() => void> = [];
 
@@ -701,14 +508,6 @@ export function mount(root: HTMLElement) {
       api.setHeroLoop(false);
     }
 
-    const builders: Record<string, (tl: gsap.core.Timeline, scene: HTMLElement, mode: SceneMode, extra?: unknown) => void | (() => void)> = {
-      avatars: buildAvatars,
-      agents: buildAgents as (tl: gsap.core.Timeline, scene: HTMLElement, mode: SceneMode, extra?: unknown) => void | (() => void),
-      backstage: buildBackstage,
-      approvals: buildApprovals as (tl: gsap.core.Timeline, scene: HTMLElement, mode: SceneMode, extra?: unknown) => void | (() => void),
-      workspace: buildWorkspace,
-    };
-
     sections.forEach((scene) => {
       if (reduced) {
         gsap.fromTo(
@@ -724,83 +523,12 @@ export function mount(root: HTMLElement) {
         return;
       }
       reveal(scene);
-      const build = builders[scene.id];
-      if (!build) return;
-      const tl = gsap.timeline({ paused: true, defaults: { ease: "none" } });
-      const restore = build(tl, scene, mode, scene.id === "approvals" ? root : api);
-      if (typeof restore === "function") cleanups.push(restore);
-      if (story) {
-        tl.paused(false);
-        ScrollTrigger.create({
-          animation: tl,
-          trigger: scene,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: true,
-          invalidateOnRefresh: true,
-          onUpdate: (scene.id === "approvals" ? approvalRules(scene, true) : null) || undefined,
-        });
-      } else if (pin) {
-        const approvalUpdate = scene.id === "approvals" ? approvalRules(scene, true) : null;
-        tl.paused(false);
-        /* The reference nulls the auto-ScrollTrigger before pinning manually; the typed surface marks it readonly. */
-        (tl as unknown as { scrollTrigger?: unknown }).scrollTrigger = null;
-        ScrollTrigger.create({
-          animation: tl,
-          trigger: scene,
-          start: "top top",
-          end: "+=" + scene.getAttribute("data-pin") + "%",
-          pin: true,
-          scrub: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: approvalUpdate || undefined,
-        });
-      } else {
-        ScrollTrigger.create({
-          trigger: scene.querySelector(".stage"),
-          start: "top 72%",
-          once: true,
-          onEnter: () => {
-            gsap.to(tl, { progress: 1, duration: 1.2, ease: "ynw-standard" });
-          },
-        });
-      }
+      const build = sceneBuilders[scene.id];
+      if (build) cleanups.push(playScene(scene, build));
     });
 
-    if (!pin && !story) approvalRules(root.querySelector<HTMLElement>("#approvals")!, false);
-
-    /* 05 Receipts: scrubbed, no pin. In flow it plays once. */
-    const receipts = root.querySelector<HTMLElement>("#receipts")!;
-    const rq = gsap.utils.selector(receipts);
+    /* Wishlist: contour lines draw along the bottom. */
     if (!reduced) {
-      const rtl = gsap.timeline({ defaults: { ease: "none" } });
-      each(rtl, rq(".dg-draw > *"), { drawSVG: "0%" }, { drawSVG: "100%", duration: 0.3 }, 0, 0.03);
-      rtl.fromTo(rq(".dg-fade"), { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.32);
-      rtl.fromTo(rq(".receipt"), { opacity: 0 }, { opacity: 1, duration: 0.1 }, 0.3);
-      each(rtl, rq(".receipt-line"), { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.14 }, 0.4, 0.14);
-      if (pin || story) {
-        ScrollTrigger.create({
-          animation: rtl,
-          trigger: rq(".stage")[0],
-          start: "top 82%",
-          end: "bottom 62%",
-          scrub: true,
-          invalidateOnRefresh: true,
-        });
-      } else {
-        rtl.pause();
-        ScrollTrigger.create({
-          trigger: rq(".stage")[0],
-          start: "top 72%",
-          once: true,
-          onEnter: () => {
-            gsap.to(rtl, { progress: 1, duration: 1.2, ease: "ynw-standard" });
-          },
-        });
-      }
-
-      /* 07 Wishlist: contour lines draw along the bottom. */
       gsap.fromTo(
         root.querySelectorAll(".contours path"),
         { drawSVG: "0%" },
@@ -819,22 +547,17 @@ export function mount(root: HTMLElement) {
     ScrollTrigger.addEventListener("refresh", measure);
     cleanups.push(() => ScrollTrigger.removeEventListener("refresh", measure));
 
-    /* Keep the approval's visual state correct when a branch rebuilds */
-    if (ui.approval !== "pending") onApproval(ui.approval);
-
     document.fonts.ready.then(() => ScrollTrigger.refresh());
     ScrollTrigger.refresh();
 
     return function cleanup() {
       cleanups.forEach((fn) => fn());
-      root.removeAttribute("data-motion");
       ui.active = 0;
       ui.railVisible = false;
     };
   });
 
   return {
-    onApproval,
     onSignup,
     jumpToStep,
     jumpToForm,

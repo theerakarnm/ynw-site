@@ -3,8 +3,10 @@
  * /support closing: thanks card with the last Buy Me a Coffee CTA.
  */
 import Icon from "@/components/ui/Icon.astro";
-import { support } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
 import { donateUrl } from "@/data/site";
+
+const { support } = copyOf(Astro.url);
 
 const t = support.closing;
 ---

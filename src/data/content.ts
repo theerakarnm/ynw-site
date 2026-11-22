@@ -4,6 +4,57 @@
  * owner must approve before launch. Do not invent claims, prices or statistics.
  */
 
+// Page-level SEO copy. Titles are final strings (brand name included) so a locale can swap them whole.
+export const meta = {
+  home: {
+    title: "YNW - A Chat App With Your Own AI Assistant",
+    description:
+      "A chat app with your own AI Assistant. Add friends by QR code, send stickers, and let it catch you up and draft replies. You decide what it does alone.",
+    ogImageAlt: "YNW - a chat app with an AI Assistant. Orange LED wave of dots forming a wave under the YNW wordmark.",
+    // CONFIRM: target keywords are derived from the reference copy, not owner-supplied.
+    keywords: [
+      "AI chat app",
+      "AI assistant in chat",
+      "group chat summary",
+      "chat app with stickers",
+      "multiple accounts chat app",
+      "chat workflows",
+      "MCP chat app",
+    ],
+  },
+  support: {
+    title: "Support YNW - Founding Round",
+    description:
+      "Help us build YNW. Join the founding round at any level: thank-you gifts for early backers, from one coffee to founding partner.",
+  },
+  privacy: {
+    title: "Privacy - YNW",
+    description: "What the YNW wishlist page collects, why, and how to unsubscribe.",
+  },
+  thanks: { title: "You are on the wishlist - YNW" },
+  unsubscribed: { title: "Unsubscribed - YNW" },
+  notFound: { title: "This wave does not exist. - 404" },
+} as const;
+
+// Accessible names and the language switch. {language} is filled with a language name.
+export const a11y = {
+  skipLink: "Skip to content",
+  navLabel: "Main",
+  homeLabel: "YNW home",
+  fundingLabel: "Funding progress",
+  language: {
+    switchToLabel: "Switch language to {language}",
+    // Each label names the language the switch goes to, shown on the other language's page.
+    labels: { en: "EN", th: "ไทย" },
+    names: { en: "English", th: "ไทย" },
+    currentLabel: "Current language: {language}",
+  },
+} as const;
+
+export const sceneUi = {
+  replay: "Replay",
+} as const;
+
 export const nav = {
   cta: "Join the wishlist",
   // /support nav: in-page anchors (reference Main.dc.html nav) + BMC CTA.
@@ -16,10 +67,10 @@ export const nav = {
 } as const;
 
 export const hero = {
-  eyebrow: "AGENTIC CHAT ▪ COMING SOON",
+  eyebrow: "CHAT APP WITH AN ASSISTANT ▪ COMING SOON",
   supportCta: "Support the founding round",
   titleLines: ["Your Next Wave.", "Your New World.", "Your Network Workspace."],
-  lead: "One chat app for your life, your team and your business. Your AI agents plan, use tools and reply for you, and you decide what they can do alone.",
+  lead: "A chat app for your life, your team and your business. Add friends by QR code, send stickers, and call your own Assistant in any chat. You decide what it can do alone.",
 } as const;
 
 export const wishlistForm = {
@@ -48,123 +99,308 @@ export const wishlistForm = {
 
 export const rail = {
   label: "Run progress",
-  steps: ["Avatars", "Agents", "Backstage", "Approvals", "Receipts", "Workspace", "Wishlist"],
+  steps: ["Chat", "Assistant", "Accounts", "Approval Modes", "Workflows", "Agent relay", "Developers", "Planned", "Wishlist"],
 } as const;
 
 export const ticker = {
   label: "Capabilities",
-  items: [
-    "AVATARS",
-    "BACKSTAGE",
-    "APPROVALS",
-    "MULTI-AGENT",
-    "TOOL CALLING",
-    "SHARED WORKSPACES",
-    "MCP CONNECTORS",
-    "RUN RECEIPTS",
-  ],
+  items: ["ASSISTANT", "ACCOUNTS", "APPROVAL MODES", "WORKFLOWS", "AGENT RELAY", "STICKERS", "MCP"],
 } as const;
 
 export const scenes = [
-  { id: "avatars", num: "01", label: "Avatars", title: "One you. Every role.", lead: "Give each role its own avatar, with its own contacts, knowledge, permissions and agent. A person or an agent can hold the seat, and the conversation never breaks.", caption: "Product concept. Interface and data are illustrative." },
-  { id: "agents", num: "02", label: "Agents", title: "Agents that finish the job", lead: "Ask once. The agent plans the steps, calls your tools, hands off to other agents and reports back.", caption: "Product concept. Interface and data are illustrative." },
-  { id: "backstage", num: "03", label: "Backstage", title: "Every chat has a backstage.", lead: "Your team and your agents talk, summarize and draft on a private layer beside the conversation. The other side sees only what you send.", caption: "Product concept. Interface and data are illustrative." },
-  { id: "approvals", num: "04", label: "Approvals", title: "Nothing important goes out without you.", lead: "You set what each agent may do alone. Anything above that line pauses for your approval.", caption: "Product concept. Interface and data are illustrative." },
-  { id: "receipts", num: "05", label: "Receipts", title: "Bring your own agents. Keep the receipts.", lead: "Connect the agents and tools you already use through MCP. Every action records who asked, what it used and who approved it.", caption: "Product concept. Interface and data are illustrative." },
-  { id: "workspace", num: "06", label: "Workspace", title: "Friends, teams and communities in one network.", lead: "Agents join with a role, like any other member.", caption: "Product concept. Interface and data are illustrative." },
-  { id: "wishlist", num: "07", label: "Wishlist", title: "The last step needs you.", lead: "Join the wishlist and get an email when early access opens.", caption: "" },
+  {
+    id: "chat", num: "01", label: "Chat", layout: "full",
+    title: "A chat app first.",
+    lead: "Add a friend by QR code. Talk one to one or in a group. Send stickers.",
+    steps: ["Scan a QR code to add a friend", "Say hello one to one", "Start a group", "Send a sticker"],
+    replay: "Replay Chat scene",
+    caption: "Product concept. Interface and data are illustrative.",
+  },
+  {
+    id: "assistant", num: "02", label: "Assistant", layout: "copy-left",
+    title: "200 unread. One line to catch up.",
+    lead: "Mention your Assistant in any chat. It reads what you can already see, tells you what changed, and drafts your reply. Only you see the answer.",
+    steps: [
+      "The family group keeps moving while you work.",
+      "You type @Assistant in the chat.",
+      "It reads the messages and finds what was decided.",
+      "You get a summary and a reply ready to send.",
+    ],
+    receipt: "Summarised 200 messages from Family group. 1 reply is ready to send.",
+    replay: "Replay Assistant scene",
+    caption: "Product concept. Interface and data are illustrative.",
+  },
+  {
+    id: "accounts", num: "03", label: "Accounts", layout: "copy-right",
+    title: "One you. Several Accounts.",
+    lead: "You sign in once as one User. You can own several Accounts, for example Personal, a shop and a team. Other people cannot see that they belong to one User.",
+    steps: [
+      "Personal, Shop and Team are equal Accounts.",
+      "Each Account has its own contacts.",
+      "Each Account has its own Assistant permissions.",
+      "The free plan includes up to 3 Accounts.", // CONFIRM: limit from product-v1
+    ],
+    replay: "Replay Accounts scene",
+    caption: "Product concept. Interface and data are illustrative.",
+  },
+  {
+    id: "approval-modes", num: "04", label: "Approval Modes", layout: "full",
+    title: "You decide what it does alone.",
+    lead: "Pick how much your Assistant may do without asking. New Accounts start on Auto.",
+    replay: "Replay Approval Modes scene",
+    caption: "Product concept. Interface and data are illustrative.",
+  },
+  {
+    id: "workflows", num: "05", label: "Workflows", layout: "copy-left",
+    title: "Say it once. It runs every time.",
+    lead: "Describe a routine in plain language. The Assistant turns it into visible steps once. You confirm, and it runs on schedule. Confirming never removes the actions that always ask.",
+    steps: [
+      "You type the routine.",
+      "The Assistant compiles it into blocks.",
+      "You confirm the steps.",
+      "The Workflow runs. A model is called only in AI steps.",
+    ],
+    replay: "Replay Workflows scene",
+    caption: "Product concept. Interface and data are illustrative.",
+  },
+  {
+    id: "relay", num: "06", label: "Agent relay", layout: "copy-right",
+    title: "One message. Two chats.",
+    lead: "Ask your Assistant to carry a message from one chat to another. The receipt shows which Account it used and who asked.",
+    steps: [
+      "Nok sends an order in the shop chat.",
+      "You ask @Assistant to send it to the team as a PDF.",
+      "The Assistant creates order-0142.pdf.",
+      "It posts the file in the Shop team group.",
+    ],
+    replay: "Replay Agent relay scene",
+    caption: "Product concept. Interface and data are illustrative.",
+  },
+  {
+    id: "developers", num: "07", label: "Developers", layout: "full",
+    title: "Connect your own system.",
+    lead: "Your server can operate one of your Accounts over HTTP, like a chat platform API. The HTTP API is planned. MCP is part of v1.",
+    receipt: "Account: Baan Khanom | Actor: Integration (order-sync)",
+    receiptTag: "Planned",
+    replay: "Run request",
+    replayText: "Run request",
+    caption: "Product concept. Interface and data are illustrative.",
+  },
+  {
+    id: "planned", num: "08", label: "Planned",
+    title: "Planned, not promised for v1.",
+    lead: "These are on the list. None has a date.",
+    caption: "Product concept. Interface and data are illustrative.",
+  },
+  { id: "wishlist", num: "09", label: "Wishlist", title: "The last step needs you.", lead: "Join the wishlist and get an email when early access opens.", caption: "" },
 ] as const;
 
-export const avatarsDemo = {
-  originLabel: "You",
-  seats: [
-    { index: "A", name: "Personal", occupant: "You", occupantInitial: "Y" },
-    { index: "B", name: "Business Admin", occupant: "You", occupantInitial: "Y" },
-    { index: "C", name: "Community host", occupant: "You", occupantInitial: "Y" },
+// Sticker bubbles carry this label: the pack comes from the official YNW Account.
+export const stickerLabel = "YNW";
+
+// Avatar initials are Latin on purpose: Thai marks such as ม read like "u" in a 28px circle.
+export const chatDemo = {
+  qr: { title: "Add friend", hint: "Scan a QR code", label: "Mali's QR code" },
+  friend: { name: "Mali", sub: "Friend" },
+  added: "You added Mali by QR code",
+  hello: "Hi Mali",
+  reply: { who: "Mali", initial: "M", text: "สวัสดี ยินดีที่ได้รู้จัก" },
+  group: { name: "Weekend trip", sub: "3 members" },
+  groupStarted: "You started the group Weekend trip",
+  groupMessages: [
+    { who: "Mali", initial: "M", text: "เสาร์นี้ไปทะเลกันไหม" },
+    { who: "You", initial: "Y", text: "ไปสิ", me: true },
+    { who: "Ploy", initial: "P", text: "Count me in" },
   ],
-  seatList: ["Contacts", "Knowledge", "Permissions", "Agent"],
-  swap: [
-    { initial: "Y", label: "You", cls: "occ-you" },
-    { initial: "B", label: "Agent", cls: "occ-agent", agent: true },
-    { initial: "M", label: "Mali", cls: "occ-mali" },
-  ],
-  threadEyebrow: "Business Admin ▪ Nok",
-  threadAuthor: "Nok",
-  threadMessage: "สนใจ 20 ชิ้น มีส่วนลดไหมคะ",
 } as const;
 
-export const agentsDemo = {
-  nokAuthor: "Nok",
-  nokMessage: "สนใจ 20 ชิ้น มีส่วนลดไหมคะ",
-  agentName: "Business Admin",
-  thinking: "Searching 2 sources",
-  handoff: "Business Admin → Finance agent",
-  planTitle: "Plan ▪ 3 steps",
-  steps: ["Check stock", "Read price policy", "Draft quote"],
-  tools: [
-    { name: 'stock.lookup({ sku: "A-20" })', output: "120 in stock ▪ 0.4s", icon: "database" },
-    { name: 'docs.search({ q: "discount policy" })', output: "Over 5% needs approval ▪ 0.9s", icon: "file" },
+export const assistantDemo = {
+  stream: { name: "Family group", sub: "8 members" },
+  unread: "unread", // same word as the scene title
+  messages: [
+    { who: "แม่", initial: "M", text: "เย็นนี้ใครว่างบ้าง" },
+    { who: "พลอย", initial: "P", text: "เลื่อนเป็นวันเสาร์ได้ไหม" },
+    { who: "พ่อ", initial: "D", text: "เสาร์ได้ 6 โมงเย็น" },
+    { who: "ยาย", initial: "G", sticker: true },
+    { who: "พลอย", initial: "P", text: "จองโต๊ะที่บ้านยายเลยนะ" },
+    { who: "น้า", initial: "A", text: "ส่งรูปมา 12 รูป" },
+    { who: "แม่", initial: "M", text: "แล้วใครเอาขนมไป" },
   ],
-  statusRunning: "Running",
-  statusDone: "Done",
+  mention: "@Assistant",
+  ask: " สรุปให้หน่อย",
+  notice: "An Assistant is used in this chat. Only the person who asked sees its answer.",
+  panelWorking: "Assistant is working",
+  panelDone: "Assistant",
+  private: "Visible only to you",
+  trail: ["Read 200 messages", "Found 2 decisions, 1 question", "Drafted a reply"],
+  summary: [
+    "Dinner moved to Saturday 18:00 at Grandma's house.",
+    "Ploy books the table. Dad brings the car.",
+    "Mom asks who brings dessert. No one has answered.",
+  ],
+  send: 'Send "I\'ll bring dessert"',
+  edit: "Edit",
 } as const;
 
-export const backstageDemo = {
-  frontWorkLabel: "FRONTSTAGE ▪ NOK SEES THIS",
-  frontWorkAuthor: "Nok",
-  frontWorkMessage: "สนใจ 20 ชิ้น มีส่วนลดไหมคะ",
-  frontHomeLabel: "FRONTSTAGE",
-  frontHomeLine: "Family group ▪ 200 unread",
-  backWorkLabel: "BACKSTAGE ▪ ONLY YOUR TEAM SEES THIS",
-  backHomeLabel: "BACKSTAGE",
-  backHomeLine: "Dinner moved to Saturday 18:00. Mom asks who brings dessert.",
-  summary: { author: "Business Admin", agent: true, body: "Nok asks for 20 units at a discount. Repeat customer, 3 past orders." },
-  mali: { author: "Mali", body: "Offer 8%." },
-  draft: { author: "Business Admin", agent: true, body: "ได้เลยค่ะ 20 ชิ้น ลดให้ 8% รวม ฿4,600 ค่ะ" },
+export const accountsDemo = {
+  switcherHint: "Switch Account",
+  compare: {
+    caption: "Accounts compared",
+    contacts: "Contacts",
+    assistant: "Assistant mode",
+    // source: ynw GLOSSARY.md "Workflow" and ADR 0015 (a Workflow belongs to one Account)
+    workflows: "Workflows",
+    none: "None yet",
+  },
+  accounts: [
+    {
+      id: "personal", kind: "Personal", name: "Pim", assistant: "Assistant: Ask", mode: "Ask", workflows: [],
+      contacts: [
+        { name: "Mali", lang: "en" },
+        { name: "Ploy", lang: "en" },
+        { name: "แม่", lang: "th" },
+      ],
+    },
+    {
+      id: "shop", kind: "Shop", name: "Baan Khanom", assistant: "Assistant: Auto", mode: "Auto", workflows: ["Weekly orders"],
+      contacts: [
+        { name: "Nok", lang: "en" },
+        { name: "Lamyai Farm", lang: "en" },
+        { name: "Shop team", lang: "en" },
+      ],
+    },
+    {
+      id: "team", kind: "Team", name: "Lamyai Team", assistant: "Assistant: Ask", mode: "Ask", workflows: [],
+      contacts: [
+        { name: "Arm", lang: "en" },
+        { name: "Beer", lang: "en" },
+        { name: "Design group", lang: "en" },
+      ],
+    },
+  ],
+  active: "team",
 } as const;
 
-export const approvalsDemo = {
-  nokAuthor: "Nok",
-  nokMessage: "สนใจ 20 ชิ้น มีส่วนลดไหมคะ",
-  headEyebrow: "APPROVAL REQUIRED",
-  headMeta: "Business Admin ▪ 14:36",
-  body: "Send this quote to Nok. 8% is above your 5% discount limit.",
-  code: 'quote.send({ to: "Nok", units: 20, discount: 0.08, total: "฿4,600" })',
-  deny: "Deny",
+export const approvalDemo = {
+  modesLabel: "Approval Mode",
+  modes: [
+    { id: "allow", name: "Allow", text: "The Assistant acts at once. The reply to Mali is sent." },
+    { id: "auto", name: "Auto", text: "A Decision Model checks each action. The routine reply is sent after the check." },
+    { id: "ask", name: "Ask", text: "The Assistant waits for you. The reply to Mali waits for your approval." },
+  ],
+  defaultMode: "auto",
+  lanes: { alone: "Does it alone", ask: "Asks you first" },
+  /** `alone` lists the modes in which the action runs without asking (ADR 0009). */
+  actions: [
+    {
+      id: "reply",
+      title: "Reply to Mali",
+      context: "เจอกันวันศุกร์ได้ไหม",
+      body: "Friday works",
+      alone: ["allow", "auto"],
+      states: { allow: "Sent by Assistant", auto: "Decision Model checked: routine reply", ask: "Assistant asks" },
+    },
+    {
+      id: "tool",
+      title: "Call a tool",
+      body: "Tool call through a Connection", // source: ADR 0011, "Tool calls follow the Approval Mode"
+      alone: ["allow"],
+      // source: ADR 0009, Auto falls back to Ask when the Decision Model's confidence is below the threshold
+      states: { allow: "Done by Assistant", auto: "Decision Model was not sure", ask: "Assistant asks" },
+    },
+  ],
   approve: "Approve",
-  approved: "Approved by you ▪ 14:37",
-  denied: "Denied by you ▪ 14:37. Nothing was sent.",
-  sent: { author: "Business Admin", body: "ได้เลยค่ะ 20 ชิ้น ลดให้ 8% รวม ฿4,600 ค่ะ" },
-  ladderEyebrowless: true,
-  ladder: [
-    { name: "Suggest", desc: "Drafts it. You send it.", eg: "complaints" },
-    { name: "Approve", desc: "Waits for your approval.", eg: "discounts, quotes" },
-    { name: "Undo window", desc: "Sends after 5 minutes unless you cancel.", eg: "appointment confirmations" },
-    { name: "Auto", desc: "Replies on its own within policy.", eg: "opening hours, address" },
-    { name: "Never", desc: "Blocked, whoever asks.", eg: "money transfers, customer data" },
+  deny: "Deny",
+  waiting: "Waiting for you",
+  payment: "Pay a 1,200 baht invoice",
+  alwaysAskTag: "Always Ask",
+  alwaysAskTitle: "Always Ask, in every mode",
+  alwaysAsk: [
+    "Spending money, such as the 1,200 baht invoice",
+    "Deleting external data",
+    "Contacting an Account with no prior conversation",
+    "Moving data between Accounts",
   ],
-  ask: { author: "Business Admin", body: "48 of your last 50 price replies went out unedited. Want me to send these myself?" },
 } as const;
 
-export const receiptsDemo = {
-  diagramLabel: "Your agents connect through MCP to the workspace. Tools by category: web, shell, data and files.",
-  diagramBoxes: ["Your agents", "MCP", "Workspace"],
-  diagramCats: ["web", "shell", "data", "files"],
+export const workflowsDemo = {
+  panelTitle: "Workflow: Weekly orders",
+  /** The routine as one sentence. Each phrase is underlined in the colour of the block it becomes. */
+  sentence: [
+    { text: "Every Friday 17:00", tone: "trigger" },
+    { text: ", " },
+    { text: "collect the week's orders", tone: "step" },
+    { text: ", " },
+    { text: "write the summary", tone: "ai" },
+    { text: " and " },
+    { text: "send a PDF to the Team group", tone: "output" },
+    { text: "." },
+  ], // source: same routine as the blocks below (product-v1 Workflows, ADR 0015)
+  blocks: [
+    { tone: "trigger", kind: "Trigger", text: "Every Friday 17:00" },
+    { tone: "step", kind: "Step", text: "Collect the week's orders" },
+    { tone: "ai", kind: "AI step", text: "Write the summary" },
+    { tone: "output", kind: "Output", text: "PDF to Team group" },
+  ],
+  confirm: "Confirm",
+  on: "Workflow on",
+  lastRun: "Last run", // UI label, no claim
+  run: "Ran Friday 17:00. Actor: Workflow.",
+  note: "A model is called only in AI steps.",
+} as const;
+
+export const relayDemo = {
+  groupLabel: "Relay",
+  from: "Baan Khanom chat",
+  to: "Shop team group",
+  order: { who: "Nok", initial: "N", text: "สั่งเค้ก 2 กล่อง รับวันเสาร์" },
+  assistant: { who: "Assistant", initial: "A" }, // source: Actor: Assistant in the receipt below
+  mention: "@Assistant",
+  ask: " send this to the team as a PDF",
+  file: "order-0142.pdf",
+  delivered: "Posted in Shop team group",
+  sys: "Assistant sent order-0142.pdf to Shop team",
+  receiptTitle: "Receipt",
   receipt: [
-    { dt: "ACTION", dd: "quote.send" },
-    { dt: "REQUESTED BY", dd: "Nok, via Business Admin" },
-    { dt: "USED", dd: "price-policy.md, stock.lookup" },
-    { dt: "APPROVED BY", dd: "you ▪ 14:37" },
+    { key: "Account", value: "Baan Khanom" },
+    { key: "Actor", value: "Assistant", actor: true },
+    { key: "Asked by", value: "Mali" },
   ],
 } as const;
 
-export const workspaceDemo = {
-  node: { initial: "B", badge: "Business Admin" },
-  cards: [
-    { index: "A", name: "Everyday", body: "Add by QR. Stickers, cards and mini apps in chat." },
-    { index: "B", name: "Work", body: "Channels, threads, search, permissions and audit logs." },
-    { index: "C", name: "Community", body: "Servers, roles, drop-in voice rooms and a bot directory." },
-    { index: "D", name: "Your customers", body: "No install needed. They reach your avatar through LINE Official Account or a web link." },
+export const developersDemo = {
+  header: { initials: "B", name: "Baan Khanom", sub: "Operated by an integration" },
+  actorLabel: "Actor", // source: GLOSSARY.md (Actor)
+  codeLabel: "HTTP API",
+  tag: "Planned",
+  illustrative: "Illustrative request",
+  request: [
+    "POST /accounts/baan-khanom/messages",
+    "Authorization: Bearer <integration-token>",
+    "",
+    '{ "chat": "Shop team",',
+    '  "text": "Order 0142 received" }',
+  ],
+  response: "202 Accepted",
+  codeAria: "Illustrative HTTP request",
+  bubble: "Order 0142 received",
+  panelTitle: "Integration (order-sync)",
+  panelNote: "Planned. Operates this Account.",
+  notesTitle: "MCP, part of v1",
+  notes: [
+    { name: "MCP out", text: "Add Connections and set Grants per Account. Tool calls follow the Approval Mode." },
+    { name: "MCP in", text: "An external AI client, such as Claude or ChatGPT, connects to one Account with OAuth." },
+  ],
+} as const;
+
+export const planned = {
+  tag: "Planned",
+  items: [
+    { name: "Workspaces", text: "Shared spaces and channels for teams." },
+    { name: "Guest links", text: "Let someone join a chat without an Account." }, // CONFIRM: not in product-v1
+    { name: "LINE OA bridging", text: "Connect a LINE Official Account, Messenger or web chat." },
+    { name: "Voice calls", text: "Voice and video calls." },
+    { name: "Developer API", text: "An HTTP API so your server can operate one of your Accounts." },
   ],
 } as const;
 
@@ -443,4 +679,39 @@ export const privacy = {
       ],
     },
   ],
+} as const;
+
+/**
+ * The only copy client scripts read. The layout serialises this into #i18n; scripts never import
+ * copy by name. {name} placeholders are filled by format() in src/lib/i18n.ts.
+ */
+export const clientStrings = {
+  form: {
+    errorInvalid: wishlistForm.errorInvalid,
+    errorConsent: wishlistForm.errorConsent,
+    errorTurnstile: wishlistForm.errorTurnstile,
+    errorRateLimited: wishlistForm.errorRateLimited,
+    errorNetwork: wishlistForm.errorNetwork,
+  },
+  thanks: {
+    copy: thanks.copy,
+    copied: thanks.copied,
+    saved: thanks.saved,
+    saveError: thanks.saveError,
+  },
+  // Scene timelines are sized by the demo copy, so the scripts read it from #i18n instead of importing it.
+  demo: {
+    developersRequest: developersDemo.request,
+    workflowsConfirm: workflowsDemo.confirm,
+    workflowsOn: workflowsDemo.on,
+    assistantMessages: assistantDemo.messages,
+    assistantTrail: assistantDemo.trail,
+    assistantSummary: assistantDemo.summary,
+  },
+  rail: {
+    running: "Running step {n} of {total}",
+    complete: "Run complete ▪ Finished in {duration}",
+    durationMinutes: "{m}m {s}s",
+    durationSeconds: "{s}s",
+  },
 } as const;

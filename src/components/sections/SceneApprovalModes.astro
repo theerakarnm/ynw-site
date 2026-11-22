@@ -1,0 +1,79 @@
+---
+/**
+ * Scene 04 - Approval Modes: a big three way switch and two lanes. Which lane an action sits
+ * in is decided by CSS from data-mode on the section (rules from ADR 0009), so the switch works
+ * without GSAP. The Always Ask box is outside the lanes and never moves.
+ * scripts/approval-modes.ts owns the buttons, scripts/scenes/approval-modes.ts the motion.
+ * Markup is the Auto state.
+ */
+import Scene from "./Scene.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, approvalDemo: d } = copyOf(Astro.url);
+
+const meta = scenes[3];
+const askingIn = (modes: readonly string[]) => d.modes.map((m) => m.id).filter((id) => !modes.includes(id)).join(" ");
+---
+
+<Scene {...meta} stageClass="stage-approval" attrs={{ "data-mode": d.defaultMode, "data-approval-modes": "" }}>
+  <div class="am">
+    <div class="am-switch" role="group" aria-label={d.modesLabel}>
+      {
+        d.modes.map((m) => (
+          <button
+            class="am-mode"
+            type="button"
+            data-mode-button={m.id}
+            aria-pressed={m.id === d.defaultMode ? "true" : "false"}
+            data-cta="approval-mode"
+            data-cta-id={`approval_mode_${m.id}`}
+          >
+            {m.name}
+          </button>
+        ))
+      }
+    </div>
+    <div class="am-desc" aria-live="polite">
+      {d.modes.map((m) => <p data-for={m.id}>{m.text}</p>)}
+    </div>
+
+    <div class="am-lanes" data-beat="lanes">
+      <div class="am-lane" data-lane="alone"><h3 class="am-lane-title ynw-eyebrow">{d.lanes.alone}</h3></div>
+      <div class="am-lane" data-lane="ask"><h3 class="am-lane-title ynw-eyebrow">{d.lanes.ask}</h3></div>
+      {
+        d.actions.map((a, i) => (
+          <div class="am-card" style={`--row: ${i + 2}`} data-alone={a.alone.join(" ")} data-beat={`action-${a.id}`}>
+            <p class="am-card-title">{a.title}</p>
+            {"context" in a && <p class="am-card-context" lang="th">{a.context}</p>}
+            <p class="am-card-body">{a.body}</p>
+            {d.modes.map((m) => <p class="am-card-state" data-for={m.id}>{a.states[m.id]}</p>)}
+            <div class="am-card-acts" data-for={askingIn(a.alone)}>
+              <span class="ynw-btn ynw-btn--primary ynw-btn--sm">{d.approve}</span>
+              <span class="ynw-btn ynw-btn--secondary ynw-btn--sm">{d.deny}</span>
+              <span class="am-card-wait">{d.waiting}</span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <section class="am-always" aria-labelledby="am-always-title" data-beat="always">
+      <div class="am-always-copy">
+        <h3 class="am-always-title ynw-eyebrow" id="am-always-title"><Icon name="lock" size="xs" />{d.alwaysAskTitle}</h3>
+        <ul class="am-always-list">
+          {d.alwaysAsk.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+      <div class="am-card am-card--lock">
+        <p class="am-card-title">{d.alwaysAskTag}</p>
+        <p class="am-card-body">{d.payment}</p>
+        <div class="am-card-acts">
+          <span class="ynw-btn ynw-btn--primary ynw-btn--sm">{d.approve}</span>
+          <span class="ynw-btn ynw-btn--secondary ynw-btn--sm">{d.deny}</span>
+          <span class="am-card-wait">{d.waiting}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</Scene>

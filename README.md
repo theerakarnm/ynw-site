@@ -1,6 +1,6 @@
 # ynw-site
 
-Marketing site for YNW ("Your Next Wave") - a pre-launch landing page for an agentic chat app, rebuilt from a design-tool mockup into a production-ready Astro site with full SEO and a front-end integration to the YNW marketing worker (wishlist, attribution, events). `/support/` is the founding-round page (Buy Me a Coffee tiers, how to donate, FAQ) ported from a second reference mockup.
+Marketing site for YNW ("Your Next Wave") - a pre-launch landing page for a chat app with a built-in AI Assistant, rebuilt from a design-tool mockup into a production-ready Astro site with full SEO and a front-end integration to the YNW marketing worker (wishlist, attribution, events). `/support/` is the founding-round page (Buy Me a Coffee tiers, how to donate, FAQ) ported from a second reference mockup.
 
 The design references live in `_reference/` (read-only, never deployed): `_reference/` for the landing, `_reference/support-round/` for `/support/`. `docs/ANALYSIS.md` documents both references and every decision made while rebuilding them.
 
@@ -8,7 +8,7 @@ The design references live in `_reference/` (read-only, never deployed): `_refer
 
 - Astro 7, static output, TypeScript strict. No UI framework.
 - Plain CSS with custom properties (design tokens). No Tailwind.
-- One JS motion module (GSAP + ScrollTrigger/SplitText/DrawSVG/CustomEase/ScrollTo, npm, free license) for the scroll-driven story. All other behavior is small vanilla TypeScript modules.
+- One JS motion module (GSAP + ScrollTrigger/SplitText/DrawSVG/CustomEase/ScrollTo, npm, free license) plus per-scene timelines in `src/scripts/scenes/` for the story (nine scenes: Chat, Assistant, Accounts, Approval Modes, Workflows, Agent relay, Developers, Planned, Wishlist; each scene has its own form and none is pinned). All other behavior is small vanilla TypeScript modules (`approval-modes.ts` owns the Approval Mode toggle and works without GSAP).
 - Self-hosted fonts (Geist variable, Geist Mono variable, IBM Plex Sans Thai) via Fontsource. No runtime font CDN requests.
 - @astrojs/sitemap, hand-rolled SEO + JSON-LD components, astro:assets.
 
@@ -32,17 +32,26 @@ Requires Node >= 22.23.4 (Astro 7). With nvm: `nvm install 24 && nvm use 24`.
 - `npm run dev` - dev server.
 - `npm run build` - production build to `dist/`: `astro check` (TypeScript strict) + build + `dist/_headers` generation.
 - `npm run preview` - serve the production build.
+- `npm test` - locale and head-script tests with Node's built-in test runner (no dependency).
 - `npm run check` - TypeScript + Astro diagnostics only.
 - `npm run fonts:sync` - copy the self-hosted woff2 subsets from the Fontsource packages into `src/assets/fonts` (run after changing font deps).
 - `python3 scripts/generate_assets.py` - regenerate favicons, PWA icons and the OG image (needs pillow + fonttools + brotli).
 
 ## Editing content
 
-- All visible copy: `src/data/content.ts` (sections, hero, scenes, ticker, form strings, error messages, support/founding-round page, thanks/unsubscribed pages, privacy copy). The reference copy is the placeholder truth; items needing owner confirmation are marked `// CONFIRM`. On `/support/` that includes the funding placeholders (`$[RAISED]`, `$[GOAL]`, `[N] backers`, `[N] days`, `[BETA DATE]`, `raisedPct`) - fill them before announcing the page.
+- All visible copy lives in two files that change together: `src/data/content.ts` (English, the source) and `src/data/content.th.ts` (Thai mirror). `src/data/copy.ts` exports `Copy` and `copyFor(locale)`, and fails the type check if the two drift apart. Components, pages and the layout read copy only through `copyOf(Astro.url)` (`src/lib/page-copy.ts`). The English file holds (sections, hero, scenes and their demo data, ticker, form strings, error messages, support/founding-round page, thanks/unsubscribed pages, privacy copy). The reference copy is the placeholder truth; items needing owner confirmation are marked `// CONFIRM`. On `/support/` that includes the funding placeholders (`$[RAISED]`, `$[GOAL]`, `[N] backers`, `[N] days`, `[BETA DATE]`, `raisedPct`) - fill them before announcing the page.
 - Site-level config (brand, URL, SEO defaults, keywords, consent version, env wiring, `donateUrl`): `src/data/site.ts`.
 - Design tokens (colors, type, spacing, radii, shadows, motion): `src/styles/tokens.css`. Components must reference tokens, never raw hex values.
 - Layout/section CSS: `src/styles/global.css` (ordered, commented sections mirroring the reference).
 - Never edit `_reference/`.
+
+## Languages
+
+- Thai is the default and unprefixed (`/`, `/support/`, ...). English lives under `/en/` with the same paths. Pages are one shared route, `src/pages/[...lang]/`, built once per locale.
+- `src/lib/locale.ts` holds the locale rules (`parseLocale`, `pathLocale`, `localizePath`, `pickLocale`). Saved choice (`localStorage` key `ynw.locale`) beats the URL, the URL beats the device language, anything other than en or th falls back to Thai.
+- An inline `<script id="locale-boot">` (built from `src/lib/locale-boot.ts`) runs first in `<head>` and redirects before first paint. `scripts/build-headers.mjs` hashes it into the CSP `script-src` and fails the build if pages disagree. It also moves `dist/en/404/index.html` to `dist/en/404.html`.
+- The nav switch is a plain link to the sibling URL; `src/scripts/locale-switch.ts` saves the choice first.
+- `html lang`, `og:locale`, `hreflang`, canonical and JSON-LD `inLanguage` follow the page locale. `robots.txt` and `llms.txt` stay single and unprefixed.
 
 ## Environment variables
 
@@ -71,13 +80,13 @@ The full API contract (source of truth, identical to the worker repo) is reprodu
 
 | Item | Status |
 | --- | --- |
-| Unique title 50-60 chars, keyword-led | Done - "YNW - Agentic Chat App. One Chat for Life, Team, Business" (owner: confirm final brand line) |
+| Unique title 50-60 chars, keyword-led | Done - "YNW - A Chat App With Your Own AI Assistant" (owner: confirm final brand line) |
 | Meta description 140-160 chars | Done - reference copy, 147 chars |
 | Canonical, charset, viewport, theme-color | Done |
 | robots meta (index,follow,max-image-preview:large) on index + privacy; noindex on /thanks, /unsubscribed, /404 | Done |
 | Open Graph + Twitter card, 1200x630 PNG with alt | Done - generated `public/og.png` |
 | Favicon set, apple-touch-icon, manifest icons | Done - generated from the YNW lockup dot grid |
-| hreflang | N/A - single language (en) at launch; Thai demo strings are content, not locale. Add when a th locale ships |
+| hreflang | Done - th, en and x-default (Thai URL) on every indexable page; sitemap alternates via the sitemap `i18n` option |
 | One h1, logical h2/h3 | Done - one h1 (hero), one h2 per scene |
 | Semantic landmarks, skip link, descriptive links | Done |
 | JSON-LD: Organization, WebSite, WebPage, SoftwareApplication | Done. FAQPage/BreadcrumbList omitted - no matching visible content (flagged) |
@@ -116,6 +125,6 @@ Full rationale in `docs/ANALYSIS.md` ("Rebuild decisions"), evidence in `docs/VE
 ## Verification summary
 
 - `npm run build`: 0 errors, 0 warnings.
-- Visual: reference vs clone at 360/768/1024/1440/1920 match (pin + story modes); details in docs/VERIFICATION.md.
+- Visual: reference vs clone at 360/768/1024/1440/1920 match; details in docs/VERIFICATION.md.
 - Functional: 21/21 UX-state tests, 18/18 API-contract tests, profile payload verified.
 - Lighthouse: mobile 99/100/100/100, desktop 100/100/100/100.

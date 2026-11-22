@@ -3,8 +3,12 @@
  * /support tiers: thank-you gift cards (For you / For shops and teams) and the
  * free-wishlist strip. One-time prices in USD; every card links to Buy Me a Coffee.
  */
-import { support } from "@/data/content";
+import { copyOf, pageLocale } from "@/lib/page-copy";
+import { localizePath } from "@/lib/locale";
 import { donateUrl } from "@/data/site";
+
+const locale = pageLocale(Astro.url);
+const { support } = copyOf(Astro.url);
 
 const t = support.tiers;
 const you = t.list.filter((tier) => ["01", "02", "03"].includes(tier.index));
@@ -100,7 +104,7 @@ const ctaId = (name: string) => `sp_tier_${name.toLowerCase().replace(/\s+/g, "_
       <span class="sp-strip-title">{support.wishlistStrip.title}</span>
       <span class="sp-strip-lead">{support.wishlistStrip.lead}</span>
     </div>
-    <a class="ynw-btn ynw-btn--secondary" href="/#wishlist" data-cta="wishlist" data-cta-id="sp_strip_wishlist">
+    <a class="ynw-btn ynw-btn--secondary" href={`${localizePath("/", locale)}#wishlist`} data-cta="wishlist" data-cta-id="sp_strip_wishlist">
       {support.wishlistStrip.cta} <span class="arrow">→</span>
     </a>
   </div>

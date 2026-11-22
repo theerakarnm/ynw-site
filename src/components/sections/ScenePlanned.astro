@@ -1,0 +1,34 @@
+---
+/**
+ * Scene 08 - Planned: dashed cards on a blueprint grid, no phone and no pin. Every card
+ * carries the Planned tag and no date. This is the only place LINE OA and voice calls appear.
+ * The dashed outline is an SVG rect behind a mask; scripts/scenes/planned.ts draws the mask in.
+ * Markup is the final state: the outline is already whole.
+ */
+import Scene from "./Scene.astro";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, planned } = copyOf(Astro.url);
+
+const meta = scenes[7];
+---
+
+<Scene {...meta} stageClass="stage-planned">
+  <ul class="planned-list">
+    {
+      planned.items.map((item, i) => (
+        <li class="planned-card" data-card>
+          <svg class="planned-dash" aria-hidden="true">
+            <mask id={`planned-mask-${i}`}>
+              <rect class="planned-trace" data-trace pathLength="100"></rect>
+            </mask>
+            <rect class="planned-outline" mask={`url(#planned-mask-${i})`}></rect>
+          </svg>
+          <span class="ynw-badge ynw-badge--plain">{planned.tag}</span>
+          <h3 class="planned-name">{item.name}</h3>
+          <p class="planned-text">{item.text}</p>
+        </li>
+      ))
+    }
+  </ul>
+</Scene>

@@ -3,6 +3,8 @@
  * User-visible copy lives in content.ts; this file is structure + SEO defaults.
  */
 
+import { meta } from "./content";
+
 export const apiBase = import.meta.env.PUBLIC_API_BASE ?? "";
 export const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
@@ -16,22 +18,10 @@ export const site = {
   legalName: "YNW", // CONFIRM: legal entity name for Privacy page
   tagline: "Your Next Wave",
   url: siteUrl,
-  locale: "en",
-  lang: "en",
   themeColor: "#0b0a0b",
-  title: "YNW - Agentic Chat App. One Chat for Life, Team, Business",
-  description:
-    "One chat app for your life, your team and your business. Your AI agents plan, use tools and reply for you, and you decide what they can do alone.",
-  // CONFIRM: target keywords are derived from the reference copy, not owner-supplied.
-  keywords: [
-    "AI chat app",
-    "AI agents",
-    "agentic chat",
-    "AI agents for business",
-    "multi-agent workspace",
-  ],
+  // Read by llms.txt.ts, which is English only and stays unprefixed.
+  description: meta.home.description,
   ogImage: "/og.png",
-  ogImageAlt: "YNW - agentic chat app. Orange LED wave of dots forming a wave under the YNW wordmark.",
   consentVersion: "2026-11", // CONFIRM: bump whenever consent text changes
 } as const;
 

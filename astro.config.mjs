@@ -23,8 +23,10 @@ const site = resolveSiteUrl();
 export default defineConfig({
   site,
   output: 'static',
+  i18n: { defaultLocale: 'th', locales: ['th', 'en'], routing: { prefixDefaultLocale: false } },
   integrations: [
     sitemap({
+      i18n: { defaultLocale: 'th', locales: { th: 'th-TH', en: 'en-US' } },
       filter: (page) => !/\/(thanks|unsubscribed|404)\/?$/.test(new URL(page).pathname),
     }),
   ],

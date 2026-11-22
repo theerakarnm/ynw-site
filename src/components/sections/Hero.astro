@@ -7,7 +7,11 @@
  */
 import LogoWordmark from "@/components/ui/LogoWordmark.astro";
 import WishlistForm from "@/components/forms/WishlistForm.astro";
-import { hero } from "@/data/content";
+import { copyOf, pageLocale } from "@/lib/page-copy";
+import { localizePath } from "@/lib/locale";
+
+const locale = pageLocale(Astro.url);
+const { hero } = copyOf(Astro.url);
 ---
 
 <section class="hero" id="top" aria-labelledby="hero-title">
@@ -32,7 +36,7 @@ import { hero } from "@/data/content";
     </h1>
     <p class="hero-lead">{hero.lead}</p>
     <WishlistForm source="hero" />
-    <a class="ynw-btn ynw-btn--ghost ynw-btn--lg hero-support" href="/support/" data-cta="support" data-cta-id="hero_support">
+    <a class="ynw-btn ynw-btn--ghost ynw-btn--lg hero-support" href={localizePath("/support/", locale)} data-cta="support" data-cta-id="hero_support">
       {hero.supportCta} <span class="arrow">→</span>
     </a>
   </div>

@@ -5,8 +5,12 @@
  * noscript notice are additions required by the marketing-worker contract.
  * Behavior lives in src/scripts/wishlist-form.ts.
  */
-import { wishlistForm } from "@/data/content";
+import { copyOf, pageLocale } from "@/lib/page-copy";
+import { localizePath } from "@/lib/locale";
 import { site } from "@/data/site";
+
+const locale = pageLocale(Astro.url);
+const { wishlistForm } = copyOf(Astro.url);
 
 interface Props {
   source: "hero" | "closing";
@@ -29,7 +33,7 @@ const consentId = `wl-consent-${source}`;
   novalidate
 >
   <input type="hidden" name="source" value={source} />
-  <input type="hidden" name="lang" value={site.locale} />
+  <input type="hidden" name="lang" value={locale} />
   <input type="hidden" name="consent_version" value={site.consentVersion} />
   <div class="wl-hp" aria-hidden="true">
     <label>{t.honeypotLabel} <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
@@ -60,9 +64,9 @@ const consentId = `wl-consent-${source}`;
       <p class="wl-error" id={errorId} role="alert"></p>
       <div class="wl-consent">
         <input type="checkbox" id={consentId} name="consent_marketing" value="1" required data-wishlist-consent />
-        <label for={consentId}>{t.consentLabel} <a href="/privacy/">{t.privacyLink}</a></label>
+        <label for={consentId}>{t.consentLabel} <a href={localizePath("/privacy/", locale)}>{t.privacyLink}</a></label>
       </div>
-      <p class="wl-note">{t.note} <a href="/privacy/">{t.privacyLink}</a></p>
+      <p class="wl-note">{t.note} <a href={localizePath("/privacy/", locale)}>{t.privacyLink}</a></p>
       <div class="wl-turnstile" data-turnstile hidden></div>
       <noscript>
         <p class="wl-noscript">{t.noscript}</p>

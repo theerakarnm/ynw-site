@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "fonts:sync": "node scripts/sync-fonts.mjs",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "test": "node --test src/lib/locale.test.ts src/lib/locale-boot.test.ts"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

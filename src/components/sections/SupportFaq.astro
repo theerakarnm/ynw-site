@@ -2,7 +2,9 @@
 /**
  * /support FAQ: two-column definition grid, reference verbatim.
  */
-import { support } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { support } = copyOf(Astro.url);
 
 const t = support.faq;
 ---

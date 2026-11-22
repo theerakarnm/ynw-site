@@ -169,3 +169,26 @@ Second design reference for the site: `_reference/support-round/` ("Support YNW 
 - Landing page: ghost lg CTA "Support the founding round ->" -> `/support/` under the hero wishlist form (stays visible after the form's success swap).
 - Events: the `cta_click` tracker in `wishlist-form.ts` now covers every `[data-cta]` element with `data-cta-id` (nav wishlist keeps id `nav_wishlist`; new ids: `hero_support`, `sp_hero_bmc`, `sp_hero_how`, `sp_tier_*`, `sp_strip_wishlist`, `sp_close_bmc`, `nav_bmc`, `footer_*`).
 - Verification summary in docs/VERIFICATION.md ("Support page (founding round)").
+
+
+---
+
+## Landing v2 - show the product (decided 2026-11-21)
+
+- **Show the product.** The index story is now nine scenes that show what YNW does: Chat, Assistant, Accounts, Approval Modes, Workflows, Agent relay, Developers, Planned, Wishlist. The six earlier abstract scenes were removed. Rail steps and the ticker follow the new order.
+- **One phone per scene, one shared `PhoneFrame`.** Every phone scene renders the same 340 x 560 `PhoneFrame` in the same grid position and is pinned on desktop, back to back. The frame looks fixed while its content changes. We chose this over a single global phone: each scene keeps final-state markup, works without JS and in reduced motion, and the player stays one timeline per scene.
+- **Motion rule lift.** The old rule not to redesign the reference timings no longer applies to the index story. Theerakarn asked for new motion on 2026-11-21. Hero, rail and pin infrastructure stay (pin removed again on 2026-11-22, see below).
+- **Product-v1 wins over the PDF.** Where the knowledge PDF and `docs/spec/product-v1.md` differ, the page follows product-v1 (Approval Modes Allow / Auto / Ask, the Always Ask floors, MCP in v1, free plan with up to 3 Accounts). Glossary words are used: User, Account, Assistant, Approval Mode, Workflow, Connection, Grant. "Avatar" is not used as a concept.
+- **Planned section.** Workspaces, Guest links, LINE OA bridging, Voice calls and Developer API appear only as small cards tagged Planned, with no dates, in a non-pinned scene that is rail step 8. LINE OA and voice appear nowhere else. Guest links carries a `// CONFIRM` because product-v1 does not list it.
+- **Developer HTTP API is shown as Planned.** ADR 0008 has no bot account type. The API means a server operating one of your Accounts, which needs its own ADR. The request in the Developers scene is labelled illustrative and the receipt carries the Planned tag. MCP in and MCP out are shown as v1 notes without a Planned tag, as product-v1 says.
+- **JSON-LD `operatingSystem`** is "iOS, Android, Web, macOS, Windows, Linux". Product-v1 confirms an Electron desktop app on macOS, Windows and Linux.
+- **Sticker placeholders.** `src/assets/stickers/placeholder-*.svg` are placeholder art filled from `--sticker-*` tokens, each marked CONFIRM. They are to be replaced with Sticker Pack art from the official YNW Account. Sticker bubbles show the label "YNW".
+- **Layout of Developers.** The code panel sits in the copy column beside the phone on desktop and stacks on mobile. The code block scrolls inside its own box.
+
+## Landing v2 - per-scene forms (addendum 2026-11-22)
+
+- **The pinned phone frame is gone.** The shared 340 x 560 `PhoneFrame` and the pinned scenes of 2026-11-21 are replaced by one form per scene. Chat is a collage, Assistant a counter with a message stream, Accounts a card deck with a table, Approval Modes a three-way switch with two lanes, Workflows a sentence and blocks, Agent relay two windows and a receipt, Developers an editor beside a chat log, Planned a blueprint grid.
+- **Why.** A frame that stays fixed while its content changes shows a frame. Giving each scene its own form shows the product feature itself, and layouts alternate (full width, copy-left, copy-right) so the page does not repeat.
+- **Code removed with it.** `PhoneFrame.astro`, `PhoneBubble.astro`, the pin branch and `phone()` helper in the scene player, the pin CSS and the `--phone-*` tokens. The motion media query has two branches now: animated and reduced.
+- **Developers.** The Run button sits in the editor bar and replays the highlight, the "202 Accepted" response and the bubble with the line "Actor: Integration (order-sync)". The Planned tag stays on the HTTP API and on the receipt.
+- **Planned.** Dashed outlines are SVG rects behind a mask; the mask trace is drawn in with DrawSVG, so the dashes stay dashes while they appear. Blueprint grid colours are tokens (`--blueprint-*`).

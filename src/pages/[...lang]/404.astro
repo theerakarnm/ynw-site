@@ -3,9 +3,15 @@
  * 404. noindex. Keeps the reference's design language.
  */
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { notFound as c } from "@/data/content";
+import { copyOf, pageLocale, localeStaticPaths } from "@/lib/page-copy";
+import { localizePath } from "@/lib/locale";
 
-const title = `${c.title} - 404`;
+export const getStaticPaths = localeStaticPaths;
+
+const locale = pageLocale(Astro.url);
+const { notFound: c, meta } = copyOf(Astro.url);
+
+const title = meta.notFound.title;
 ---
 
 <BaseLayout title={title} description={c.lead} path="/404" robots="noindex, follow">
@@ -16,7 +22,7 @@ const title = `${c.title} - 404`;
       <p class="page-lead">{c.lead}</p>
     </div>
     <div class="profile-actions">
-      <a class="ynw-btn ynw-btn--primary" href="/">{c.back} <span class="arrow">→</span></a>
+      <a class="ynw-btn ynw-btn--primary" href={localizePath("/", locale)}>{c.back} <span class="arrow">→</span></a>
     </div>
   </div>
 </BaseLayout>
