@@ -224,20 +224,24 @@ html { background: var(--bg); scroll-padding-top: 72px; }
 .scene--full .scene-copy .scene-caption { margin-top: 0; }
 
 /* ---------- 01 Chat ---------- */
-/* Phones: one column, pieces in story order. From 900px the pieces are placed freely on the open stage. */
-.cc { display: grid; justify-items: center; gap: var(--space-6); }
+/* Four titled columns from 1100px, one stacked column in the same order below. */
+.cc { width: 100%; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
+.cc-col { min-width: 0; display: grid; grid-template-rows: auto 1fr; gap: var(--space-5); padding-top: var(--space-3); border-top: var(--bw-hairline) solid var(--border); }
+.cc-title { margin: 0; display: flex; gap: var(--space-3); font-size: 15px; font-weight: 500; line-height: 1.4; color: var(--text-primary); }
+.cc-num { flex: none; font-family: var(--font-mono); font-size: 12px; line-height: 1.7; color: var(--accent-text); }
+.cc-demo { min-width: 0; padding-inline: var(--space-3); display: grid; justify-items: start; align-content: start; }
 .cc-bubble, .cc-group, .cc-gmsg { box-shadow: var(--shadow-overlay); }
-.cc-qr-card { width: 200px; padding: var(--space-4); display: grid; justify-items: center; gap: var(--space-2); border-radius: var(--panel-radius); background: var(--text-primary); color: var(--bg); box-shadow: var(--shadow-overlay); rotate: -4deg; }
+.cc-qr-card { width: min(100%, 200px); padding: var(--space-4); display: grid; justify-items: center; gap: var(--space-2); border-radius: var(--panel-radius); background: var(--text-primary); color: var(--bg); box-shadow: var(--shadow-overlay); rotate: -4deg; }
 .cc-qr-title { font-size: 15px; font-weight: 600; }
 .cc-qr-card svg { display: block; width: 100%; aspect-ratio: 1; fill: currentColor; }
 .cc-qr-hint, .cc-qr-label { font-family: var(--font-mono); font-size: 11px; color: var(--surface-overlay); }
-.cc-dm { display: grid; justify-items: start; gap: var(--space-2); width: min(100%, 320px); }
+.cc-dm { display: grid; justify-items: start; gap: var(--space-2); width: 100%; }
 .cc-sys { margin: 0; font-family: var(--font-mono); font-size: 11px; line-height: 1.45; color: var(--text-secondary); }
 .cc-bubble { max-width: 280px; padding: var(--space-3) var(--space-4); border: var(--bw-hairline) solid var(--border); border-radius: var(--panel-radius) var(--panel-radius) var(--panel-radius) var(--bubble-tail); background: var(--surface-raised); font-size: 16px; line-height: 1.4; }
 .cc-bubble--me { justify-self: end; border: 0; border-radius: var(--panel-radius) var(--panel-radius) var(--bubble-tail) var(--panel-radius); background: var(--accent); color: var(--on-accent); }
 .cc-who { display: block; margin-bottom: 2px; font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); }
 .cc-who-sub { color: var(--text-muted); }
-.cc-group { width: min(100%, 360px); padding: var(--space-4); display: grid; justify-items: start; gap: var(--space-2); border: var(--bw-hairline) solid var(--border-strong); border-radius: var(--panel-radius); background: var(--surface); }
+.cc-group { width: 100%; max-width: 360px; padding: var(--space-4); display: grid; justify-items: start; gap: var(--space-2); border: var(--bw-hairline) solid var(--border-strong); border-radius: var(--panel-radius); background: var(--surface); }
 .cc-group-head { width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3); }
 .cc-group-name { font-size: 15px; font-weight: 600; }
 .cc-group-sub { font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); }
@@ -247,25 +251,16 @@ html { background: var(--bg); scroll-padding-top: 72px; }
 .cc-av--me { background: var(--accent); color: var(--on-accent); }
 .cc-gmsg { max-width: 85%; padding: var(--space-2) var(--space-3); border: var(--bw-hairline) solid var(--border); border-radius: var(--bubble-radius) var(--bubble-radius) var(--bubble-radius) var(--bubble-tail); background: var(--surface-raised); font-size: 14px; line-height: 1.4; box-shadow: none; }
 .cc-gmsg--me { justify-self: end; border-radius: var(--bubble-radius) var(--bubble-radius) var(--bubble-tail) var(--bubble-radius); background: var(--surface-overlay); }
-.cc-stickers { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-6); }
-.cc-sticker .sticker { --sticker-size: 112px; }
+.cc-stickers { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+.cc-sticker .sticker { --sticker-size: 72px; }
 .cc-sticker--1 .sticker { rotate: -8deg; }
 .cc-sticker--2 .sticker { rotate: 10deg; }
 .cc-sticker--3 .sticker { rotate: -6deg; }
 .cc .sticker.is-bob .sticker-art { animation: ynw-float calc(var(--dur-bob) * 2) var(--ease-in-out) infinite; }
 .cc-sticker--2 .sticker.is-bob .sticker-art { animation-delay: calc(var(--dur-bob) * -0.6); }
 .cc-sticker--3 .sticker.is-bob .sticker-art { animation-delay: calc(var(--dur-bob) * -1.2); }
-@media (min-width: 900px) {
-  .cc { display: block; position: relative; height: 540px; }
-  .cc-qr, .cc-dm, .cc-group, .cc-sticker { position: absolute; }
-  .cc-qr { left: 0; top: var(--space-12); }
-  .cc-dm { left: 28%; top: 170px; width: 30%; min-width: 240px; }
-  .cc-group { right: 0; top: 0; width: 34%; min-width: 300px; max-width: 380px; }
-  .cc-stickers { display: contents; }
-  .cc-sticker .sticker { --sticker-size: 150px; }
-  .cc-sticker--1 { left: 40%; bottom: 0; }
-  .cc-sticker--2 { left: 27%; top: 0; }
-  .cc-sticker--3 { right: 4%; bottom: 0; }
+@media (min-width: 1100px) {
+  .cc { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
 }
 
 /* ---------- 02 Assistant ---------- */
