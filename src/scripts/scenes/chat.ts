@@ -1,36 +1,34 @@
 /**
- * Scene 01 timeline: scan the QR code, say hello, start a group, send a sticker.
+ * Scene 01 timeline: the collage pieces fly in one after another (QR card, the one to one
+ * thread, the group, then the stickers), after which the stickers float for good.
  */
 import gsap from "gsap";
-import { chatDemo as d } from "@/data/content";
 import type { SceneBuilder } from "./index";
+
+const FLY = { duration: 0.7, ease: "back.out(1.3)" };
 
 export const buildChat: SceneBuilder = (_scene, ctx) => {
   const tl = gsap.timeline({ paused: true, defaults: { ease: "none" } });
-  const header = ctx.phone();
-  const qr = ctx.beat("qr");
+  const fly = (name: string, from: gsap.TweenVars, at: number) =>
+    tl.fromTo(ctx.beat(name), { autoAlpha: 0, scale: 0.92, ...from }, { autoAlpha: 1, scale: 1, x: 0, y: 0, ...FLY }, at);
+  const fade = (name: string, at: number) =>
+    tl.fromTo(ctx.beat(name), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.3, ease: "ynw-standard" }, at);
 
-  ctx.lightSteps(tl, [0, 2.4, 4.3, 7.2]);
+  ctx.lightSteps(tl, [0, 1.1, 2.4, 4.2]);
 
-  ctx.swapText(tl, header.avatar, d.start.initials, [[d.friend.initials, 1.9], [d.group.initials, 4.3]]);
-  ctx.swapText(tl, header.name, d.start.name, [[d.friend.name, 1.9], [d.group.name, 4.3]]);
-  ctx.swapText(tl, header.sub, d.start.sub, [[d.friend.sub, 1.9], [d.group.sub, 4.3]]);
+  fly("qr", { x: -120, y: 30 }, 0);
+  fade("sys-added", 0.9);
+  fly("dm-me", { x: 90, y: 40 }, 1.1);
+  fly("dm-them", { x: -90, y: 40 }, 1.7);
+  fly("group", { x: 140, y: -30 }, 2.4);
+  fade("g-sys", 3.0);
+  ["g-0", "g-1", "g-2"].forEach((name, i) => fade(name, 3.3 + i * 0.35));
+  ["sticker-0", "sticker-1", "sticker-2"].forEach((name, i) => {
+    const at = 4.2 + i * 0.3;
+    fly(name, { y: 120 }, at);
+    ctx.bob(tl, ctx.beat(name), at + FLY.duration);
+  });
 
-  tl.fromTo(qr, { height: 0, autoAlpha: 0 }, { height: "auto", autoAlpha: 1, duration: 0.35, ease: "ynw-standard" }, 0.2);
-  tl.fromTo(ctx.beat("qr-scan"), { y: 0 }, { y: 116, duration: 1.1, ease: "power1.inOut" }, 0.6);
-  tl.to(qr, { height: 0, autoAlpha: 0, duration: 0.3, ease: "ynw-standard" }, 1.8);
-
-  ctx.reveal(tl, ctx.beat("sys-added"), 1.95);
-  ctx.reveal(tl, ctx.beat("dm-me"), 2.5);
-  ctx.reveal(tl, ctx.beat("dm-them"), 3.3);
-  ctx.reveal(tl, ctx.beat("sys-group"), 4.3);
-  ctx.reveal(tl, ctx.beat("g-mali"), 4.9);
-  ctx.reveal(tl, ctx.beat("g-you"), 5.7);
-  ctx.reveal(tl, ctx.beat("g-ploy"), 6.5);
-  const sticker = ctx.beat("sticker");
-  ctx.reveal(tl, sticker, 7.3);
-  ctx.bob(tl, sticker, 7.4);
-
-  tl.to({}, { duration: 0.01 }, 8.8);
+  tl.to({}, { duration: 0.01 }, 6);
   return tl;
 };

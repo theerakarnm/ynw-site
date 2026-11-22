@@ -1,41 +1,63 @@
 ---
 /**
- * Scene 01 - Chat: add a friend by QR, a one to one thread, a group, a sticker.
- * Markup is the final state (group thread, no QR panel); the timeline in
- * scripts/scenes/chat.ts plays the story from the start.
+ * Scene 01 - Chat: a collage on the open background (no phone). QR card, a one to one
+ * thread, a group card and big stickers. Decorative, the steps below carry the same facts.
+ * Markup is the final state; scripts/scenes/chat.ts flies the pieces in, in order.
  */
 import Scene from "./Scene.astro";
-import PhoneFrame from "@/components/ui/PhoneFrame.astro";
-import PhoneBubble from "@/components/ui/PhoneBubble.astro";
 import Sticker from "@/components/ui/Sticker.astro";
 import { scenes, chatDemo as d } from "@/data/content";
 
 const meta = scenes[0];
 const qrRows = ['11111110101111111', '10000010001000001', '10111010001011101', '10111010001011101', '10111010001011101', '10000010101000001', '11111110101111111', '00000000000000000', '01101010101111010', '00000000110110000', '11111110010111000', '10000010011001000', '10111010010111011', '10111010111010111', '10111010101100011', '10000010000101101', '11111110010001000'];
 const qrCells = qrRows.flatMap((row, y) => [...row].flatMap((bit, x) => (bit === "1" ? [{ x, y }] : [])));
-const [mali, you, ploy] = d.groupMessages;
+const lang = (text: string) => (/[\u0E00-\u0E7F]/.test(text) ? "th" : "en");
+const stickers = ["thumbs-up", "wave", "heart"] as const;
 ---
 
 <Scene {...meta} stageClass="stage-chat">
-  <PhoneFrame {...d.group} lang="th">
-    <p class="phone-sys" data-beat="sys-added">{d.added}</p>
-    <PhoneBubble me data-beat="dm-me">{d.hello}</PhoneBubble>
-    <PhoneBubble who={d.reply.who} initial={d.reply.initial} lang="th" data-beat="dm-them">{d.reply.text}</PhoneBubble>
-    <p class="phone-sys" data-beat="sys-group">{d.groupStarted}</p>
-    <PhoneBubble who={mali.who} initial={mali.initial} lang="th" data-beat="g-mali">{mali.text}</PhoneBubble>
-    <PhoneBubble me lang="th" data-beat="g-you">{you.text}</PhoneBubble>
-    <PhoneBubble who={ploy.who} initial={ploy.initial} data-beat="g-ploy">{ploy.text}</PhoneBubble>
-    <PhoneBubble me bare data-beat="sticker"><Sticker name="thumbs-up" /></PhoneBubble>
-    <div slot="panel" class="chat-qr" data-beat="qr">
-      <div class="chat-qr-card">
-        <div class="qr-box">
-          <svg viewBox="0 0 17 17" shape-rendering="crispEdges" aria-hidden="true">
-            {qrCells.map((c) => <rect x={c.x} y={c.y} width="1" height="1" />)}
-          </svg>
-          <span class="qr-scan" data-beat="qr-scan"></span>
-        </div>
-        <span class="qr-label">{d.qrLabel}</span>
+  <div class="cc" aria-hidden="true">
+    <div class="cc-piece cc-qr" data-beat="qr">
+      <div class="cc-qr-card">
+        <span class="cc-qr-title">{d.qr.title}</span>
+        <svg viewBox="0 0 17 17" shape-rendering="crispEdges">
+          {qrCells.map((c) => <rect x={c.x} y={c.y} width="1" height="1" />)}
+        </svg>
+        <span class="cc-qr-hint">{d.qr.hint}</span>
+        <span class="cc-qr-label">{d.qr.label}</span>
       </div>
     </div>
-  </PhoneFrame>
+
+    <div class="cc-dm">
+      <p class="cc-sys" data-beat="sys-added">{d.added}</p>
+      <div class="cc-piece cc-bubble cc-bubble--me" data-beat="dm-me">{d.hello}</div>
+      <div class="cc-piece cc-bubble" data-beat="dm-them" lang="th">
+        <span class="cc-who" lang="en">{d.friend.name} <span class="cc-who-sub">{d.friend.sub}</span></span>
+        {d.reply.text}
+      </div>
+    </div>
+
+    <div class="cc-piece cc-group" data-beat="group">
+      <div class="cc-group-head">
+        <span class="cc-group-name">{d.group.name}</span>
+        <span class="cc-group-sub">{d.group.sub}</span>
+      </div>
+      <div class="cc-avs">
+        {d.groupMessages.map((m) => <span class:list={["cc-av", { "cc-av--me": "me" in m }]} lang={lang(m.initial)}>{m.initial}</span>)}
+      </div>
+      <p class="cc-sys" data-beat="g-sys">{d.groupStarted}</p>
+      {
+        d.groupMessages.map((m, i) => (
+          <div class:list={["cc-gmsg", { "cc-gmsg--me": "me" in m }]} data-beat={`g-${i}`} lang={lang(m.text)}>
+            {!("me" in m) && <span class="cc-who" lang="en">{m.who}</span>}
+            {m.text}
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="cc-stickers">
+      {stickers.map((name, i) => <div class={`cc-piece cc-sticker cc-sticker--${i + 1}`} data-beat={`sticker-${i}`}><Sticker name={name} /></div>)}
+    </div>
+  </div>
 </Scene>

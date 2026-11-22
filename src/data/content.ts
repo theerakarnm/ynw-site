@@ -58,7 +58,7 @@ export const ticker = {
 
 export const scenes = [
   {
-    id: "chat", num: "01", label: "Chat", phone: true,
+    id: "chat", num: "01", label: "Chat", layout: "full",
     title: "A chat app first.",
     lead: "Add a friend by QR code. Talk one to one or in a group. Send stickers.",
     steps: ["Scan a QR code to add a friend", "Say hello one to one", "Start a group", "Send a sticker"],
@@ -66,7 +66,7 @@ export const scenes = [
     caption: "Product concept. Interface and data are illustrative.",
   },
   {
-    id: "assistant", num: "02", label: "Assistant", phone: true,
+    id: "assistant", num: "02", label: "Assistant", layout: "copy-left",
     title: "200 unread. One line to catch up.",
     lead: "Mention your Assistant in any chat. It reads what you can already see, tells you what changed, and drafts your reply. Only you see the answer.",
     steps: [
@@ -152,40 +152,40 @@ export const phone = {
   stickerLabel: "YNW",
 } as const;
 
+// Avatar initials are Latin on purpose: Thai marks such as ม read like "u" in a 28px circle.
 export const chatDemo = {
-  start: { initials: "+", name: "Add friend", sub: "Scan a QR code" },
-  friend: { initials: "ม", name: "Mali", sub: "Friend" },
-  group: { initials: "ทริป", name: "Weekend trip", sub: "3 members" },
-  qrLabel: "Mali's QR code",
+  qr: { title: "Add friend", hint: "Scan a QR code", label: "Mali's QR code" },
+  friend: { name: "Mali", sub: "Friend" },
   added: "You added Mali by QR code",
   hello: "Hi Mali",
-  reply: { who: "Mali", initial: "ม", text: "สวัสดี ยินดีที่ได้รู้จัก" },
+  reply: { who: "Mali", initial: "M", text: "สวัสดี ยินดีที่ได้รู้จัก" },
+  group: { name: "Weekend trip", sub: "3 members" },
   groupStarted: "You started the group Weekend trip",
   groupMessages: [
-    { who: "Mali", initial: "ม", text: "เสาร์นี้ไปทะเลกันไหม" },
-    { who: "You", initial: "", text: "ไปสิ", me: true },
-    { who: "Ploy", initial: "พ", text: "Count me in" },
+    { who: "Mali", initial: "M", text: "เสาร์นี้ไปทะเลกันไหม" },
+    { who: "You", initial: "Y", text: "ไปสิ", me: true },
+    { who: "Ploy", initial: "P", text: "Count me in" },
   ],
 } as const;
 
 export const assistantDemo = {
-  header: { initials: "ครอบ", name: "Family group", sub: "8 members" },
+  stream: { name: "Family group", sub: "8 members" },
+  unread: "unread", // same word as the scene title
   messages: [
-    { who: "แม่", initial: "ม", text: "เย็นนี้ใครว่างบ้าง" },
-    { who: "พลอย", initial: "พ", text: "เลื่อนเป็นวันเสาร์ได้ไหม" },
-    { who: "พ่อ", initial: "พ", text: "เสาร์ได้ 6 โมงเย็น" },
-    { who: "ยาย", initial: "ย", sticker: true },
-    { who: "พลอย", initial: "พ", text: "จองโต๊ะที่บ้านยายเลยนะ" },
-    { who: "น้า", initial: "น", text: "ส่งรูปมา 12 รูป" },
-    { who: "แม่", initial: "ม", text: "แล้วใครเอาขนมไป" },
+    { who: "แม่", initial: "M", text: "เย็นนี้ใครว่างบ้าง" },
+    { who: "พลอย", initial: "P", text: "เลื่อนเป็นวันเสาร์ได้ไหม" },
+    { who: "พ่อ", initial: "D", text: "เสาร์ได้ 6 โมงเย็น" },
+    { who: "ยาย", initial: "G", sticker: true },
+    { who: "พลอย", initial: "P", text: "จองโต๊ะที่บ้านยายเลยนะ" },
+    { who: "น้า", initial: "A", text: "ส่งรูปมา 12 รูป" },
+    { who: "แม่", initial: "M", text: "แล้วใครเอาขนมไป" },
   ],
   mention: "@Assistant",
   ask: " สรุปให้หน่อย",
-  private: "Visible only to you",
   notice: "An Assistant is used in this chat. Only the person who asked sees its answer.",
   panelWorking: "Assistant is working",
   panelDone: "Assistant",
-  only: "Only you",
+  private: "Visible only to you",
   trail: ["Read 200 messages", "Found 2 decisions, 1 question", "Drafted a reply"],
   summary: [
     "Dinner moved to Saturday 18:00 at Grandma's house.",

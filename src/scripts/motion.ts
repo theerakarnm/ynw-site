@@ -1,8 +1,8 @@
 /**
  * YNW landing motion: hero, section reveals, progress rail and the scene player.
- * One gsap.matchMedia() with four branches - pin (desktop, each phone scene is pinned
- * while its timeline plays), story (phones/tablets) and flow (short windows) which
- * play a scene once when it is visible, and reduced (fades only).
+ * One gsap.matchMedia() with four branches - pin (desktop: scenes marked data-pin are pinned
+ * while their timeline plays), story (phones/tablets) and flow (short windows). Every scene
+ * without a pin plays once when its stage scrolls into view. The fourth branch is reduced (fades only).
  * CSS default of every scene is its final state; scene timelines (scripts/scenes)
  * only animate hidden -> visible, so no-JS and reduced-motion users see the complete page.
  */
@@ -378,7 +378,7 @@ export function mount(root: HTMLElement) {
   }
 
   function barOffset() {
-    return window.innerWidth >= 1024 ? 72 : 112;
+    return window.innerWidth >= 1440 ? 72 : 112;
   }
 
   function jumpToStep(n: number) {
@@ -460,8 +460,9 @@ export function mount(root: HTMLElement) {
     };
   }
 
-  function playScene(scene: HTMLElement, build: SceneBuilder, pin: boolean) {
+  function playScene(scene: HTMLElement, build: SceneBuilder, pinMode: boolean) {
     const player = createScenePlayer(scene, build);
+    const pin = pinMode && scene.hasAttribute("data-pin");
     ScrollTrigger.create({ trigger: scene, start: "top 100%", once: true, onEnter: player.prepare });
     if (pin) {
       ScrollTrigger.create({
@@ -476,7 +477,7 @@ export function mount(root: HTMLElement) {
       ScrollTrigger.create({ trigger: scene, start: "top 25%", once: true, onEnter: player.play });
     } else {
       const stage = scene.querySelector<HTMLElement>(".stage")!;
-      ScrollTrigger.create({ trigger: stage, start: "top 65%", end: "bottom top", onEnter: player.play, onLeave: player.finish });
+      ScrollTrigger.create({ trigger: stage, start: "top 70%", end: "bottom top", onEnter: player.play, onLeave: player.finish });
     }
     const disposers: Array<() => void> = [];
     const replay = scene.querySelector<HTMLButtonElement>("[data-replay]");

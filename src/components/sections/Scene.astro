@@ -1,7 +1,9 @@
 ---
 /**
- * Shared scene shell. Phone scenes: copy column (head, steps, receipt, Replay,
- * caption) beside a stage that holds the PhoneFrame. Other scenes: head, stage, caption.
+ * Shared scene shell, three layouts, one markup. The copy column holds head, steps, receipt,
+ * Replay and caption. copy-left / copy-right put it beside the stage; full lets CSS dissolve the
+ * column so the head sits above the stage and the rest below it. Phone scenes are copy-left
+ * and the only pinned ones.
  * The markup is always the final state; motion.ts only animates it in.
  */
 import SceneHead from "./SceneHead.astro";
@@ -23,6 +25,8 @@ export interface SceneMeta {
   replay?: string;
   /** Visible label of the button; default "Replay". */
   replayText?: string;
+  /** Where the copy sits relative to the stage. Default full. */
+  layout?: "full" | "copy-left" | "copy-right";
   /** Scene shows the phone beside its copy and is pinned on desktop. */
   phone?: boolean;
   closing?: boolean;
@@ -32,12 +36,13 @@ export interface SceneMeta {
 
 interface Props extends SceneMeta {}
 
-const { id, num, label, title, lead, caption, stageClass, steps, receipt, receiptTag, replay, replayText = "Replay", phone = false, closing = false, attrs = {} } = Astro.props;
+const { id, num, label, title, lead, caption, stageClass, steps, receipt, receiptTag, replay, replayText = "Replay", layout = "full", phone = false, closing = false, attrs = {} } = Astro.props;
 const head = { id, num, label, title, lead };
+const side = phone ? "copy-left" : layout;
 ---
 
 <section
-  class:list={["scene", { "scene--closing": closing, "scene--phone": phone }]}
+  class:list={["scene", `scene--${side}`, { "scene--closing": closing, "scene--phone": phone }]}
   id={id}
   data-step={Number(num)}
   data-pin={phone || undefined}
@@ -46,46 +51,34 @@ const head = { id, num, label, title, lead };
 >
   <div class="scene-pin">
     <div class="scene-grid">
-      {
-        phone ? (
-          <div class="scene-body">
-            <div class="scene-copy">
-              <SceneHead {...head} />
-              {steps && (
-                <ol class="scene-steps">
-                  {steps.map((step) => (
-                    <li>{step}</li>
-                  ))}
-                </ol>
-              )}
-              <slot name="controls" />
-              {receipt && (
-                <p class="scene-receipt ynw-mono" aria-live="polite">
-                  {receipt}
-                  {receiptTag && <span class="ynw-badge ynw-badge--plain ynw-badge--accent">{receiptTag}</span>}
-                </p>
-              )}
-              {replay && (
-                <button class="ynw-btn ynw-btn--secondary ynw-btn--sm scene-replay" type="button" aria-label={replay} data-replay hidden>
-                  {replayText}
-                </button>
-              )}
-              {caption && <p class="scene-caption ynw-mono">{caption}</p>}
-            </div>
-            <div class:list={["stage", stageClass]}>
-              <slot />
-            </div>
-          </div>
-        ) : (
-          <>
-            <SceneHead {...head} />
-            <div class:list={["stage", stageClass]}>
-              <slot />
-            </div>
-            {caption && <p class="scene-caption ynw-mono">{caption}</p>}
-          </>
-        )
-      }
+      <div class="scene-body">
+        <div class="scene-copy">
+          <SceneHead {...head} />
+          {steps && (
+            <ol class="scene-steps">
+              {steps.map((step) => (
+                <li>{step}</li>
+              ))}
+            </ol>
+          )}
+          <slot name="controls" />
+          {receipt && (
+            <p class="scene-receipt ynw-mono" aria-live="polite">
+              {receipt}
+              {receiptTag && <span class="ynw-badge ynw-badge--plain ynw-badge--accent">{receiptTag}</span>}
+            </p>
+          )}
+          {replay && (
+            <button class="ynw-btn ynw-btn--secondary ynw-btn--sm scene-replay" type="button" aria-label={replay} data-replay hidden>
+              {replayText}
+            </button>
+          )}
+          {caption && <p class="scene-caption ynw-mono">{caption}</p>}
+        </div>
+        <div class:list={["stage", stageClass]}>
+          <slot />
+        </div>
+      </div>
     </div>
   </div>
   <slot name="extra" />
