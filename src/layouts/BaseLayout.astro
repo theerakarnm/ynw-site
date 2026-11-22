@@ -12,11 +12,14 @@ import JsonLd from "@/components/seo/JsonLd.astro";
 import SiteNav from "@/components/sections/SiteNav.astro";
 import SiteFooter from "@/components/sections/SiteFooter.astro";
 import { site, absoluteUrl } from "@/data/site";
-import { a11y, clientStrings } from "@/data/content";
+import { localizePath } from "@/lib/locale";
+import { localeBootScript } from "@/lib/locale-boot";
+import { copyOf, pageLocale } from "@/lib/page-copy";
 
 export interface Props {
   title: string;
   description: string;
+  /** Unprefixed (Thai) path of the page; localized URLs are derived from it. */
   path: string;
   robots?: string;
   /** Additional JSON-LD nodes for this page (WebPage is added automatically). */
@@ -26,6 +29,10 @@ export interface Props {
 }
 
 const { title, description, path, robots, jsonLd = [], support = false } = Astro.props;
+
+const locale = pageLocale(Astro.url);
+const { a11y, clientStrings, meta } = copyOf(Astro.url);
+const pageUrl = absoluteUrl(localizePath(path, locale));
 
 const graph: Record<string, unknown>[] = [
   {
@@ -40,17 +47,17 @@ const graph: Record<string, unknown>[] = [
     "@id": `${site.url}/#website`,
     url: site.url,
     name: site.name,
-    description: site.description,
-    inLanguage: site.locale,
+    description: meta.home.description,
+    inLanguage: locale,
     publisher: { "@id": `${site.url}/#organization` },
   },
   {
     "@type": "WebPage",
-    "@id": absoluteUrl(path),
-    url: absoluteUrl(path),
+    "@id": pageUrl,
+    url: pageUrl,
     name: title,
     description,
-    inLanguage: site.locale,
+    inLanguage: locale,
     isPartOf: { "@id": `${site.url}/#website` },
   },
   ...jsonLd,
@@ -66,9 +73,13 @@ const graphWithTypes = graph.map((node) => ({
 ---
 
 <!doctype html>
-<html lang={site.lang}>
+<html lang={locale}>
   <head>
-    <SEO {title} {description} {path} {robots} />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Inline and first so a redirect happens before the stylesheet and fonts are requested. */}
+    <script id="locale-boot" is:inline set:html={localeBootScript} />
+    <SEO {title} {description} {path} {robots} {locale} imageAlt={meta.home.ogImageAlt} />
     <link rel="preload" href={geistWoff2} as="font" type="font/woff2" crossorigin />
     <JsonLd data={graphWithTypes} />
   </head>

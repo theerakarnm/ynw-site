@@ -6,7 +6,9 @@
  * Markup is the final state; scripts/scenes/workflows.ts plays it from the start.
  */
 import Scene from "./Scene.astro";
-import { scenes, workflowsDemo as d } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, workflowsDemo: d } = copyOf(Astro.url);
 
 const meta = scenes[4];
 ---

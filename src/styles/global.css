@@ -27,7 +27,7 @@ svg.ynw-i.xs { width: var(--icon-xs); height: var(--icon-xs); }
 .ynw-list li { display: flex; gap: var(--space-2); align-items: baseline; color: var(--text-secondary); font-size: 14px; }
 .ynw-list li::before { content: ""; width: 6px; height: 6px; background: var(--accent); flex: none; transform: translateY(-2px); }
 /* ---------- Button ---------- */
-.ynw-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); height: 36px; padding: 0 var(--space-4); border-radius: var(--radius-sm); border: var(--bw-hairline) solid transparent; background: transparent; color: var(--text-primary); font-size: 14px; font-weight: 500; letter-spacing: -0.005em; cursor: pointer; white-space: nowrap; transition: background var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard); }
+.ynw-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); height: 36px; padding: 0 var(--space-4); border-radius: var(--radius-sm); border: var(--bw-hairline) solid transparent; background: transparent; color: var(--text-primary); font-size: 14px; font-weight: 500; letter-spacing: -0.005em; cursor: pointer; white-space: nowrap; text-decoration: none; transition: background var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard); }
 .ynw-btn--primary { background: var(--accent); color: var(--on-accent); }
 .ynw-btn--primary:hover { background: var(--accent-hover); }
 .ynw-btn--primary:active { background: var(--accent-pressed); }

@@ -6,7 +6,9 @@
  * final state: the file is already posted and the receipt is whole.
  */
 import Scene from "./Scene.astro";
-import { scenes, relayDemo as d } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, relayDemo: d } = copyOf(Astro.url);
 
 const meta = scenes[5];
 ---

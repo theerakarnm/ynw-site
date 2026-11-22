@@ -6,7 +6,9 @@
  * copy column. Markup is the final state; scripts/scenes/developers.ts plays the request.
  */
 import Scene from "./Scene.astro";
-import { scenes, developersDemo as d } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, developersDemo: d } = copyOf(Astro.url);
 
 const { replay, replayText, ...meta } = scenes[6];
 ---

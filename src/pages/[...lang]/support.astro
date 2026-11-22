@@ -10,7 +10,11 @@ import SupportTiers from "@/components/sections/SupportTiers.astro";
 import SupportHow from "@/components/sections/SupportHow.astro";
 import SupportFaq from "@/components/sections/SupportFaq.astro";
 import SupportClosing from "@/components/sections/SupportClosing.astro";
-import { meta } from "@/data/content";
+import { copyOf, localeStaticPaths } from "@/lib/page-copy";
+
+export const getStaticPaths = localeStaticPaths;
+
+const { meta } = copyOf(Astro.url);
 
 const { title, description } = meta.support;
 ---

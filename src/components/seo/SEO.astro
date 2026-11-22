@@ -3,15 +3,18 @@
  * All head meta for every page. Per-page props; defaults come from site.ts.
  */
 import { site, absoluteUrl } from "@/data/site";
-import { meta } from "@/data/content";
+import { localizePath } from "@/lib/locale";
+import type { Locale } from "@/lib/locale";
 
 export interface Props {
   title: string;
   description: string;
+  /** Unprefixed (Thai) path; the page's own locale URL is derived from it. */
   path: string;
+  locale: Locale;
+  imageAlt: string;
   robots?: string;
   image?: string;
-  imageAlt?: string;
 }
 
 const {
@@ -20,24 +23,36 @@ const {
   path,
   robots = "index, follow, max-image-preview:large",
   image = site.ogImage,
-  imageAlt = meta.home.ogImageAlt,
+  locale,
+  imageAlt,
 } = Astro.props;
 
-const canonical = absoluteUrl(path);
+const ogLocales = { th: "th_TH", en: "en_US" } as const;
+const otherLocale = locale === "th" ? "en" : "th";
+const indexable = !robots.startsWith("noindex");
+const canonical = absoluteUrl(localizePath(path, locale));
 const ogImage = image.startsWith("http") ? image : absoluteUrl(image);
 ---
 
 <title>{title}</title>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="description" content={description} />
 <meta name="author" content={site.name} />
 <meta name="robots" content={robots} />
 <link rel="canonical" href={canonical} />
+{
+  indexable && (
+    <>
+      <link rel="alternate" hreflang="th" href={absoluteUrl(localizePath(path, "th"))} />
+      <link rel="alternate" hreflang="en" href={absoluteUrl(localizePath(path, "en"))} />
+      <link rel="alternate" hreflang="x-default" href={absoluteUrl(localizePath(path, "th"))} />
+    </>
+  )
+}
 <meta name="theme-color" content={site.themeColor} />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content={site.name} />
-<meta property="og:locale" content={site.locale} />
+<meta property="og:locale" content={ogLocales[locale]} />
+<meta property="og:locale:alternate" content={ogLocales[otherLocale]} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />

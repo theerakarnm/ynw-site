@@ -16,8 +16,14 @@ import SceneRelay from "@/components/sections/SceneRelay.astro";
 import SceneDevelopers from "@/components/sections/SceneDevelopers.astro";
 import ScenePlanned from "@/components/sections/ScenePlanned.astro";
 import SceneWishlist from "@/components/sections/SceneWishlist.astro";
-import { site } from "@/data/site";
-import { meta } from "@/data/content";
+import { site, absoluteUrl } from "@/data/site";
+import { localizePath } from "@/lib/locale";
+import { copyOf, pageLocale, localeStaticPaths } from "@/lib/page-copy";
+
+export const getStaticPaths = localeStaticPaths;
+
+const { meta } = copyOf(Astro.url);
+const locale = pageLocale(Astro.url);
 
 const softwareApp = {
   "@type": "SoftwareApplication",
@@ -25,7 +31,8 @@ const softwareApp = {
   applicationCategory: "CommunicationApplication",
   operatingSystem: "iOS, Android, Web, macOS, Windows, Linux",
   description: meta.home.description,
-  url: site.url,
+  inLanguage: locale,
+  url: absoluteUrl(localizePath("/", locale)),
   offers: undefined, // pre-launch: no price, do not invent one
   publisher: { "@id": `${site.url}/#organization` },
 };

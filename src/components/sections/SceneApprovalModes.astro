@@ -8,7 +8,9 @@
  */
 import Scene from "./Scene.astro";
 import Icon from "@/components/ui/Icon.astro";
-import { scenes, approvalDemo as d } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, approvalDemo: d } = copyOf(Astro.url);
 
 const meta = scenes[3];
 const askingIn = (modes: readonly string[]) => d.modes.map((m) => m.id).filter((id) => !modes.includes(id)).join(" ");

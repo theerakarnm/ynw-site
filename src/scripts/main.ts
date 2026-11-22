@@ -8,11 +8,13 @@ import { initWishlistForms } from "./wishlist-form";
 import { initThanksPage } from "./thanks-page";
 import { initApprovalModes } from "./approval-modes";
 import { initAccounts } from "./accounts";
+import { initLocaleSwitch } from "./locale-switch";
 
 captureAttribution();
 initWishlistForms();
 initApprovalModes();
 initAccounts();
+initLocaleSwitch();
 
 if (document.querySelector("[data-profile-form]")) {
   initThanksPage();

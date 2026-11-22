@@ -6,7 +6,9 @@
  * The markup is always the final state; motion.ts only animates it in.
  */
 import SceneHead from "./SceneHead.astro";
-import { sceneUi } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { sceneUi } = copyOf(Astro.url);
 
 export interface SceneMeta {
   id: string;

@@ -6,7 +6,9 @@
  * Markup is the final state: the outline is already whole.
  */
 import Scene from "./Scene.astro";
-import { scenes, planned } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, planned } = copyOf(Astro.url);
 
 const meta = scenes[7];
 ---

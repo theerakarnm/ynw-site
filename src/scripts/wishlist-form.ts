@@ -8,6 +8,7 @@ import { ApiError, submitWishlist, type WishlistPayload } from "@/lib/api";
 import { getAttribution, getReferredBy } from "@/lib/attribution";
 import { track } from "@/lib/events";
 import { strings } from "@/lib/i18n";
+import { parseLocale } from "@/lib/locale";
 import { ensureTurnstile } from "./turnstile";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -200,7 +201,7 @@ async function handleSubmit(r: FormRefs): Promise<void> {
 
   const payload: WishlistPayload = {
     email,
-    lang: document.documentElement.lang || "en",
+    lang: parseLocale(document.documentElement.lang) ?? "th",
     consent_marketing: r.consent.checked,
     consent_version: r.form.querySelector<HTMLInputElement>('input[name="consent_version"]')?.value ?? "",
     turnstile_token: token,

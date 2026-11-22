@@ -7,7 +7,9 @@ import wave from "@/assets/stickers/placeholder-wave.svg?raw";
 import thumbsUp from "@/assets/stickers/placeholder-thumbs-up.svg?raw";
 import heart from "@/assets/stickers/placeholder-heart.svg?raw";
 import ok from "@/assets/stickers/placeholder-ok.svg?raw";
-import { stickerLabel } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { stickerLabel } = copyOf(Astro.url);
 
 const art = { wave, "thumbs-up": thumbsUp, heart, ok };
 

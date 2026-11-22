@@ -3,7 +3,9 @@
  * Capabilities marquee band. Items duplicated once for the seamless CSS loop;
  * the duplicate is aria-hidden.
  */
-import { ticker } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { ticker } = copyOf(Astro.url);
 ---
 
 <div class="ynw-ticker site-ticker" role="region" aria-label={ticker.label}>

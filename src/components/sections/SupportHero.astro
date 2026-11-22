@@ -4,8 +4,10 @@
  * funding progress card. Static port of the reference (no motion module).
  */
 import Icon from "@/components/ui/Icon.astro";
-import { support, a11y } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
 import { donateUrl } from "@/data/site";
+
+const { support, a11y } = copyOf(Astro.url);
 
 const t = support.hero;
 const f = support.funding;

@@ -6,7 +6,11 @@
  * noindex. Behavior in src/scripts/thanks-page.ts.
  */
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { thanks as c, meta } from "@/data/content";
+import { copyOf, localeStaticPaths } from "@/lib/page-copy";
+
+export const getStaticPaths = localeStaticPaths;
+
+const { thanks: c, meta } = copyOf(Astro.url);
 
 const title = meta.thanks.title;
 ---

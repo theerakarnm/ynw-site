@@ -4,7 +4,7 @@
  * three points type in one by one and the reply is ready to send.
  */
 import gsap from "gsap";
-import { assistantDemo as d } from "@/data/content";
+import { strings } from "@/lib/i18n";
 import type { SceneBuilder } from "./index";
 
 const ROW_GAP = 0.5;
@@ -12,6 +12,11 @@ const COUNT_SECONDS = 4;
 const TYPE_SECONDS_PER_CHAR = 0.02;
 
 export const buildAssistant: SceneBuilder = (_scene, ctx) => {
+  const d = {
+    messages: strings().demo.assistantMessages,
+    trail: strings().demo.assistantTrail,
+    summary: strings().demo.assistantSummary,
+  };
   const tl = gsap.timeline({ paused: true, defaults: { ease: "none" } });
   const card = ctx.beat("card");
   const fade = (name: string, at: number) =>

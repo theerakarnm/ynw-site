@@ -3,7 +3,11 @@
  * Privacy page. Copy is placeholder - flagged CONFIRM in content.ts.
  */
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { privacy, meta } from "@/data/content";
+import { copyOf, localeStaticPaths } from "@/lib/page-copy";
+
+export const getStaticPaths = localeStaticPaths;
+
+const { privacy, meta } = copyOf(Astro.url);
 
 const { title, description } = meta.privacy;
 ---

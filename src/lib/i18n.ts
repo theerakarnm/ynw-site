@@ -1,7 +1,6 @@
-import type { clientStrings } from "@/data/content";
+import type { Copy } from "@/data/copy";
 
-type Widen<T> = { -readonly [K in keyof T]: T[K] extends string ? string : Widen<T[K]> };
-export type ClientStrings = Widen<typeof clientStrings>;
+export type ClientStrings = Copy["clientStrings"];
 
 let cached: ClientStrings | null = null;
 

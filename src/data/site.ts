@@ -18,10 +18,8 @@ export const site = {
   legalName: "YNW", // CONFIRM: legal entity name for Privacy page
   tagline: "Your Next Wave",
   url: siteUrl,
-  locale: "en",
-  lang: "en",
   themeColor: "#0b0a0b",
-  // Read by llms.txt.ts, which stays out of the translation pass; page copy comes from content.ts.
+  // Read by llms.txt.ts, which is English only and stays unprefixed.
   description: meta.home.description,
   ogImage: "/og.png",
   consentVersion: "2026-11", // CONFIRM: bump whenever consent text changes

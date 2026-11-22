@@ -7,20 +7,22 @@ Conventions for any coding agent working in this repo. Read `docs/ANALYSIS.md` f
 - `npm run dev` - dev server against the local marketing worker (`.env.development`: `http://localhost:8787` + Turnstile test key). Start `npm run dev` in `../ynw-marketing-worker` first, or set `PUBLIC_API_BASE=` in `.env.development.local` for the built-in mock.
 - `npm run build` - typecheck + production build to `dist/` (also regenerates `dist/_headers` with env-aware CSP; needs Node >= 22.23.4).
 - `npm run preview` - serve the build.
+- `npm test` - Node's built-in test runner (no dependency) for the locale rules and head script.
 - `npm run check` - `astro check` (TypeScript strict + Astro diagnostics).
 - `npm run deploy` - production build (canonical origin from shell env or `.env`) + `wrangler deploy` (assets-only worker on ynw.app, config in `wrangler.jsonc`).
 Commit small and often; one logical change per commit (docs, tokens, layout, sections, integration, pages, SEO, fixes). Never one giant commit.
 
 ## Structure map
 
-- `src/pages/` - one file per route (`index`, `support`, `thanks`, `unsubscribed`, `privacy`, `404`). Pages compose sections and set per-page SEO props; `/support/` (founding round) passes `support` to the layout for the nav variant.
+- `src/pages/[...lang]/` - one file per route (`index`, `support`, `thanks`, `unsubscribed`, `privacy`, `404`), rendered for Thai (unprefixed) and English (`/en/`) via `localeStaticPaths`. Pages compose sections and set per-page SEO props; `/support/` (founding round) passes `support` to the layout for the nav variant.
 - `src/layouts/BaseLayout.astro` - the only layout: `<html>`, head via `SEO.astro` + `JsonLd.astro`, font preloads, skip link, global styles, page scripts.
 - `src/components/seo/` - `SEO.astro` (all meta), `JsonLd.astro` (schema.org graph).
 - `src/components/sections/` - page sections in reference order (`SiteNav`, `ProgressRail`, `Hero`, `CapabilityTicker`, the scenes in order `SceneChat`, `SceneAssistant`, `SceneAccounts`, `SceneApprovalModes`, `SceneWorkflows`, `SceneRelay`, `SceneDevelopers` (all built on `Scene.astro` + `SceneHead.astro`), `ScenePlanned` (dashed cards on a blueprint grid, rail step 8), `SceneWishlist` (step 9), then the static `/support/` sections `SupportHero`, `SupportTiers`, `SupportHow`, `SupportFaq`, `SupportClosing`, and `SiteFooter`).
 - `src/components/ui/` - primitives reused inside sections (`Sticker`, `Icon`, `LogoLockup`, `LogoWordmark`).
 - `src/components/forms/WishlistForm.astro` - one form component used twice (hero + closing), plus the client module `src/scripts/wishlist-form.ts`.
 - `src/data/site.ts` - site config: brand, canonical URL, SEO defaults, keywords, consent version, env plumbing, `donateUrl` (Buy Me a Coffee).
-- `src/data/content.ts` - ALL copy. No user-visible string may live in a component or layout.
+- `src/data/content.ts` - ALL copy, English source. `src/data/content.th.ts` mirrors it; both change together and `src/data/copy.ts` fails the type check on drift. No user-visible string may live in a component or layout, and none may import content directly: read it with `copyOf(Astro.url)` from `src/lib/page-copy.ts`.
+- `src/lib/locale.ts` (locale rules, self-contained functions) and `src/lib/locale-boot.ts` (inline head script, CSP-hashed by `build-headers.mjs`). Internal hrefs go through `localizePath`. The nav language switch is `src/scripts/locale-switch.ts`.
 - `src/styles/tokens.css` - design tokens only (custom properties on `:root` + `@font-face`).
 - `src/styles/global.css` - base + all component/section CSS, ordered like the page, commented by section.
 - `src/lib/` - `api.ts` (typed marketing-worker client + dev mock), `attribution.ts` (first-touch capture), `events.ts` (batched beacons).
@@ -38,7 +40,7 @@ Commit small and often; one logical change per commit (docs, tokens, layout, sec
 
 ## Copy and content rules
 
-- New/changed copy goes in `src/data/content.ts`; English is the source, Thai demo strings keep `lang="th"` attributes in the markup that renders them.
+- New/changed copy goes in `src/data/content.ts`; English is the source and Thai mirrors it; Thai strings inside English pages keep `lang="th"`.
 - Never invent claims, testimonials, prices or statistics. Strings needing owner confirmation carry a `// CONFIRM` comment.
 - Keep the reference's neutral product-concept caption under every demo scene.
 

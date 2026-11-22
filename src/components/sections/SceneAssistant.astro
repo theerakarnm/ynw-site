@@ -6,7 +6,9 @@
  */
 import Scene from "./Scene.astro";
 import Sticker from "@/components/ui/Sticker.astro";
-import { scenes, assistantDemo as d } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, assistantDemo: d } = copyOf(Astro.url);
 
 const meta = scenes[1];
 ---

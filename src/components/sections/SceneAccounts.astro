@@ -6,7 +6,9 @@
  * the marking, scripts/scenes/accounts.ts fans the deck out. Both work apart from each other.
  */
 import Scene from "./Scene.astro";
-import { scenes, accountsDemo as d } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, accountsDemo: d } = copyOf(Astro.url);
 
 const meta = scenes[2];
 ---

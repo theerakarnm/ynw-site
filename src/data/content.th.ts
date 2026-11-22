@@ -39,7 +39,7 @@ export const meta = {
   notFound: { title: "ไม่มีคลื่นลูกนี้ - 404" },
 } as const;
 
-// Accessible names and the language switch. {language} is filled with the target language label.
+// Accessible names and the language switch. {language} is filled with a language name.
 export const a11y = {
   skipLink: "ข้ามไปยังเนื้อหา",
   navLabel: "เมนูหลัก",
@@ -49,6 +49,8 @@ export const a11y = {
     switchToLabel: "เปลี่ยนภาษาเป็น {language}",
     // Each label names the language the switch goes to, shown on the other language's page.
     labels: { en: "EN", th: "ไทย" },
+    names: { en: "English", th: "ไทย" },
+    currentLabel: "ภาษาปัจจุบัน: {language}",
   },
 } as const;
 
@@ -699,6 +701,15 @@ export const clientStrings = {
     copied: thanks.copied,
     saved: thanks.saved,
     saveError: thanks.saveError,
+  },
+  // Scene timelines are sized by the demo copy, so the scripts read it from #i18n instead of importing it.
+  demo: {
+    developersRequest: developersDemo.request,
+    workflowsConfirm: workflowsDemo.confirm,
+    workflowsOn: workflowsDemo.on,
+    assistantMessages: assistantDemo.messages,
+    assistantTrail: assistantDemo.trail,
+    assistantSummary: assistantDemo.summary,
   },
   rail: {
     running: "กำลังรันขั้นที่ {n} จาก {total}",

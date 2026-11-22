@@ -4,7 +4,13 @@
  * redirect. noindex.
  */
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { unsubscribed as c, meta } from "@/data/content";
+import { copyOf, pageLocale, localeStaticPaths } from "@/lib/page-copy";
+import { localizePath } from "@/lib/locale";
+
+export const getStaticPaths = localeStaticPaths;
+
+const locale = pageLocale(Astro.url);
+const { unsubscribed: c, meta } = copyOf(Astro.url);
 
 const title = meta.unsubscribed.title;
 ---
@@ -17,7 +23,7 @@ const title = meta.unsubscribed.title;
       <p class="page-lead">{c.lead}</p>
     </div>
     <div class="profile-actions">
-      <a class="ynw-btn ynw-btn--secondary" href="/">{c.back}</a>
+      <a class="ynw-btn ynw-btn--secondary" href={localizePath("/", locale)}>{c.back}</a>
     </div>
   </div>
 </BaseLayout>

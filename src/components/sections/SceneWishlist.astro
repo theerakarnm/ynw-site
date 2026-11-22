@@ -6,7 +6,9 @@
 import Icon from "@/components/ui/Icon.astro";
 import Scene from "./Scene.astro";
 import WishlistForm from "@/components/forms/WishlistForm.astro";
-import { scenes, closing } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, closing } = copyOf(Astro.url);
 
 const meta = scenes[8];
 ---

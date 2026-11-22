@@ -6,8 +6,12 @@
  * in-page anchors and a Buy Me a Coffee CTA.
  */
 import LogoLockup from "@/components/ui/LogoLockup.astro";
-import { nav, a11y } from "@/data/content";
+import { copyOf, pageLocale } from "@/lib/page-copy";
+import { localizePath } from "@/lib/locale";
 import { donateUrl } from "@/data/site";
+
+const locale = pageLocale(Astro.url);
+const { nav, a11y } = copyOf(Astro.url);
 
 interface Props {
   /** True on the landing page (CTA jumps to the on-page form). */
@@ -17,10 +21,14 @@ interface Props {
 }
 
 const { home = false, support = false } = Astro.props;
+
+const target = locale === "th" ? "en" : "th";
+const { names, labels, switchToLabel, currentLabel } = a11y.language;
+const switchName = `${switchToLabel.replace("{language}", names[target])}. ${currentLabel.replace("{language}", names[locale])}`;
 ---
 
 <nav class="ynw-nav site-nav" aria-label={a11y.navLabel}>
-  <a class="site-lockup-link" href="/" aria-label={a11y.homeLabel}>
+  <a class="site-lockup-link" href={localizePath("/", locale)} aria-label={a11y.homeLabel}>
     <LogoLockup />
   </a>
   {
@@ -33,6 +41,16 @@ const { home = false, support = false } = Astro.props;
     )
   }
   <div class="ynw-nav-end">
+    <a
+      class:list={["ynw-btn", "ynw-btn--secondary", { "ynw-btn--sm": support }]}
+      href={localizePath(Astro.url.pathname, target)}
+      hreflang={target}
+      lang={target}
+      aria-label={switchName}
+      data-locale-switch={target}
+    >
+      {labels[target]}
+    </a>
     {
       support ? (
         <a
@@ -50,7 +68,7 @@ const { home = false, support = false } = Astro.props;
           {nav.cta}
         </button>
       ) : (
-        <a class="ynw-btn ynw-btn--secondary" href="/#top" data-cta="jump-to-form" data-cta-id="nav_wishlist">
+        <a class="ynw-btn ynw-btn--secondary" href={`${localizePath("/", locale)}#top`} data-cta="jump-to-form" data-cta-id="nav_wishlist">
           {nav.cta}
         </a>
       )

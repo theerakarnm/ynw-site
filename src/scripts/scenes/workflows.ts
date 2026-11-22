@@ -4,7 +4,7 @@
  * CSS holds the final state, so every tween here starts from hidden.
  */
 import gsap from "gsap";
-import { workflowsDemo as d } from "@/data/content";
+import { strings } from "@/lib/i18n";
 import type { SceneBuilder } from "./index";
 
 const PHRASE_AT = 0.5;
@@ -30,7 +30,8 @@ export const buildWorkflows: SceneBuilder = (scene, ctx) => {
 
   confirm.classList.remove("is-on");
   ctx.onRevert(() => confirm.classList.add("is-on"));
-  ctx.swapText(tl, confirm, d.confirm, [[d.on, CONFIRM_AT]]);
+  const { workflowsConfirm, workflowsOn } = strings().demo;
+  ctx.swapText(tl, confirm, workflowsConfirm, [[workflowsOn, CONFIRM_AT]]);
   tl.call(() => confirm.classList.add("is-on"), [], CONFIRM_AT);
   tl.fromTo(ctx.beat("runs"), { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: "ynw-standard" }, CONFIRM_AT + 0.4);
 

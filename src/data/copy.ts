@@ -2,17 +2,19 @@ import type { Locale } from "@/lib/locale";
 import * as en from "./content";
 import * as th from "./content.th";
 
+// Visible text widens to `string` so each locale can write its own. Identifiers and layout names are
+// structure shared by both locales, so they keep their literal types.
+type Structural = "id" | "layout";
+
 type Widen<T> = T extends string
   ? string
   : T extends number
     ? number
     : T extends boolean
       ? boolean
-      : T extends readonly (infer U)[]
-        ? readonly Widen<U>[]
-        : T extends object
-          ? { readonly [K in keyof T]: Widen<T[K]> }
-          : T;
+      : T extends object
+        ? { readonly [K in keyof T]: K extends Structural ? T[K] : Widen<T[K]> }
+        : T;
 
 /** The English module, widened to its types: every locale supplies the same keys with plain strings. */
 export type Copy = Widen<typeof import("./content")>;

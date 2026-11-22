@@ -7,7 +7,9 @@
  */
 import Scene from "./Scene.astro";
 import Sticker from "@/components/ui/Sticker.astro";
-import { scenes, chatDemo as d } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { scenes, chatDemo: d } = copyOf(Astro.url);
 
 const { steps, ...meta } = scenes[0];
 const qrRows = ['11111110101111111', '10000010001000001', '10111010001011101', '10111010001011101', '10111010001011101', '10000010101000001', '11111110101111111', '00000000000000000', '01101010101111010', '00000000110110000', '11111110010111000', '10000010011001000', '10111010010111011', '10111010111010111', '10111010101100011', '10000010000101101', '11111110010001000'];

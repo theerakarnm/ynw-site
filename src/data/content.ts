@@ -36,7 +36,7 @@ export const meta = {
   notFound: { title: "This wave does not exist. - 404" },
 } as const;
 
-// Accessible names and the language switch. {language} is filled with the target language label.
+// Accessible names and the language switch. {language} is filled with a language name.
 export const a11y = {
   skipLink: "Skip to content",
   navLabel: "Main",
@@ -46,6 +46,8 @@ export const a11y = {
     switchToLabel: "Switch language to {language}",
     // Each label names the language the switch goes to, shown on the other language's page.
     labels: { en: "EN", th: "ไทย" },
+    names: { en: "English", th: "ไทย" },
+    currentLabel: "Current language: {language}",
   },
 } as const;
 
@@ -696,6 +698,15 @@ export const clientStrings = {
     copied: thanks.copied,
     saved: thanks.saved,
     saveError: thanks.saveError,
+  },
+  // Scene timelines are sized by the demo copy, so the scripts read it from #i18n instead of importing it.
+  demo: {
+    developersRequest: developersDemo.request,
+    workflowsConfirm: workflowsDemo.confirm,
+    workflowsOn: workflowsDemo.on,
+    assistantMessages: assistantDemo.messages,
+    assistantTrail: assistantDemo.trail,
+    assistantSummary: assistantDemo.summary,
   },
   rail: {
     running: "Running step {n} of {total}",

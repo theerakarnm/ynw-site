@@ -3,7 +3,9 @@
  * /support how-to: the four Buy Me a Coffee steps and the "what to type"
  * example card (readonly fields mirroring the BMC form).
  */
-import { support } from "@/data/content";
+import { copyOf } from "@/lib/page-copy";
+
+const { support } = copyOf(Astro.url);
 
 const t = support.how;
 const ex = t.example;
