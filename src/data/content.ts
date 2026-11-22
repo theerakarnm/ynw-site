@@ -80,7 +80,7 @@ export const scenes = [
     caption: "Product concept. Interface and data are illustrative.",
   },
   {
-    id: "accounts", num: "03", label: "Accounts", phone: true,
+    id: "accounts", num: "03", label: "Accounts", layout: "copy-right",
     title: "One you. Several Accounts.",
     lead: "You sign in once as one User. You can own several Accounts, for example Personal, a shop and a team. Other people cannot see that they belong to one User.",
     steps: [
@@ -93,7 +93,7 @@ export const scenes = [
     caption: "Product concept. Interface and data are illustrative.",
   },
   {
-    id: "approval-modes", num: "04", label: "Approval Modes", phone: true,
+    id: "approval-modes", num: "04", label: "Approval Modes", layout: "full",
     title: "You decide what it does alone.",
     lead: "Pick how much your Assistant may do without asking. New Accounts start on Auto.",
     replay: "Replay Approval Modes scene",
@@ -198,38 +198,41 @@ export const assistantDemo = {
 
 export const accountsDemo = {
   switcherHint: "Switch Account",
+  compare: {
+    caption: "Accounts compared",
+    contacts: "Contacts",
+    assistant: "Assistant mode",
+  },
   accounts: [
     {
-      id: "personal", kind: "Personal", initials: "พิ", name: "Pim", assistant: "Assistant: Ask",
+      id: "personal", kind: "Personal", name: "Pim", assistant: "Assistant: Ask", mode: "Ask",
       contacts: [
-        { initial: "ม", name: "Mali", line: "ไปเที่ยวกันไหม", lang: "th" },
-        { initial: "พ", name: "Ploy", line: "See you Sunday", lang: "en" },
-        { initial: "แ", name: "แม่", line: "กินข้าวหรือยัง", lang: "th" },
+        { name: "Mali", lang: "en" },
+        { name: "Ploy", lang: "en" },
+        { name: "แม่", lang: "th" },
       ],
     },
     {
-      id: "shop", kind: "Shop", initials: "บข", name: "Baan Khanom", assistant: "Assistant: Auto",
+      id: "shop", kind: "Shop", name: "Baan Khanom", assistant: "Assistant: Auto", mode: "Auto",
       contacts: [
-        { initial: "น", name: "Nok", line: "สั่งเค้ก 2 กล่อง", lang: "th" },
-        { initial: "L", name: "Lamyai Farm", line: "Delivery is on Thursday", lang: "en" },
-        { initial: "S", name: "Shop team", line: "Packing today", lang: "en" },
+        { name: "Nok", lang: "en" },
+        { name: "Lamyai Farm", lang: "en" },
+        { name: "Shop team", lang: "en" },
       ],
     },
     {
-      id: "team", kind: "Team", initials: "LT", name: "Lamyai Team", assistant: "Assistant: Ask",
+      id: "team", kind: "Team", name: "Lamyai Team", assistant: "Assistant: Ask", mode: "Ask",
       contacts: [
-        { initial: "A", name: "Arm", line: "Review is ready", lang: "en" },
-        { initial: "B", name: "Beer", line: "Moved the call to 10:00", lang: "en" },
-        { initial: "D", name: "Design group", line: "New logo options", lang: "en" },
+        { name: "Arm", lang: "en" },
+        { name: "Beer", lang: "en" },
+        { name: "Design group", lang: "en" },
       ],
     },
   ],
   active: "team",
-  sub: "Account",
 } as const;
 
 export const approvalDemo = {
-  header: { initials: "ม", name: "Mali", sub: "Friend" },
   modesLabel: "Approval Mode",
   modes: [
     { id: "allow", name: "Allow", text: "The Assistant acts at once. The reply to Mali is sent." },
@@ -237,16 +240,29 @@ export const approvalDemo = {
     { id: "ask", name: "Ask", text: "The Assistant waits for you. The reply to Mali waits for your approval." },
   ],
   defaultMode: "auto",
-  incoming: "เจอกันวันศุกร์ได้ไหม",
-  action: "Reply to Mali",
-  reply: "Friday works",
-  sent: "Sent by Assistant",
-  checked: "Decision Model checked: routine reply",
-  askTitle: "Assistant asks",
-  askBody: "Reply to Mali: Friday works",
-  waiting: "Waiting for you",
+  lanes: { alone: "Does it alone", ask: "Asks you first" },
+  /** `alone` lists the modes in which the action runs without asking (ADR 0009). */
+  actions: [
+    {
+      id: "reply",
+      title: "Reply to Mali",
+      context: "เจอกันวันศุกร์ได้ไหม",
+      body: "Friday works",
+      alone: ["allow", "auto"],
+      states: { allow: "Sent by Assistant", auto: "Decision Model checked: routine reply", ask: "Assistant asks" },
+    },
+    {
+      id: "tool",
+      title: "Call a tool",
+      body: "Tool call through a Connection", // source: ADR 0011, "Tool calls follow the Approval Mode"
+      alone: ["allow"],
+      // source: ADR 0009, Auto falls back to Ask when the Decision Model's confidence is below the threshold
+      states: { allow: "Done by Assistant", auto: "Decision Model was not sure", ask: "Assistant asks" },
+    },
+  ],
   approve: "Approve",
   deny: "Deny",
+  waiting: "Waiting for you",
   payment: "Pay a 1,200 baht invoice",
   alwaysAskTag: "Always Ask",
   alwaysAskTitle: "Always Ask, in every mode",

@@ -14,7 +14,7 @@ import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import { CustomEase } from "gsap/CustomEase";
 import { createSceneCtx, sceneBuilders, type SceneBuilder } from "./scenes";
 import { animateApprovalMode } from "./scenes/approval-modes";
-import type { ApprovalMode } from "./approval-modes";
+import type { ApprovalModeChange } from "./approval-modes";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin, CustomEase, ScrollToPlugin);
 
@@ -492,7 +492,7 @@ export function mount(root: HTMLElement) {
     if (scene.hasAttribute("data-approval-modes")) {
       const onMode = (e: Event) => {
         player.finish();
-        animateApprovalMode(scene, (e as CustomEvent<ApprovalMode>).detail);
+        animateApprovalMode(scene, (e as CustomEvent<ApprovalModeChange>).detail);
       };
       scene.addEventListener("ynw:approval-mode", onMode);
       disposers.push(() => scene.removeEventListener("ynw:approval-mode", onMode));

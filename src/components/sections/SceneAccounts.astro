@@ -1,48 +1,70 @@
 ---
 /**
- * Scene 03 - Accounts: one User, several equal Accounts, each with its own contacts
- * and Assistant permissions. Markup is the final state (Team active); the timeline in
- * scripts/scenes/accounts.ts cycles Personal, Shop, Team by setting data-account.
+ * Scene 03 - Accounts: a card deck that fans out, and a table that compares the Accounts.
+ * Hover, focus or click on a card or a column header marks that Account in both. The marked
+ * Account is data-account on the section (Team in the markup). scripts/accounts.ts owns
+ * the marking, scripts/scenes/accounts.ts fans the deck out. Both work apart from each other.
  */
 import Scene from "./Scene.astro";
-import PhoneFrame from "@/components/ui/PhoneFrame.astro";
 import { scenes, accountsDemo as d } from "@/data/content";
 
 const meta = scenes[2];
-const active = d.accounts.find((a) => a.id === d.active)!;
 ---
 
-<Scene {...meta} stageClass="stage-accounts" attrs={{ "data-account": d.active }}>
-  <PhoneFrame initials={active.initials} name={active.name} sub={d.sub} lang="th">
-    {
-      d.accounts.map((a) => (
-        <div class="acc-contacts" data-account-for={a.id} data-beat={`contacts-${a.id}`}>
-          {a.contacts.map((c) => (
-            <div class="acc-contact">
-              <span class="av" lang={c.lang}>{c.initial}</span>
-              <span class="acc-contact-text">
-                <span class="acc-contact-name" lang={c.lang}>{c.name}</span>
-                <span class="acc-contact-line" lang={c.lang}>{c.line}</span>
-              </span>
-            </div>
-          ))}
-        </div>
-      ))
-    }
-    <div slot="panel" class="acc-panel" data-beat="panel">
-      <p class="acc-hint">{d.switcherHint}</p>
+<Scene {...meta} stageClass="stage-accounts" attrs={{ "data-account": d.active, "data-accounts": "" }}>
+  <div class="acc">
+    <p class="acc-hint ynw-mono">{d.switcherHint}</p>
+    <div class="acc-deck" data-beat="deck">
       {
-        d.accounts.map((a) => (
-          <div class="acc-row" data-account-row={a.id} data-beat={`row-${a.id}`}>
-            <span class="phone-avatar" lang="th">{a.initials}</span>
-            <span class="acc-row-text">
-              <span class="acc-row-name">{a.name}</span>
-              <span class="acc-row-sub">{a.kind} | {a.assistant}</span>
-            </span>
-            <span class="acc-mark" aria-hidden="true"></span>
-          </div>
+        d.accounts.map((a, i) => (
+          <button
+            class="acc-card"
+            type="button"
+            style={`--i: ${i}`}
+            data-account-pick={a.id}
+            data-account-id={a.id}
+            aria-pressed={a.id === d.active ? "true" : "false"}
+          >
+            <span class="acc-mark" aria-hidden="true">{a.kind.slice(0, 1)}</span>
+            <span class="acc-name">{a.name}</span>
+            <span class="acc-sub">{a.kind} | {a.assistant}</span>
+          </button>
         ))
       }
     </div>
-  </PhoneFrame>
+
+    <table class="acc-table" data-beat="table">
+      <caption class="acc-caption ynw-mono">{d.compare.caption}</caption>
+      <thead>
+        <tr>
+          <td></td>
+          {
+            d.accounts.map((a) => (
+              <th scope="col" data-account-id={a.id}>
+                <button class="acc-col" type="button" data-account-pick={a.id}>{a.name}</button>
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">{d.compare.contacts}</th>
+          {
+            d.accounts.map((a) => (
+              <td data-account-id={a.id}>
+                <ul class="acc-list">
+                  {a.contacts.map((c) => <li lang={c.lang}>{c.name}</li>)}
+                </ul>
+              </td>
+            ))
+          }
+        </tr>
+        <tr>
+          <th scope="row">{d.compare.assistant}</th>
+          {d.accounts.map((a) => <td data-account-id={a.id}>{a.mode}</td>)}
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </Scene>
