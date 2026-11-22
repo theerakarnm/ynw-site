@@ -8,7 +8,7 @@ The design references live in `_reference/` (read-only, never deployed): `_refer
 
 - Astro 7, static output, TypeScript strict. No UI framework.
 - Plain CSS with custom properties (design tokens). No Tailwind.
-- One JS motion module (GSAP + ScrollTrigger/SplitText/DrawSVG/CustomEase/ScrollTo, npm, free license) plus per-scene timelines in `src/scripts/scenes/` for the phone story (nine scenes: Chat, Assistant, Accounts, Approval Modes, Workflows, Agent relay, Developers, Planned, Wishlist; one shared `PhoneFrame`, each phone scene pinned on desktop, Planned is plain cards). All other behavior is small vanilla TypeScript modules (`approval-modes.ts` owns the Approval Mode toggle and works without GSAP).
+- One JS motion module (GSAP + ScrollTrigger/SplitText/DrawSVG/CustomEase/ScrollTo, npm, free license) plus per-scene timelines in `src/scripts/scenes/` for the story (nine scenes: Chat, Assistant, Accounts, Approval Modes, Workflows, Agent relay, Developers, Planned, Wishlist; each scene has its own form and none is pinned). All other behavior is small vanilla TypeScript modules (`approval-modes.ts` owns the Approval Mode toggle and works without GSAP).
 - Self-hosted fonts (Geist variable, Geist Mono variable, IBM Plex Sans Thai) via Fontsource. No runtime font CDN requests.
 - @astrojs/sitemap, hand-rolled SEO + JSON-LD components, astro:assets.
 
@@ -116,6 +116,6 @@ Full rationale in `docs/ANALYSIS.md` ("Rebuild decisions"), evidence in `docs/VE
 ## Verification summary
 
 - `npm run build`: 0 errors, 0 warnings.
-- Visual: reference vs clone at 360/768/1024/1440/1920 match (pin + story modes); details in docs/VERIFICATION.md.
+- Visual: reference vs clone at 360/768/1024/1440/1920 match; details in docs/VERIFICATION.md.
 - Functional: 21/21 UX-state tests, 18/18 API-contract tests, profile payload verified.
 - Lighthouse: mobile 99/100/100/100, desktop 100/100/100/100.
