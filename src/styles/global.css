@@ -314,8 +314,8 @@ html { background: var(--bg); scroll-padding-top: 72px; }
 .acc { display: grid; gap: var(--space-8); justify-items: start; width: 100%; min-width: 0; }
 .acc-hint { margin: 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); }
 /* --fan is 1 (fanned out) in CSS; the timeline tweens it from 0 so the deck starts stacked. */
-.acc-deck { --card: 200px; --step: 52px; --fan: 1; position: relative; width: calc(var(--card) + 2 * var(--step)); max-width: 100%; height: 148px; }
-.acc-card { position: absolute; top: var(--space-3); left: 0; width: var(--card); display: grid; justify-items: start; gap: var(--space-1); padding: var(--space-4); border: var(--bw-hairline) solid var(--border-strong); border-radius: var(--panel-radius); background: var(--surface-raised); box-shadow: var(--shadow-overlay); color: var(--text-primary); text-align: left; cursor: pointer; z-index: calc(var(--i) + 1); translate: calc(var(--i) * var(--step) * var(--fan)) 0; rotate: calc((var(--i) - 1) * var(--fan) * 3deg); transition: transform var(--dur-base) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard); }
+.acc-deck { --card: 220px; --step: 140px; --fan: 1; position: relative; width: min(var(--card), 100%); max-width: 100%; height: calc(var(--space-3) + 2 * var(--step) + 124px); }
+.acc-card { position: absolute; top: var(--space-3); left: 0; width: 100%; box-sizing: border-box; display: grid; justify-items: start; gap: var(--space-1); padding: var(--space-4); border: var(--bw-hairline) solid var(--border-strong); border-radius: var(--panel-radius); background: var(--surface-raised); box-shadow: var(--shadow-overlay); color: var(--text-primary); text-align: left; cursor: pointer; z-index: calc(var(--i) + 1); translate: 0 calc(var(--i) * var(--step) * var(--fan)); rotate: calc((var(--i) - 1) * var(--fan) * 3deg); transition: transform var(--dur-base) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard); }
 .acc-mark { width: 32px; height: 32px; display: grid; place-items: center; margin-bottom: var(--space-1); border: var(--bw-hairline) solid var(--border-strong); border-radius: var(--radius-full); background: var(--surface-overlay); font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
 .acc-name { font-size: 16px; font-weight: 600; line-height: 1.3; }
 .acc-sub { font-family: var(--font-mono); font-size: 11px; line-height: 1.4; color: var(--text-secondary); }
@@ -334,7 +334,6 @@ html { background: var(--bg); scroll-padding-top: 72px; }
 .scene[data-account="shop"] :is(th, td)[data-account-id="shop"],
 .scene[data-account="team"] :is(th, td)[data-account-id="team"] { background: var(--surface-raised); }
 @media (min-width: 640px) {
-  .acc-deck { --card: 230px; --step: 150px; height: 160px; }
   .acc-table { font-size: 14px; }
 }
 
