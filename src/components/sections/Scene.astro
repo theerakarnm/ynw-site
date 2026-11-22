@@ -6,6 +6,7 @@
  * The markup is always the final state; motion.ts only animates it in.
  */
 import SceneHead from "./SceneHead.astro";
+import { sceneUi } from "@/data/content";
 
 export interface SceneMeta {
   id: string;
@@ -22,7 +23,7 @@ export interface SceneMeta {
   receiptTag?: string;
   /** Accessible label of the Replay button; shown by motion.ts on animated branches only. */
   replay?: string;
-  /** Visible label of the button; default "Replay". */
+  /** Visible label of the button; default sceneUi.replay. */
   replayText?: string;
   /** Where the copy sits relative to the stage. Default full. */
   layout?: "full" | "copy-left" | "copy-right";
@@ -33,7 +34,7 @@ export interface SceneMeta {
 
 interface Props extends SceneMeta {}
 
-const { id, num, label, title, lead, caption, stageClass, steps, receipt, receiptTag, replay, replayText = "Replay", layout = "full", closing = false, attrs = {} } = Astro.props;
+const { id, num, label, title, lead, caption, stageClass, steps, receipt, receiptTag, replay, replayText = sceneUi.replay, layout = "full", closing = false, attrs = {} } = Astro.props;
 const head = { id, num, label, title, lead };
 ---
 

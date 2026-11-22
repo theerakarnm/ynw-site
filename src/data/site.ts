@@ -3,6 +3,8 @@
  * User-visible copy lives in content.ts; this file is structure + SEO defaults.
  */
 
+import { meta } from "./content";
+
 export const apiBase = import.meta.env.PUBLIC_API_BASE ?? "";
 export const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
@@ -19,21 +21,9 @@ export const site = {
   locale: "en",
   lang: "en",
   themeColor: "#0b0a0b",
-  title: "YNW - A Chat App With Your Own AI Assistant",
-  description:
-    "A chat app with your own AI Assistant. Add friends by QR code, send stickers, and let it catch you up and draft replies. You decide what it does alone.",
-  // CONFIRM: target keywords are derived from the reference copy, not owner-supplied.
-  keywords: [
-    "AI chat app",
-    "AI assistant in chat",
-    "group chat summary",
-    "chat app with stickers",
-    "multiple accounts chat app",
-    "chat workflows",
-    "MCP chat app",
-  ],
+  // Read by llms.txt.ts, which stays out of the translation pass; page copy comes from content.ts.
+  description: meta.home.description,
   ogImage: "/og.png",
-  ogImageAlt: "YNW - a chat app with an AI Assistant. Orange LED wave of dots forming a wave under the YNW wordmark.",
   consentVersion: "2026-11", // CONFIRM: bump whenever consent text changes
 } as const;
 

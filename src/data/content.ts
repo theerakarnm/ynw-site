@@ -4,6 +4,55 @@
  * owner must approve before launch. Do not invent claims, prices or statistics.
  */
 
+// Page-level SEO copy. Titles are final strings (brand name included) so a locale can swap them whole.
+export const meta = {
+  home: {
+    title: "YNW - A Chat App With Your Own AI Assistant",
+    description:
+      "A chat app with your own AI Assistant. Add friends by QR code, send stickers, and let it catch you up and draft replies. You decide what it does alone.",
+    ogImageAlt: "YNW - a chat app with an AI Assistant. Orange LED wave of dots forming a wave under the YNW wordmark.",
+    // CONFIRM: target keywords are derived from the reference copy, not owner-supplied.
+    keywords: [
+      "AI chat app",
+      "AI assistant in chat",
+      "group chat summary",
+      "chat app with stickers",
+      "multiple accounts chat app",
+      "chat workflows",
+      "MCP chat app",
+    ],
+  },
+  support: {
+    title: "Support YNW - Founding Round",
+    description:
+      "Help us build YNW. Join the founding round at any level: thank-you gifts for early backers, from one coffee to founding partner.",
+  },
+  privacy: {
+    title: "Privacy - YNW",
+    description: "What the YNW wishlist page collects, why, and how to unsubscribe.",
+  },
+  thanks: { title: "You are on the wishlist - YNW" },
+  unsubscribed: { title: "Unsubscribed - YNW" },
+  notFound: { title: "This wave does not exist. - 404" },
+} as const;
+
+// Accessible names and the language switch. {language} is filled with the target language label.
+export const a11y = {
+  skipLink: "Skip to content",
+  navLabel: "Main",
+  homeLabel: "YNW home",
+  fundingLabel: "Funding progress",
+  language: {
+    switchToLabel: "Switch language to {language}",
+    // Each label names the language the switch goes to, shown on the other language's page.
+    labels: { en: "EN", th: "ไทย" },
+  },
+} as const;
+
+export const sceneUi = {
+  replay: "Replay",
+} as const;
+
 export const nav = {
   cta: "Join the wishlist",
   // /support nav: in-page anchors (reference Main.dc.html nav) + BMC CTA.
@@ -628,4 +677,30 @@ export const privacy = {
       ],
     },
   ],
+} as const;
+
+/**
+ * The only copy client scripts read. The layout serialises this into #i18n; scripts never import
+ * copy by name. {name} placeholders are filled by format() in src/lib/i18n.ts.
+ */
+export const clientStrings = {
+  form: {
+    errorInvalid: wishlistForm.errorInvalid,
+    errorConsent: wishlistForm.errorConsent,
+    errorTurnstile: wishlistForm.errorTurnstile,
+    errorRateLimited: wishlistForm.errorRateLimited,
+    errorNetwork: wishlistForm.errorNetwork,
+  },
+  thanks: {
+    copy: thanks.copy,
+    copied: thanks.copied,
+    saved: thanks.saved,
+    saveError: thanks.saveError,
+  },
+  rail: {
+    running: "Running step {n} of {total}",
+    complete: "Run complete ▪ Finished in {duration}",
+    durationMinutes: "{m}m {s}s",
+    durationSeconds: "{s}s",
+  },
 } as const;

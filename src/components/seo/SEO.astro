@@ -3,6 +3,7 @@
  * All head meta for every page. Per-page props; defaults come from site.ts.
  */
 import { site, absoluteUrl } from "@/data/site";
+import { meta } from "@/data/content";
 
 export interface Props {
   title: string;
@@ -19,7 +20,7 @@ const {
   path,
   robots = "index, follow, max-image-preview:large",
   image = site.ogImage,
-  imageAlt = site.ogImageAlt,
+  imageAlt = meta.home.ogImageAlt,
 } = Astro.props;
 
 const canonical = absoluteUrl(path);

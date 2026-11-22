@@ -17,20 +17,21 @@ import SceneDevelopers from "@/components/sections/SceneDevelopers.astro";
 import ScenePlanned from "@/components/sections/ScenePlanned.astro";
 import SceneWishlist from "@/components/sections/SceneWishlist.astro";
 import { site } from "@/data/site";
+import { meta } from "@/data/content";
 
 const softwareApp = {
   "@type": "SoftwareApplication",
   name: site.name,
   applicationCategory: "CommunicationApplication",
   operatingSystem: "iOS, Android, Web, macOS, Windows, Linux",
-  description: site.description,
+  description: meta.home.description,
   url: site.url,
   offers: undefined, // pre-launch: no price, do not invent one
   publisher: { "@id": `${site.url}/#organization` },
 };
 ---
 
-<BaseLayout title={site.title} description={site.description} path="/" jsonLd={[softwareApp]}>
+<BaseLayout title={meta.home.title} description={meta.home.description} path="/" jsonLd={[softwareApp]}>
   <ProgressRail />
   <div id="run" class="run-anchor" tabindex="-1"></div>
   <Hero />

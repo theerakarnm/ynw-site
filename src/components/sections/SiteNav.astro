@@ -6,7 +6,7 @@
  * in-page anchors and a Buy Me a Coffee CTA.
  */
 import LogoLockup from "@/components/ui/LogoLockup.astro";
-import { nav } from "@/data/content";
+import { nav, a11y } from "@/data/content";
 import { donateUrl } from "@/data/site";
 
 interface Props {
@@ -19,8 +19,8 @@ interface Props {
 const { home = false, support = false } = Astro.props;
 ---
 
-<nav class="ynw-nav site-nav" aria-label="Main">
-  <a class="site-lockup-link" href="/" aria-label="YNW home">
+<nav class="ynw-nav site-nav" aria-label={a11y.navLabel}>
+  <a class="site-lockup-link" href="/" aria-label={a11y.homeLabel}>
     <LogoLockup />
   </a>
   {

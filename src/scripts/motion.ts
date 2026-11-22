@@ -14,6 +14,7 @@ import { CustomEase } from "gsap/CustomEase";
 import { createSceneCtx, sceneBuilders, type SceneBuilder } from "./scenes";
 import { animateApprovalMode } from "./scenes/approval-modes";
 import type { ApprovalModeChange } from "./approval-modes";
+import { format, strings } from "@/lib/i18n";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin, CustomEase, ScrollToPlugin);
 
@@ -301,12 +302,14 @@ export function mount(root: HTMLElement) {
   }
 
   function railStatusText(): string {
+    const t = strings().rail;
     if (ui.complete) {
       const m = Math.floor(ui.runSeconds / 60);
       const s = ui.runSeconds % 60;
-      return `Run complete ▪ Finished in ${m ? `${m}m ` : ""}${s}s`;
+      const duration = format(m ? t.durationMinutes : t.durationSeconds, { m, s });
+      return format(t.complete, { duration });
     }
-    return `Running step ${Math.max(ui.active, 1)} of ${railSteps.length}`;
+    return format(t.running, { n: Math.max(ui.active, 1), total: railSteps.length });
   }
 
   function renderRail() {

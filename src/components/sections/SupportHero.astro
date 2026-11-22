@@ -4,7 +4,7 @@
  * funding progress card. Static port of the reference (no motion module).
  */
 import Icon from "@/components/ui/Icon.astro";
-import { support } from "@/data/content";
+import { support, a11y } from "@/data/content";
 import { donateUrl } from "@/data/site";
 
 const t = support.hero;
@@ -45,7 +45,7 @@ const segments = Array.from({ length: 20 }, (_, i) => i < onSegments);
       </div>
     </div>
 
-    <section class="ynw-card sp-funding" aria-label="Funding progress">
+    <section class="ynw-card sp-funding" aria-label={a11y.fundingLabel}>
       <div class="ynw-card-top">
         <span class="ynw-eyebrow">{f.eyebrow}</span>
         <span class="ynw-badge ynw-badge--success">{f.badge}</span>

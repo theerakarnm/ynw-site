@@ -12,6 +12,7 @@ import JsonLd from "@/components/seo/JsonLd.astro";
 import SiteNav from "@/components/sections/SiteNav.astro";
 import SiteFooter from "@/components/sections/SiteFooter.astro";
 import { site, absoluteUrl } from "@/data/site";
+import { a11y, clientStrings } from "@/data/content";
 
 export interface Props {
   title: string;
@@ -55,6 +56,9 @@ const graph: Record<string, unknown>[] = [
   ...jsonLd,
 ];
 
+// "<" is escaped so no copy string can close the script element.
+const clientJson = JSON.stringify(clientStrings).replace(/</g, "\\u003c");
+
 const graphWithTypes = graph.map((node) => ({
   "@context": "https://schema.org",
   ...node,
@@ -69,12 +73,13 @@ const graphWithTypes = graph.map((node) => ({
     <JsonLd data={graphWithTypes} />
   </head>
   <body class="page" data-loop="run">
-    <a class="skip" href="#main">Skip to content</a>
+    <a class="skip" href="#main">{a11y.skipLink}</a>
     <SiteNav {support} />
     <main id="main">
       <slot />
     </main>
     <SiteFooter {support} />
+    <script id="i18n" type="application/json" set:html={clientJson} />
     <script>
       import "@/scripts/main";
     </script>

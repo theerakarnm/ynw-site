@@ -10,10 +10,9 @@ import SupportTiers from "@/components/sections/SupportTiers.astro";
 import SupportHow from "@/components/sections/SupportHow.astro";
 import SupportFaq from "@/components/sections/SupportFaq.astro";
 import SupportClosing from "@/components/sections/SupportClosing.astro";
+import { meta } from "@/data/content";
 
-const title = "Support YNW - Founding Round";
-const description =
-  "Help us build YNW. Join the founding round at any level: thank-you gifts for early backers, from one coffee to founding partner.";
+const { title, description } = meta.support;
 ---
 
 <BaseLayout title={title} description={description} path="/support/" support>

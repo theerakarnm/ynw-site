@@ -4,9 +4,10 @@
  * second-step profile form (skippable).
  */
 import { submitProfile } from "@/lib/api";
-import { thanks as c } from "@/data/content";
+import { strings } from "@/lib/i18n";
 
 export function initThanksPage(): void {
+  const c = strings().thanks;
   const posEl = document.querySelector<HTMLElement>("[data-thanks-pos]");
   const refEl = document.querySelector<HTMLInputElement>("[data-thanks-ref]");
   const copyBtn = document.querySelector<HTMLButtonElement>("[data-thanks-copy]");

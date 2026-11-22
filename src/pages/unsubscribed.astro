@@ -4,10 +4,9 @@
  * redirect. noindex.
  */
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { unsubscribed as c } from "@/data/content";
-import { site } from "@/data/site";
+import { unsubscribed as c, meta } from "@/data/content";
 
-const title = `Unsubscribed - ${site.name}`;
+const title = meta.unsubscribed.title;
 ---
 
 <BaseLayout title={title} description={c.lead} path="/unsubscribed/" robots="noindex, follow">

@@ -3,9 +3,9 @@
  * 404. noindex. Keeps the reference's design language.
  */
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { notFound as c } from "@/data/content";
+import { notFound as c, meta } from "@/data/content";
 
-const title = `${c.title} - 404`;
+const title = meta.notFound.title;
 ---
 
 <BaseLayout title={title} description={c.lead} path="/404" robots="noindex, follow">
