@@ -29,7 +29,7 @@ export const buildRelay: SceneBuilder = (_scene, ctx) => {
   show(ctx.beat("order"), 0.7);
   const ask = ctx.beat("ask");
   show(ask, ASK_AT);
-  ctx.typeText(tl, ask.querySelector<HTMLElement>(".rl-bubble")!, ASK_AT + 0.2, 0.035);
+  ctx.typeText(tl, ask.querySelector<HTMLElement>(".cmsg-bubble")!, ASK_AT + 0.2, 0.035);
 
   /* Flight: a manual progress tween along the measured path (no MotionPath plugin). */
   let length = 0;

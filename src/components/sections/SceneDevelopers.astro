@@ -1,39 +1,58 @@
 ---
 /**
- * Scene 07 - Developers: an illustrative HTTP request beside the phone, a Run request
- * button, and two MCP notes. The HTTP API is Planned; MCP is part of v1 (no tag).
- * Markup is the final state; scripts/scenes/developers.ts plays the request from the start.
+ * Scene 07 - Developers: an illustrative HTTP request in an editor window beside the chat log
+ * of the Account it operates, and the MCP notes below. The HTTP API is Planned; MCP is part of
+ * v1 (no tag). The Run button lives in the editor bar, so it is taken out of the shared
+ * copy column. Markup is the final state; scripts/scenes/developers.ts plays the request.
  */
 import Scene from "./Scene.astro";
-import PhoneFrame from "@/components/ui/PhoneFrame.astro";
-import PhoneBubble from "@/components/ui/PhoneBubble.astro";
 import { scenes, developersDemo as d } from "@/data/content";
 
-const meta = scenes[6];
+const { replay, replayText, ...meta } = scenes[6];
 ---
 
 <Scene {...meta} stageClass="stage-developers">
-  <div slot="controls" class="dev-controls">
-    <section class="dev-code" aria-label={d.codeAria}>
-      <div class="dev-code-head">
-        <span class="ynw-eyebrow">{d.codeLabel}</span>
-        <span class="ynw-badge ynw-badge--plain ynw-badge--accent">{d.tag}</span>
-        <span class="dev-code-note ynw-mono">{d.illustrative}</span>
-      </div>
-      <pre class="dev-code-body ynw-mono" tabindex="0"><code>{d.request.map((line, i) => <span class="dev-line" data-beat={`line-${i}`}>{line}{"\n"}</span>)}<span class="dev-line dev-line--res" data-beat="response">{d.response}</span></code></pre>
-    </section>
-    <section class="dev-mcp" aria-labelledby="dev-mcp-title">
-      <h3 class="ynw-eyebrow" id="dev-mcp-title">{d.notesTitle}</h3>
-      <ul class="dev-mcp-list">
-        {d.notes.map((n) => <li><b>{n.name}</b> {n.text}</li>)}
+  <div class="dv">
+    <div class="dv-panes">
+      <section class="win dv-code" aria-label={d.codeAria}>
+        <header class="win-bar">
+          <span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="dv-title">{d.codeLabel}</span>
+          <span class="ynw-badge ynw-badge--plain ynw-badge--accent">{d.tag}</span>
+          <button class="ynw-btn ynw-btn--primary ynw-btn--sm dv-run" type="button" aria-label={replay} data-replay hidden>{replayText}</button>
+        </header>
+        <pre class="dv-body ynw-mono" tabindex="0"><code>{d.request.map((line, i) => <span class="dv-line" data-beat={`line-${i}`}>{line}</span>)}</code></pre>
+        <p class="dv-res ynw-mono" data-beat="response">{d.response}</p>
+        <p class="dv-note ynw-mono">{d.illustrative}</p>
+      </section>
+
+      <section class="win dv-chat" aria-label={d.header.name}>
+        <header class="win-bar">
+          <span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="cmsg-av" aria-hidden="true">{d.header.initials}</span>
+          <span class="dv-who"><span class="dv-title">{d.header.name}</span><span class="dv-sub ynw-mono">{d.header.sub}</span></span>
+        </header>
+        <div class="dv-log">
+          <div class="cmsg" data-beat="bubble">
+            <span class="cmsg-av" aria-hidden="true">{d.header.initials}</span>
+            <div class="cmsg-bubble">
+              <span class="cmsg-who">{d.header.name}</span>
+              {d.bubble}
+            </div>
+          </div>
+          <div class="dv-actor" data-beat="panel">
+            <span class="dv-actor-line ynw-mono"><b>{d.actorLabel}:</b> {d.panelTitle}</span>
+            <span class="dv-actor-note ynw-mono">{d.panelNote}</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="dv-mcp" aria-labelledby="dv-mcp-title">
+      <h3 class="ynw-eyebrow" id="dv-mcp-title">{d.notesTitle}</h3>
+      <ul class="dv-mcp-list">
+        {d.notes.map((n) => <li class="dv-mcp-card"><b>{n.name}</b><span>{n.text}</span></li>)}
       </ul>
     </section>
   </div>
-  <PhoneFrame {...d.header} lang="th">
-    <PhoneBubble who={d.header.name} initial={d.header.initials} lang="th" data-beat="bubble">{d.bubble}</PhoneBubble>
-    <div slot="panel" class="dev-panel" data-beat="panel">
-      <span class="dev-panel-name">{d.panelTitle}</span>
-      <span class="dev-panel-note">{d.panelNote}</span>
-    </div>
-  </PhoneFrame>
 </Scene>

@@ -126,7 +126,7 @@ export const scenes = [
     caption: "Product concept. Interface and data are illustrative.",
   },
   {
-    id: "developers", num: "07", label: "Developers", phone: true,
+    id: "developers", num: "07", label: "Developers", layout: "full",
     title: "Connect your own system.",
     lead: "Your server can operate one of your Accounts over HTTP, like a chat platform API. The HTTP API is planned. MCP is part of v1.",
     receipt: "Account: Baan Khanom | Actor: Integration (order-sync)",
@@ -144,11 +144,8 @@ export const scenes = [
   { id: "wishlist", num: "09", label: "Wishlist", title: "The last step needs you.", lead: "Join the wishlist and get an email when early access opens.", caption: "" },
 ] as const;
 
-export const phone = {
-  composer: "Message",
-  // Sticker bubbles carry this label: the pack comes from the official YNW Account.
-  stickerLabel: "YNW",
-} as const;
+// Sticker bubbles carry this label: the pack comes from the official YNW Account.
+export const stickerLabel = "YNW";
 
 // Avatar initials are Latin on purpose: Thai marks such as ม read like "u" in a 28px circle.
 export const chatDemo = {
@@ -318,7 +315,8 @@ export const relayDemo = {
 } as const;
 
 export const developersDemo = {
-  header: { initials: "บข", name: "Baan Khanom", sub: "Operated by an integration" },
+  header: { initials: "B", name: "Baan Khanom", sub: "Operated by an integration" },
+  actorLabel: "Actor", // source: GLOSSARY.md (Actor)
   codeLabel: "HTTP API",
   tag: "Planned",
   illustrative: "Illustrative request",

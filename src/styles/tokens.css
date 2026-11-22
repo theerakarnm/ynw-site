@@ -164,14 +164,15 @@
   --chat-max: 760px;
   --sidebar-w: 264px;
 
-  --phone-w: 340px;
-  --phone-h: 560px;
-  --phone-pad: 10px;
-  --phone-radius: 36px;
-  --phone-screen-radius: 28px;
   --bubble-radius: 14px;
   --bubble-tail: 4px;
   --panel-radius: 16px;
+
+  --blueprint-bg: var(--brand-teal-deep);
+  --blueprint-line: color-mix(in srgb, var(--info) 14%, transparent);
+  --blueprint-major: color-mix(in srgb, var(--info) 28%, transparent);
+  --blueprint-cell: 24px;
+  --highlight: color-mix(in srgb, var(--accent) 24%, transparent);
 
   --sticker-size: 84px;
   --sticker-body: #ed662e;

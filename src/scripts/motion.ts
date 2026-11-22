@@ -1,8 +1,7 @@
 /**
  * YNW landing motion: hero, section reveals, progress rail and the scene player.
- * One gsap.matchMedia() with four branches - pin (desktop: scenes marked data-pin are pinned
- * while their timeline plays), story (phones/tablets) and flow (short windows). Every scene
- * without a pin plays once when its stage scrolls into view. The fourth branch is reduced (fades only).
+ * One gsap.matchMedia() with two branches - animated (every scene plays once when its stage
+ * scrolls into view; nothing is pinned) and reduced (fades only).
  * CSS default of every scene is its final state; scene timelines (scripts/scenes)
  * only animate hidden -> visible, so no-JS and reduced-motion users see the complete page.
  */
@@ -18,10 +17,7 @@ import type { ApprovalModeChange } from "./approval-modes";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin, CustomEase, ScrollToPlugin);
 
-const PIN = "(min-width: 1024px) and (min-height: 700px) and (max-height: 1700px) and (prefers-reduced-motion: no-preference)";
-const STORY = "(max-width: 1023.98px) and (min-height: 600px) and (max-height: 1700px) and (prefers-reduced-motion: no-preference)";
-const FLOW =
-  "(max-width: 1023.98px) and (max-height: 599.98px) and (prefers-reduced-motion: no-preference), (min-width: 1024px) and (max-height: 699.98px) and (prefers-reduced-motion: no-preference), (min-height: 1700.02px) and (prefers-reduced-motion: no-preference)";
+const ANIMATED = "(prefers-reduced-motion: no-preference)";
 const REDUCED = "(prefers-reduced-motion: reduce)";
 
 CustomEase.create("ynw-standard", "0.2,0,0,1");
@@ -203,8 +199,6 @@ function createWave(canvas: HTMLCanvasElement, hero: HTMLElement, reduced: boole
 
 /* ---------- Scene player ---------- */
 
-type SceneMode = "pin" | "story" | "flow" | "reduced";
-
 type MotionApi = {
   setRail: (rail: { active: number; visible: boolean }) => void;
   setDots: (dots: boolean) => void;
@@ -291,8 +285,8 @@ export function mount(root: HTMLElement) {
   const railSteps = root.querySelectorAll<HTMLElement>(".rail-step");
 
   const ui = {
-    positions: [] as { step: number; top: number; pinned: boolean }[],
-    mode: "flow" as SceneMode,
+    positions: [] as { step: number; top: number }[],
+    reduced: false,
     active: 0,
     railVisible: false,
     complete: false,
@@ -349,10 +343,7 @@ export function mount(root: HTMLElement) {
   };
 
   function measure() {
-    ui.positions = sections.map((el) => {
-      const box = el.parentElement && (el.parentElement as HTMLElement).classList.contains("pin-spacer") ? el.parentElement : el;
-      return { step: Number(el.dataset.step), top: (box as HTMLElement).getBoundingClientRect().top + window.scrollY, pinned: box !== el };
-    });
+    ui.positions = sections.map((el) => ({ step: Number(el.dataset.step), top: el.getBoundingClientRect().top + window.scrollY }));
     updateRail();
   }
 
@@ -367,7 +358,7 @@ export function mount(root: HTMLElement) {
   }
 
   function scrollToY(y: number, then?: () => void) {
-    const instant = ui.mode === "reduced";
+    const instant = ui.reduced;
     gsap.to(window, {
       duration: instant ? 0 : 0.9,
       ease: "ynw-standard",
@@ -384,7 +375,7 @@ export function mount(root: HTMLElement) {
   function jumpToStep(n: number) {
     const pos = ui.positions.find((p) => p.step === n);
     if (!pos) return;
-    scrollToY(pos.pinned ? pos.top + 1 : pos.top - barOffset() + 56);
+    scrollToY(pos.top - barOffset() + 56);
   }
 
   function jumpToForm(focusInput: boolean) {
@@ -460,25 +451,11 @@ export function mount(root: HTMLElement) {
     };
   }
 
-  function playScene(scene: HTMLElement, build: SceneBuilder, pinMode: boolean) {
+  function playScene(scene: HTMLElement, build: SceneBuilder) {
     const player = createScenePlayer(scene, build);
-    const pin = pinMode && scene.hasAttribute("data-pin");
     ScrollTrigger.create({ trigger: scene, start: "top 100%", once: true, onEnter: player.prepare });
-    if (pin) {
-      ScrollTrigger.create({
-        trigger: scene,
-        start: "top top",
-        end: () => `+=${Math.round(window.innerHeight * 0.6)}`,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onLeave: player.finish,
-      });
-      ScrollTrigger.create({ trigger: scene, start: "top 25%", once: true, onEnter: player.play });
-    } else {
-      const stage = scene.querySelector<HTMLElement>(".stage")!;
-      ScrollTrigger.create({ trigger: stage, start: "top 70%", end: "bottom top", onEnter: player.play, onLeave: player.finish });
-    }
+    const stage = scene.querySelector<HTMLElement>(".stage")!;
+    ScrollTrigger.create({ trigger: stage, start: "top 70%", end: "bottom top", onEnter: player.play, onLeave: player.finish });
     const disposers: Array<() => void> = [];
     const replay = scene.querySelector<HTMLButtonElement>("[data-replay]");
     if (replay) {
@@ -500,13 +477,9 @@ export function mount(root: HTMLElement) {
     return () => disposers.forEach((dispose) => dispose());
   }
 
-  mm.add({ pin: PIN, story: STORY, flow: FLOW, reduced: REDUCED }, (context) => {
-    const cond = context.conditions as Record<string, boolean>;
-    const mode: SceneMode = cond.pin ? "pin" : cond.story ? "story" : cond.reduced ? "reduced" : "flow";
-    ui.mode = mode;
-    root.setAttribute("data-motion", mode);
-    const pin = mode === "pin";
-    const reduced = mode === "reduced";
+  mm.add({ animated: ANIMATED, reduced: REDUCED }, (context) => {
+    const reduced = Boolean((context.conditions as Record<string, boolean>).reduced);
+    ui.reduced = reduced;
     const q = gsap.utils.selector(root);
     const cleanups: Array<() => void> = [];
 
@@ -548,7 +521,7 @@ export function mount(root: HTMLElement) {
       }
       reveal(scene);
       const build = sceneBuilders[scene.id];
-      if (build) cleanups.push(playScene(scene, build, pin));
+      if (build) cleanups.push(playScene(scene, build));
     });
 
     /* Wishlist: contour lines draw along the bottom. */
@@ -576,7 +549,6 @@ export function mount(root: HTMLElement) {
 
     return function cleanup() {
       cleanups.forEach((fn) => fn());
-      root.removeAttribute("data-motion");
       ui.active = 0;
       ui.railVisible = false;
     };

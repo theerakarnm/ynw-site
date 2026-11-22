@@ -12,6 +12,7 @@ import { buildApprovalModes } from "./approval-modes";
 import { buildWorkflows } from "./workflows";
 import { buildRelay } from "./relay";
 import { buildDevelopers } from "./developers";
+import { buildPlanned } from "./planned";
 
 export interface SceneCtx {
   reduced: boolean;
@@ -25,8 +26,6 @@ export interface SceneCtx {
   countTo(tl: Timeline, el: HTMLElement, from: number, to: number, at: number, duration: number): void;
   /** Show `start` now, then set each `[text, at]` change in turn. The final DOM text is restored on revert. */
   swapText(tl: Timeline, el: HTMLElement, start: string, changes: ReadonlyArray<readonly [string, number]>): void;
-  /** The phone header parts and the panel wrapper. */
-  phone(): { avatar: HTMLElement; name: HTMLElement; sub: HTMLElement; panel: HTMLElement };
   /** Fade and lift elements in, one by one. They take no room until their turn. */
   reveal(tl: Timeline, targets: HTMLElement | HTMLElement[], at: number, gap?: number): void;
   /** Make the sticker inside `el` bounce at `at`. */
@@ -105,14 +104,6 @@ export function createSceneCtx(scene: HTMLElement, reduced: boolean): SceneCtx {
       onRevert(() => (el.textContent = final));
       for (const [text, at] of changes) tl.call(() => (el.textContent = text), [], at);
     },
-    phone() {
-      const part = (selector: string) => {
-        const el = scene.querySelector<HTMLElement>(selector);
-        if (!el) throw new Error(`Scene ${scene.id}: missing ${selector}`);
-        return el;
-      };
-      return { avatar: part("[data-phone-avatar]"), name: part("[data-phone-name]"), sub: part("[data-phone-sub]"), panel: part(".phone-panel") };
-    },
     reveal(tl, targets, at, gap = 0.12) {
       const list = Array.isArray(targets) ? targets : [targets];
       list.forEach((el, i) => {
@@ -154,4 +145,5 @@ export const sceneBuilders: Record<string, SceneBuilder> = {
   workflows: buildWorkflows,
   relay: buildRelay,
   developers: buildDevelopers,
+  planned: buildPlanned,
 };
