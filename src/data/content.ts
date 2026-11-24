@@ -31,6 +31,10 @@ export const meta = {
     title: "Privacy - YNW",
     description: "What the YNW wishlist page collects, why, and how to unsubscribe.",
   },
+  terms: {
+    title: "Terms - YNW",
+    description: "The terms for using YNW: who runs it, what is free, how the Assistant acts, guest links and reporting.",
+  },
   thanks: { title: "You are on the wishlist - YNW" },
   unsubscribed: { title: "Unsubscribed - YNW" },
   notFound: { title: "This wave does not exist. - 404" },
@@ -591,6 +595,7 @@ export const footer = {
   bmc: "Buy Me a Coffee",
   wishlist: "Wishlist",
   privacy: "Privacy",
+  terms: "Terms",
   copyright: "© 2026 Eukron team",
   payments: "Payments by Buy Me a Coffee · Prices in USD",
   mark: "YNW",
@@ -677,6 +682,64 @@ export const privacy = {
       p: [
         "Questions about your data: privacy@ynw.example", // CONFIRM: real contact address
       ],
+    },
+  ],
+} as const;
+
+/**
+ * Terms page copy. DRAFT - CONFIRM with the owner before launch.
+ * States only product facts; legal terms (liability, law, retention) are not set.
+ */
+export const terms = {
+  eyebrow: "TERMS",
+  title: "Terms of Service",
+  updated: "Last updated ▪ 2026-11-24",
+  lead: "These are the terms for using YNW. Below: who runs it, what the service includes, how your Assistant acts, how guest links work, and how to report problems.",
+  sections: [
+    {
+      // CONFIRM: registered entity name, registration number and address are not set.
+      h: "Who runs YNW",
+      p: ["YNW is operated by the Eukron Team."],
+    },
+    {
+      h: "The service",
+      p: [
+        "Chat is free. AI is free inside a daily quota, on lower-cost models.",
+        "Premium gives a larger quota, stronger models and more Accounts.",
+        "You can also bring your own AI to YNW through inbound MCP.",
+      ],
+    },
+    {
+      h: "Your Assistant",
+      p: [
+        "Each User has one Assistant. You choose an Approval Mode for each Account and for each category of action: Allow, Auto or Ask. New Accounts start on Auto.",
+        "Some actions are always at least Ask: spending money, deleting external data, contacting an Account you have not talked to before, and moving data between Accounts. In Auto, the Assistant also asks when the Decision Model is unsure or unavailable.",
+        "The Assistant reads only what that Account can already see, and uses only that Account's Account Memory.",
+      ],
+    },
+    {
+      // CONFIRM: guest links are specified but not confirmed as shipped; check before launch.
+      h: "Guest links",
+      p: [
+        "A host can share a link to a conversation. A guest types a display name and the passcode the host gave them, then joins that one conversation and is shown as a guest.",
+        "A guest has no other chats, friends, search, Assistant or voice rooms.",
+        "The host can require approval, set a cap on the link, revoke it, or remove a guest. Revoking a link stops new joins; people already in the conversation stay.",
+        "The same browser can return for up to 30 days since its last use.",
+        "A guest can sign up with Apple, Google or LINE to keep the conversation as a full Account. If the guest already has a User, the conversation is attached only after that User confirms.",
+      ],
+    },
+    {
+      // CONFIRM: no prohibited-acts list or penalties are defined yet.
+      h: "Acceptable use and reporting",
+      p: [
+        "You can block an Account, and report a message or an Account. Our team reviews reports in a review queue.",
+        "Content written by AI is checked by a filter before it is sent.",
+      ],
+    },
+    {
+      // CONFIRM: deletion process and data retention are not specified.
+      h: "Deleting your Account",
+      p: ["How to delete an Account is not set yet."],
     },
   ],
 } as const;

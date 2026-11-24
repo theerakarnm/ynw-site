@@ -1,0 +1,36 @@
+---
+/**
+ * Terms page. The legal wording is a draft for Theerakarn to review before launch.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { copyOf, localeStaticPaths } from "@/lib/page-copy";
+
+export const getStaticPaths = localeStaticPaths;
+
+const { terms, meta } = copyOf(Astro.url);
+
+const { title, description } = meta.terms;
+---
+
+<BaseLayout title={title} description={description} path="/terms/">
+  <div class="page-shell page-shell--narrow">
+    <div class="page-eyebrow-row">
+      <span class="ynw-eyebrow">{terms.eyebrow}</span>
+      <h1 class="page-title" id="h-terms">{terms.title}</h1>
+      <p class="page-updated">{terms.updated}</p>
+      <p class="page-lead">{terms.lead}</p>
+    </div>
+    <div class="page-prose">
+      {
+        terms.sections.map((section) => (
+          <section>
+            <h2>{section.h}</h2>
+            {section.p.map((para) => (
+              <p>{para}</p>
+            ))}
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
