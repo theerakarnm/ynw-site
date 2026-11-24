@@ -77,7 +77,7 @@ test("localizePath maps between sibling URLs", () => {
 })
 
 test("localizePath is idempotent and round trips", () => {
-  for (const p of ["/", "/support/", "/privacy/", "/thanks/"]) {
+  for (const p of ["/", "/support/", "/privacy/", "/terms/", "/thanks/"]) {
     for (const l of ["th", "en"] as const) {
       const once = localizePath(p, l)
       assert.equal(localizePath(once, l), once)

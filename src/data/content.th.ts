@@ -34,6 +34,10 @@ export const meta = {
     title: "ความเป็นส่วนตัว - YNW",
     description: "หน้ารายชื่อรอใช้งานของ YNW เก็บข้อมูลอะไร เพราะอะไร และยกเลิกการรับอีเมลได้อย่างไร",
   },
+  terms: {
+    title: "ข้อกำหนดการใช้งาน - YNW",
+    description: "ข้อกำหนดการใช้ YNW ได้แก่ ผู้ให้บริการ สิ่งที่ใช้ได้ฟรี วิธีที่ Assistant ทำงาน ลิงก์สำหรับแขก และการรายงาน",
+  },
   thanks: { title: "คุณอยู่ในรายชื่อรอใช้งานแล้ว - YNW" },
   unsubscribed: { title: "ยกเลิกการรับอีเมลแล้ว - YNW" },
   notFound: { title: "ไม่มีคลื่นลูกนี้ - 404" },
@@ -594,6 +598,7 @@ export const footer = {
   bmc: "Buy Me a Coffee",
   wishlist: "รายชื่อรอใช้งาน",
   privacy: "ความเป็นส่วนตัว",
+  terms: "ข้อกำหนด",
   copyright: "© 2026 ทีม Eukron",
   payments: "ชำระเงินผ่าน Buy Me a Coffee · ราคาเป็น USD",
   mark: "YNW",
@@ -680,6 +685,64 @@ export const privacy = {
       p: [
         "คำถามเกี่ยวกับข้อมูลของคุณ: privacy@ynw.example", // CONFIRM: real contact address
       ],
+    },
+  ],
+} as const;
+
+/**
+ * Terms page copy. DRAFT - CONFIRM with the owner before launch.
+ * States only product facts; legal terms (liability, law, retention) are not set.
+ */
+export const terms = {
+  eyebrow: "ข้อกำหนด",
+  title: "ข้อกำหนดการใช้งาน",
+  updated: "อัปเดตล่าสุด ▪ 2026-11-24",
+  lead: "นี่คือข้อกำหนดการใช้ YNW ด้านล่างสรุปว่าใครเป็นผู้ให้บริการ บริการมีอะไรบ้าง Assistant ทำงานอย่างไร ลิงก์สำหรับแขกทำงานอย่างไร และรายงานปัญหาได้อย่างไร",
+  sections: [
+    {
+      // CONFIRM: registered entity name, registration number and address are not set.
+      h: "ผู้ให้บริการ YNW",
+      p: ["YNW ดำเนินงานโดย Eukron Team"],
+    },
+    {
+      h: "บริการ",
+      p: [
+        "แชตใช้ได้ฟรี ส่วน AI ใช้ได้ฟรีภายในโควตารายวัน โดยใช้โมเดลที่ต้นทุนต่ำกว่า",
+        "Premium ให้โควตาที่มากขึ้น โมเดลที่แรงขึ้น และเพิ่มจำนวน Account ได้มากขึ้น",
+        "คุณยังนำ AI ของคุณเองมาใช้กับ YNW ได้ผ่าน MCP ขาเข้า",
+      ],
+    },
+    {
+      h: "Assistant ของคุณ",
+      p: [
+        "User แต่ละคนมี Assistant หนึ่งตัว คุณเลือก Approval Mode ได้ทั้งแยกตาม Account และแยกตามประเภทของการกระทำ ได้แก่ Allow, Auto หรือ Ask Account ใหม่จะเริ่มที่ Auto",
+        "การกระทำบางอย่างจะอยู่ที่ Ask เป็นอย่างน้อยเสมอ ได้แก่ การใช้จ่ายเงิน การลบข้อมูลภายนอก การติดต่อ Account ที่ยังไม่เคยคุยด้วย และการย้ายข้อมูลระหว่าง Account นอกจากนี้ ในโหมด Auto Assistant จะถามเมื่อ Decision Model ไม่แน่ใจหรือใช้งานไม่ได้",
+        "Assistant อ่านได้เฉพาะสิ่งที่ Account นั้นมองเห็นอยู่แล้ว และใช้เฉพาะ Account Memory ของ Account นั้น",
+      ],
+    },
+    {
+      // CONFIRM: guest links are specified but not confirmed as shipped; check before launch.
+      h: "ลิงก์สำหรับแขก",
+      p: [
+        "โฮสต์แชร์ลิงก์ของการสนทนาได้ แขกพิมพ์ชื่อที่แสดงและรหัสผ่านที่โฮสต์ให้ไว้ แล้วเข้าร่วมได้เพียงการสนทนานั้น โดยแสดงเป็นแขก",
+        "แขกไม่มีแชตอื่น เพื่อน การค้นหา Assistant หรือห้องเสียง",
+        "โฮสต์เลือกให้ต้องอนุมัติก่อนเข้าร่วม จำกัดจำนวนแขกของลิงก์นั้น เพิกถอนลิงก์ หรือนำแขกออกได้ การเพิกถอนลิงก์จะหยุดการเข้าร่วมใหม่ ส่วนคนที่อยู่ในการสนทนาแล้วจะยังอยู่ต่อ",
+        "เบราว์เซอร์เดิมกลับเข้ามาได้นานสูงสุด 30 วันนับจากการใช้งานครั้งล่าสุด",
+        "แขกสมัครด้วย Apple, Google หรือ LINE เพื่อเก็บการสนทนานั้นไว้เป็น Account เต็มรูปแบบได้ หากมี User อยู่แล้ว การสนทนาจะถูกผูกเข้ากับ User นั้นก็ต่อเมื่อ User ยืนยันเท่านั้น",
+      ],
+    },
+    {
+      // CONFIRM: no prohibited-acts list or penalties are defined yet.
+      h: "การใช้งานที่เหมาะสมและการรายงาน",
+      p: [
+        "คุณบล็อก Account ได้ และรายงานข้อความหรือ Account ได้ ทีมของเรามีคิวสำหรับตรวจสอบรายงาน",
+        "เนื้อหาที่ AI เขียนจะผ่านตัวกรองตรวจสอบก่อนส่ง",
+      ],
+    },
+    {
+      // CONFIRM: deletion process and data retention are not specified.
+      h: "การลบ Account",
+      p: ["ขั้นตอนการลบ Account ยังไม่ได้กำหนด"],
     },
   ],
 } as const;
